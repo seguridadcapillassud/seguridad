@@ -1,0 +1,10 @@
+name: Prueba de Actions
+
+on: [push]
+
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mensaje de confirmación
+        run: echo "🎉 Actions funcionando en SeguridadCapillas"
