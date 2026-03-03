@@ -2,253 +2,348 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comité de Seguridad - Versión 1.8.6</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Comité de Seguridad - Versión 1.8.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        
+        :root {
+            --safe-area-top: env(safe-area-inset-top);
+            --safe-area-bottom: env(safe-area-inset-bottom);
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: contain;
+        }
+
         @keyframes fade-out { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
         .animate-fade-out { animation: fade-out 0.5s ease-in-out forwards; }
+        
         .sos-glow { animation: pulse-red 2s infinite; }
         @keyframes pulse-red {
             0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
             70% { box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); }
             100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
         }
+
         .hidden { display: none !important; }
-        .tab-btn { transition: all 0.2s; border-bottom: 2px solid transparent; }
+        .tab-btn { transition: all 0.2s; border-bottom: 2px solid transparent; white-space: nowrap; }
         .tab-active { border-bottom-color: #3b82f6; color: #3b82f6; background-color: rgba(59, 130, 246, 0.05); }
-        .admin-gear-btn { background-color: #fbbf24; color: #0f172a; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .admin-gear-btn { background-color: #fbbf24; color: #0f172a; }
+        
         svg { transition: transform 0.4s ease; display: block; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .pass-container { position: relative; width: 100%; }
-        .pass-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; z-index: 10; padding: 0.5rem; }
-        .force-uppercase { text-transform: uppercase; }
-        .check-custom { width: 1.5rem; height: 1.5rem; border-radius: 0.5rem; accent-color: #fbbf24; cursor: pointer; border: 2px solid rgba(255,255,255,0.3); background: transparent; }
-        .task-input-integrated { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; border-radius: 0.75rem; padding: 0.5rem 0.75rem; font-size: 0.75rem; outline: none; transition: all 0.2s; }
-        .task-input-integrated:focus { background: rgba(255,255,255,0.15); border-color: #fbbf24; }
+        
+        /* Adaptación móvil para inputs */
+        input, textarea, select { font-size: 16px !important; } /* Evita zoom en iOS */
+        
+        /* Cajas de verificación táctiles */
+        .check-custom { 
+            width: 1.6rem; 
+            height: 1.6rem; 
+            border-radius: 0.5rem; 
+            accent-color: #fbbf24; 
+            cursor: pointer; 
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .task-input-integrated { 
+            background: rgba(255,255,255,0.1); 
+            border: 1px solid rgba(255,255,255,0.2); 
+            color: white; 
+            border-radius: 0.75rem; 
+            padding: 0.6rem 0.8rem; 
+            font-size: 0.85rem !important; 
+            outline: none; 
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col overflow-x-hidden text-slate-900">
 
-    <!-- PANTALLA DE CARGA -->
+    <!-- PANTALLA DE CARGA (MOBILE READY) -->
     <div id="splashScreen" class="fixed inset-0 z-[100] bg-blue-900 flex flex-col items-center justify-center text-white text-center">
         <div class="mb-6 bg-white/10 p-6 rounded-full backdrop-blur-md border border-white/20">
             <div id="splashIcon" data-icon="shield-check" class="w-16 h-16"></div>
         </div>
-        <h1 class="text-3xl font-black uppercase tracking-[0.2em] mb-1 px-4">Comité de Seguridad</h1>
-        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 1.8.6</p>
-        <div class="absolute bottom-10 flex flex-col items-center px-6 w-full max-w-sm text-white">
+        <h1 class="text-3xl font-black uppercase tracking-[0.2em] mb-1 px-4">Seguridad Barrio</h1>
+        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 1.8.7 Mobile</p>
+        <div class="absolute bottom-12 flex flex-col items-center px-6 w-full max-w-sm">
             <div id="loadingSpinner" class="w-8 h-8 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin mb-4"></div>
-            <span id="statusLabel" class="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70 leading-relaxed text-center">Sincronizando...</span>
-            <button id="retryButton" onclick="location.reload()" class="hidden mt-4 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-full text-[10px] font-black uppercase border border-white/20 transition-all text-white">Reintentar</button>
+            <span id="statusLabel" class="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70">Sincronizando...</span>
+            <button id="retryButton" onclick="location.reload()" class="hidden mt-4 bg-white/10 px-6 py-2 rounded-full text-[10px] font-black uppercase border border-white/20">Reintentar</button>
         </div>
     </div>
 
     <!-- PÁGINA IDENTIFICACIÓN -->
-    <div id="unitStepPage" class="hidden flex-grow flex items-center justify-center p-6 bg-white text-center text-slate-800">
-        <div class="w-full max-w-sm space-y-8">
-            <div class="space-y-2">
-                <h1 class="text-2xl font-bold uppercase tracking-widest text-slate-800 font-black">Identificación</h1>
-                <p class="text-slate-500 text-xs uppercase font-bold">Barrio o Rama</p>
+    <div id="unitStepPage" class="hidden flex-grow flex items-center justify-center p-6 bg-white">
+        <div class="w-full max-w-sm space-y-10">
+            <div class="text-center space-y-2">
+                <h1 class="text-3xl font-black uppercase tracking-tight text-slate-900">Bienvenido</h1>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Identifique su Unidad</p>
             </div>
-            <form id="unitForm" class="space-y-4 text-left">
-                <div class="space-y-4">
-                    <input type="text" id="inputUnitName" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800 font-bold force-uppercase" placeholder="NOMBRE DEL BARRIO">
-                    <input type="text" id="inputUnitNumber" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800 font-bold" placeholder="Número de Unidad">
-                </div>
-                <button type="submit" class="w-full bg-blue-900 text-white font-bold py-4 rounded-2xl shadow-lg uppercase text-sm tracking-widest">Verificar</button>
+            <form id="unitForm" class="space-y-4">
+                <input type="text" id="inputUnitName" required class="w-full px-6 py-5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800 font-bold force-uppercase shadow-sm" placeholder="NOMBRE DEL BARRIO">
+                <input type="text" id="inputUnitNumber" required class="w-full px-6 py-5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800 font-bold shadow-sm" placeholder="NÚMERO DE UNIDAD">
+                <button type="submit" class="w-full bg-blue-900 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-sm tracking-widest active:scale-95 transition-transform">Verificar</button>
             </form>
         </div>
     </div>
 
     <!-- PÁGINA ACCESO -->
-    <div id="loginPage" class="hidden flex-grow flex items-center justify-center p-6 bg-white text-center text-slate-800">
-        <div class="w-full max-w-sm space-y-8">
-            <div class="space-y-2">
-                <h2 id="loginUnitDisplay" class="text-blue-600 font-black text-xl uppercase tracking-tighter font-bold">BARRIO</h2>
-                <p class="text-slate-500 text-xs uppercase font-bold">Acceso de Miembro</p>
+    <div id="loginPage" class="hidden flex-grow flex items-center justify-center p-6 bg-white">
+        <div class="w-full max-w-sm space-y-10">
+            <div class="text-center space-y-2">
+                <h2 id="loginUnitDisplay" class="text-blue-600 font-black text-2xl uppercase tracking-tighter">BARRIO</h2>
+                <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Acceso de Miembro</p>
             </div>
-            <form id="loginForm" class="space-y-4 text-left">
-                <div class="space-y-4">
-                    <input type="email" id="email" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800" placeholder="Correo Electrónico">
-                    <div class="pass-container">
-                        <input type="password" id="password" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800 pr-12" placeholder="Contraseña">
-                        <div class="pass-toggle" onclick="window.togglePassword('password')"><div data-icon="eye" class="w-5 h-5 text-slate-400"></div></div>
-                    </div>
+            <form id="loginForm" class="space-y-4">
+                <input type="email" id="email" required class="w-full px-6 py-5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800 font-medium shadow-sm" placeholder="Correo Electrónico">
+                <div class="pass-container">
+                    <input type="password" id="password" required class="w-full px-6 py-5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800 pr-14 shadow-sm" placeholder="Contraseña">
+                    <div class="pass-toggle" onclick="window.togglePassword('password')"><div data-icon="eye" class="w-6 h-6"></div></div>
                 </div>
-                <button type="submit" id="btnLoginSubmit" class="w-full bg-blue-900 text-white font-bold py-4 rounded-2xl shadow-lg uppercase text-sm tracking-widest text-white">Entrar</button>
-                <button type="button" onclick="location.reload()" class="w-full text-slate-400 text-[10px] font-bold uppercase tracking-widest py-4 text-center">Regresar</button>
+                <button type="submit" id="btnLoginSubmit" class="w-full bg-blue-900 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-sm tracking-widest active:scale-95 transition-transform">Entrar</button>
+                <button type="button" onclick="location.reload()" class="w-full text-slate-400 text-[10px] font-black uppercase tracking-widest py-4">Cambiar de Barrio</button>
             </form>
         </div>
     </div>
 
     <!-- PÁGINA REGISTRO INICIAL -->
-    <div id="initAdminPage" class="hidden flex-grow flex items-center justify-center p-6 bg-white text-center text-slate-800">
-        <div class="w-full max-sm:max-w-xs max-w-sm space-y-8">
-            <div class="bg-blue-50 p-6 rounded-3xl border border-blue-100 text-center">
-                <div data-icon="shield" class="w-10 h-10 text-blue-500 mx-auto mb-3"></div>
-                <h2 class="text-lg font-bold uppercase tracking-tight text-blue-900">Configuración Inicial</h2>
-                <p id="initAdminQuestionText" class="text-blue-700 text-xs mt-2 font-medium leading-relaxed">¿Eres el especialista en seguridad o eres el Obispo de este Barrio?</p>
-                <div id="initAdminGate" class="flex gap-3 mt-6">
-                    <button onclick="window.handleInitGate(true)" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl uppercase text-xs text-white">Sí, soy yo</button>
-                    <button onclick="window.handleInitGate(false)" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3 rounded-xl uppercase text-xs">No</button>
+    <div id="initAdminPage" class="hidden flex-grow flex items-center justify-center p-6 bg-white">
+        <div class="w-full max-w-sm space-y-8">
+            <div class="bg-blue-50 p-8 rounded-[2.5rem] border border-blue-100 text-center">
+                <div data-icon="shield" class="w-12 h-12 text-blue-500 mx-auto mb-4"></div>
+                <h2 class="text-xl font-black uppercase tracking-tight text-blue-900 leading-tight">Configuración Inicial de la Unidad</h2>
+                <p id="initAdminQuestionText" class="text-blue-700 text-xs mt-3 font-medium leading-relaxed">¿Es usted el Especialista en Seguridad o el Obispo de este Barrio?</p>
+                <div id="initAdminGate" class="flex gap-3 mt-8">
+                    <button onclick="window.handleInitGate(true)" class="flex-1 bg-blue-600 text-white font-black py-4 rounded-2xl uppercase text-xs shadow-lg active:scale-95">Sí, soy yo</button>
+                    <button onclick="window.handleInitGate(false)" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-4 rounded-2xl uppercase text-xs active:scale-95">No</button>
                 </div>
             </div>
-            <form id="initAdminForm" class="hidden space-y-4 text-left animate-in fade-in slide-in-from-top-4 duration-300">
-                <div class="space-y-4">
-                    <input type="text" id="initAdminFullName" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800 font-bold force-uppercase" placeholder="NOMBRE COMPLETO">
-                    <input type="email" id="initAdminEmail" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800" placeholder="ejemplo@correo.com">
-                    <div class="pass-container">
-                        <input type="password" id="initAdminPass" required minlength="6" class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none pr-12 text-slate-800" placeholder="Contraseña (6+ caracteres)"><div class="pass-toggle" onclick="window.togglePassword('initAdminPass')"><div data-icon="eye" class="w-5 h-5 text-slate-400"></div></div>
-                    </div>
+            <form id="initAdminForm" class="hidden space-y-4 text-left animate-in fade-in slide-in-from-top-4 duration-500">
+                <input type="text" id="initAdminFullName" required class="w-full px-6 py-5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800 font-bold force-uppercase" placeholder="NOMBRE COMPLETO">
+                <input type="email" id="initAdminEmail" required class="w-full px-6 py-5 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800" placeholder="ejemplo@correo.com">
+                <div class="pass-container">
+                    <input type="password" id="initAdminPass" required minlength="6" class="w-full px-6 py-5 rounded-2xl bg-slate-50 border border-slate-200 outline-none pr-14 text-slate-800" placeholder="Contraseña (6+ carac.)">
+                    <div class="pass-toggle" onclick="window.togglePassword('initAdminPass')"><div data-icon="eye" class="w-6 h-6"></div></div>
                 </div>
-                <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-lg uppercase text-sm tracking-widest text-white text-white">Finalizar Registro</button>
+                <button type="submit" class="w-full bg-emerald-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-sm tracking-widest active:scale-95">Finalizar Registro</button>
             </form>
         </div>
     </div>
 
     <!-- PANEL SUPERUSUARIO -->
     <div id="superuserPanel" class="hidden flex-grow flex flex-col bg-slate-900 text-white">
-        <header class="bg-red-900 p-6 flex justify-between items-center shadow-2xl">
-            <div><h2 class="text-xl font-black uppercase tracking-widest text-white">Panel Maestro</h2><p class="text-[10px] font-bold text-red-200 uppercase">Gestión Global</p></div>
-            <button onclick="window.logout()" class="bg-white/10 p-3 rounded-xl hover:bg-red-700 transition-all text-white"><div data-icon="log-out" class="w-6 h-6 text-white text-white"></div></button>
+        <header class="bg-red-900 p-6 pt-10 flex justify-between items-center shadow-2xl">
+            <div><h2 class="text-xl font-black uppercase tracking-widest">Master Panel</h2><p class="text-[10px] font-bold text-red-200 uppercase opacity-60 tracking-widest">Gestión Global</p></div>
+            <button onclick="window.logout()" class="bg-white/10 p-3 rounded-2xl"><div data-icon="log-out" class="w-6 h-6"></div></button>
         </header>
         <main class="max-w-4xl mx-auto w-full p-6 space-y-6"><div id="allUnitsList" class="space-y-4"></div></main>
     </div>
 
-    <!-- APP PRINCIPAL -->
-    <div id="mainApp" class="hidden flex-grow flex flex-col text-slate-800">
-        <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
-            <div class="max-w-4xl mx-auto px-4 h-20 flex justify-between items-center relative">
-                <!-- IZQUIERDA: CALENDARIO PARA TODOS (PUNTO 2) -->
+    <!-- APP PRINCIPAL (MOBILE OPTIMIZED) -->
+    <div id="mainApp" class="hidden flex-grow flex flex-col">
+        <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50 pt-8 pb-4">
+            <div class="max-w-4xl mx-auto px-4 flex justify-between items-center relative h-14">
+                <!-- IZQUIERDA -->
                 <div class="flex items-center gap-2">
-                    <button onclick="window.showFutureScheduleModal()" class="bg-white/10 hover:bg-blue-600 w-10 h-10 rounded-xl flex items-center justify-center transition-all text-white" title="Próximas 4 semanas">
-                        <div data-icon="calendar" class="w-5 h-5"></div>
+                    <button onclick="window.showFutureScheduleModal()" class="bg-white/10 active:bg-blue-600 w-11 h-11 rounded-2xl flex items-center justify-center transition-all shadow-inner">
+                        <div data-icon="calendar" class="w-6 h-6"></div>
                     </button>
-                    <div class="flex flex-col text-white hidden sm:flex">
-                        <h2 id="headerLocName" class="font-bold text-[10px] uppercase truncate max-w-[80px]">...</h2>
-                        <span id="headerUnitNumber" class="text-[7px] text-blue-300 font-bold uppercase opacity-80">...</span>
+                    <div class="flex flex-col hidden xs:flex">
+                        <h2 id="headerLocName" class="font-black text-[10px] uppercase truncate max-w-[70px] leading-none">...</h2>
+                        <span id="headerUnitNumber" class="text-[7px] text-blue-300 font-black uppercase opacity-60 tracking-tighter">...</span>
                     </div>
                 </div>
 
-                <!-- CENTRO: SOS -->
+                <!-- CENTRO: SOS (PUNTO 4) -->
                 <div class="absolute left-1/2 -translate-x-1/2">
-                    <button onclick="window.openEmergencyMenu()" class="sos-glow bg-red-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all border-4 border-blue-900 text-white">
-                        <div data-icon="megaphone" class="w-7 h-7"></div>
+                    <button onclick="window.openEmergencyMenu()" class="sos-glow bg-red-600 w-16 h-16 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all border-4 border-blue-900">
+                        <div data-icon="megaphone" class="w-8 h-8"></div>
                     </button>
                 </div>
 
-                <!-- DERECHA: ROL Y GESTIÓN -->
+                <!-- DERECHA: ROL (PUNTO 4) -->
                 <div class="flex items-center gap-2">
-                    <div class="flex flex-col items-end mr-1">
-                        <span id="displayRole" class="text-[9px] font-black bg-blue-800 px-2 py-0.5 rounded-lg text-blue-200 uppercase tracking-tighter">...</span>
+                    <div class="flex flex-col items-end">
+                        <span id="displayRole" class="text-[9px] font-black bg-blue-800 px-3 py-1 rounded-xl text-blue-200 uppercase tracking-tighter border border-blue-700/50 shadow-sm">...</span>
                     </div>
-                    <button id="adminBtn" onclick="window.toggleAdminPanel()" class="hidden admin-gear-btn w-9 h-9 rounded-lg shadow-md flex items-center justify-center text-slate-900"><div data-icon="settings" class="w-5 h-5"></div></button>
-                    <button onclick="window.logout()" class="bg-white/10 hover:bg-red-500 w-9 h-9 rounded-lg transition-all flex items-center justify-center text-white"><div data-icon="log-out" class="w-5 h-5 text-white"></div></button>
+                    <button id="adminBtn" onclick="window.toggleAdminPanel()" class="hidden admin-gear-btn w-11 h-11 rounded-2xl shadow-lg flex items-center justify-center active:scale-90"><div data-icon="settings" class="w-6 h-6"></div></button>
+                    <button onclick="window.logout()" class="bg-white/10 hover:bg-red-500 w-11 h-11 rounded-2xl transition-all flex items-center justify-center active:scale-90"><div data-icon="log-out" class="w-6 h-6"></div></button>
                 </div>
             </div>
         </header>
 
-        <main class="max-w-4xl mx-auto w-full p-4 flex-grow relative text-slate-800">
+        <main class="max-w-4xl mx-auto w-full p-4 flex-grow space-y-6">
             <!-- PANEL ADMINISTRADOR -->
-            <section id="adminPanel" class="hidden bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-2xl border border-slate-700 w-full mb-6">
-                <div class="flex justify-between items-center mb-6 text-white"><h3 class="font-black text-xs text-blue-400 uppercase tracking-widest flex items-center gap-2 text-blue-400 text-blue-400"><div data-icon="sliders" class="w-4 h-4 text-blue-400"></div> Gestión de Unidad</h3><button onclick="window.toggleAdminPanel()" class="text-slate-500 hover:text-white p-1 text-white"><div data-icon="x" class="w-6 h-6 text-white"></div></button></div>
-                
-                <div class="flex bg-slate-800 rounded-2xl p-1 mb-6 border border-slate-700 text-white overflow-x-auto no-scrollbar">
-                    <button onclick="window.switchAdminTab('unit')" id="tabUnit" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn tab-active rounded-xl text-white">Horario</button>
-                    <button onclick="window.switchAdminTab('tasks')" id="tabTasks" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl">Tareas</button>
-                    <button onclick="window.switchAdminTab('emergency')" id="tabEmergency" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl">Teléfonos</button>
-                    <button onclick="window.switchAdminTab('users')" id="tabUsers" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl text-white">Usuarios</button>
-                    <button onclick="window.switchAdminTab('reports')" id="tabReports" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl text-slate-500">Informes</button>
+            <section id="adminPanel" class="hidden bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-2xl border border-slate-700 w-full mb-6 animate-in slide-in-from-top-4 duration-300">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div data-icon="sliders" class="w-4 h-4 text-blue-400"></div>
+                        <h3 class="font-black text-xs text-blue-400 uppercase tracking-widest">Gestión de Unidad</h3>
+                    </div>
+                    <button onclick="window.toggleAdminPanel()" class="text-slate-500 p-2"><div data-icon="x" class="w-6 h-6"></div></button>
                 </div>
                 
-                <div id="panelUnitContent" class="space-y-4"><div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/50 text-white"><label class="text-[9px] font-bold uppercase ml-1 text-slate-400">Hora de Entrada Dominical</label><input type="time" id="inputStartTime" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-5 py-4 text-lg font-bold text-white"><button onclick="window.updateUnitTime()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black text-[10px] uppercase text-white mt-4 text-white text-white">Actualizar</button></div></div>
+                <div class="flex bg-slate-800 rounded-2xl p-1 mb-6 border border-slate-700 overflow-x-auto no-scrollbar gap-1">
+                    <button onclick="window.switchAdminTab('unit')" id="tabUnit" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn tab-active rounded-xl">Horario</button>
+                    <button onclick="window.switchAdminTab('tasks')" id="tabTasks" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl">Tareas</button>
+                    <button onclick="window.switchAdminTab('emergency')" id="tabEmergency" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl">Teléfonos</button>
+                    <button onclick="window.switchAdminTab('users')" id="tabUsers" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl">Usuarios</button>
+                    <button onclick="window.switchAdminTab('reports')" id="tabReports" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl">Informes</button>
+                </div>
+                
+                <div id="panelUnitContent" class="space-y-4">
+                    <div class="bg-slate-800/40 p-6 rounded-3xl border border-slate-700/50">
+                        <label class="text-[9px] font-black uppercase ml-1 text-slate-400 mb-2 block">Hora de Entrada Dominical</label>
+                        <input type="time" id="inputStartTime" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-6 py-5 text-xl font-bold text-white mb-4 shadow-inner">
+                        <button onclick="window.updateUnitTime()" class="w-full bg-blue-600 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-transform">Actualizar</button>
+                    </div>
+                </div>
 
-                <div id="panelTasksContent" class="hidden space-y-6 text-white">
-                    <div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/50 text-white">
-                        <div class="flex justify-between items-center mb-4 text-white">
-                            <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Configuración de Tareas</h4>
-                            <button onclick="window.refreshTasksCatalog()" class="text-[8px] font-black bg-blue-600 px-3 py-1.5 rounded-lg uppercase tracking-widest text-white">Actualizar</button>
+                <div id="panelTasksContent" class="hidden space-y-6">
+                    <div class="bg-slate-800/40 p-6 rounded-3xl border border-slate-700/50">
+                        <div class="flex justify-between items-center mb-6">
+                            <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Catálogo de Tareas</h4>
+                            <button onclick="window.refreshTasksCatalog()" class="text-[8px] font-black bg-blue-600/20 text-blue-400 px-4 py-2 rounded-lg uppercase border border-blue-900/50">Sincronizar</button>
                         </div>
-                        <div class="space-y-6 text-white">
-                            <div><label class="text-[9px] font-bold text-slate-400 uppercase ml-1 block mb-2">Exterior (Turno 1)</label><div id="adminExteriorTasksList" class="space-y-2 mb-3"></div><div class="flex gap-2"><input type="text" id="newExteriorTask" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none" placeholder="Agregar..."><button onclick="window.addNewCatalogTask('exterior')" class="bg-blue-600 px-3 py-2 rounded-xl text-white"><div data-icon="shield-check" class="w-4 h-4 text-white text-white"></div></button></div></div>
-                            <div class="border-t border-slate-700/50 pt-4"><label class="text-[9px] font-bold text-slate-400 uppercase ml-1 block mb-2">Interior (Turno 2 y 3)</label><div id="adminInteriorTasksList" class="space-y-2 mb-3"></div><div class="flex gap-2"><input type="text" id="newInteriorTask" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none" placeholder="Agregar..."><button onclick="window.addNewCatalogTask('interior')" class="bg-blue-600 px-3 py-2 rounded-xl text-white text-white text-white"> <div data-icon="shield-check" class="w-4 h-4"></div></button></div></div>
+                        <div class="space-y-8">
+                            <div>
+                                <label class="text-[9px] font-black text-slate-400 uppercase ml-1 block mb-3">Exterior (Turno 1)</label>
+                                <div id="adminExteriorTasksList" class="space-y-2 mb-4"></div>
+                                <div class="flex gap-2">
+                                    <input type="text" id="newExteriorTask" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-white" placeholder="Nueva tarea...">
+                                    <button onclick="window.addNewCatalogTask('exterior')" class="bg-blue-600 px-4 rounded-xl"><div data-icon="shield-check" class="w-5 h-5"></div></button>
+                                </div>
+                            </div>
+                            <div class="border-t border-slate-700/50 pt-6">
+                                <label class="text-[9px] font-black text-slate-400 uppercase ml-1 block mb-3">Interior (Turno 2 y 3)</label>
+                                <div id="adminInteriorTasksList" class="space-y-2 mb-4"></div>
+                                <div class="flex gap-2">
+                                    <input type="text" id="newInteriorTask" class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-white" placeholder="Nueva tarea...">
+                                    <button onclick="window.addNewCatalogTask('interior')" class="bg-blue-600 px-4 rounded-xl"><div data-icon="shield-check" class="w-5 h-5"></div></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="panelEmergencyContent" class="hidden space-y-4"><div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/50 text-white space-y-4 text-white"><h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Directorio SOS</h4><div class="grid grid-cols-1 gap-3">
-                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Protección Civil</label><input type="tel" id="tel_pc" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Tránsito</label><input type="tel" id="tel_tr" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Proximidad Social</label><input type="tel" id="tel_ps" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Seguridad Pública</label><input type="tel" id="tel_sp" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Ambulancia</label><input type="tel" id="tel_am" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Bomberos</label><input type="tel" id="tel_bo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1 text-slate-400">Otro</label><input type="tel" id="tel_ot" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                </div><button onclick="window.updateEmergencyPhones()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-4 rounded-xl font-black text-[10px] uppercase text-white mt-2 text-white">Guardar Directorio</button></div></div>
+                <div id="panelEmergencyContent" class="hidden space-y-4">
+                    <div class="bg-slate-800/40 p-6 rounded-3xl border border-slate-700/50 space-y-4">
+                        <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Directorio SOS</h4>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1 block mb-1">Protección Civil</label><input type="tel" id="tel_pc" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1 block mb-1">Tránsito</label><input type="tel" id="tel_tr" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1 block mb-1">Seguridad Pública</label><input type="tel" id="tel_sp" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1 block mb-1">Ambulancia</label><input type="tel" id="tel_am" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1 block mb-1">Bomberos</label><input type="tel" id="tel_bo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1 block mb-1">Otro</label><input type="tel" id="tel_ot" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                        </div>
+                        <button onclick="window.updateEmergencyPhones()" class="w-full bg-emerald-600 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-transform mt-4">Guardar Teléfonos</button>
+                    </div>
+                </div>
 
-                <div id="panelUsersContent" class="hidden space-y-6 text-white"><div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/50 text-white text-white"><form id="addUserForm" class="space-y-4 text-slate-800 text-slate-800"><input type="text" id="newUserFullName" required placeholder="NOMBRE COMPLETO" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white force-uppercase"><div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-800 text-slate-800"><input type="email" id="newUserEmail" required placeholder="correo@ejemplo.com" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white font-bold text-white text-white"><select id="newUserRole" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white text-white text-white text-white text-white text-white text-white text-white text-white text-white text-white text-white text-white text-white"><option value="Observador">Observador</option><option value="Administrador Auxiliar">Admin Auxiliar</option><option value="Obispo">Obispo</option></select></div><input type="password" id="newUserPass" required placeholder="Clave temporal" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white text-white text-white text-white text-white text-white text-white text-white"><button type="submit" class="w-full bg-blue-600 py-3 rounded-xl text-[9px] font-black uppercase text-white">Registrar Miembro</button></form></div><div id="userTableList" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-white text-white"></div></div>
-                
-                <!-- PESTAÑA INFORMES (PUNTO 2) -->
-                <div id="panelReportsContent" class="hidden space-y-4 text-white text-white">
-                    <div class="overflow-x-auto no-scrollbar text-white">
-                        <div class="min-w-[750px] bg-slate-800/50 rounded-3xl border border-slate-700/50 overflow-hidden text-white">
-                            <div class="grid grid-cols-12 bg-slate-900/80 p-4 border-b border-slate-700 text-[9px] font-black uppercase text-blue-400 tracking-widest text-white">
-                                <div class="col-span-3 text-white">Fecha y Responsable</div>
-                                <div class="col-span-5 text-white">Relación de Gira</div>
-                                <div class="col-span-4 text-white">Observaciones</div>
+                <div id="panelUsersContent" class="hidden space-y-6">
+                    <div class="bg-slate-800/40 p-6 rounded-3xl border border-slate-700/50">
+                        <form id="addUserForm" class="space-y-4">
+                            <input type="text" id="newUserFullName" required placeholder="NOMBRE COMPLETO" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-4 text-sm font-bold text-white force-uppercase shadow-inner">
+                            <input type="email" id="newUserEmail" required placeholder="correo@ejemplo.com" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-4 text-sm text-white shadow-inner">
+                            <div class="grid grid-cols-1 gap-4">
+                                <select id="newUserRole" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-4 text-sm font-bold text-white shadow-inner">
+                                    <option value="Observador">Observador</option>
+                                    <option value="Administrador Auxiliar">Administrador Auxiliar</option>
+                                    <option value="Obispo">Obispo</option>
+                                </select>
+                                <input type="password" id="newUserPass" required placeholder="Clave temporal" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-4 text-sm font-bold text-white shadow-inner">
                             </div>
-                            <div id="adminFullReportsList" class="divide-y divide-slate-700/50 max-h-[60vh] overflow-y-auto no-scrollbar text-white text-white"></div>
+                            <button type="submit" class="w-full bg-blue-600 py-5 rounded-2xl font-black uppercase text-xs shadow-xl active:scale-95">Registrar Miembro</button>
+                        </form>
+                    </div>
+                    <div id="userTableList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                </div>
+                
+                <!-- PESTAÑA INFORMES EN COLUMNAS (PUNTO 2) -->
+                <div id="panelReportsContent" class="hidden space-y-4">
+                    <div class="bg-blue-600/10 p-3 rounded-2xl text-[8px] text-blue-400 font-bold uppercase tracking-widest text-center">Deslice lateralmente para ver todo el reporte</div>
+                    <div class="overflow-x-auto no-scrollbar rounded-3xl border border-slate-700/50">
+                        <div class="min-w-[800px] bg-slate-800/50 overflow-hidden">
+                            <div class="grid grid-cols-12 bg-slate-900/80 p-5 border-b border-slate-700 text-[9px] font-black uppercase text-blue-400 tracking-widest">
+                                <div class="col-span-3">Fecha y Responsable</div>
+                                <div class="col-span-5 border-l border-white/5 pl-4">Relación de Gira</div>
+                                <div class="col-span-4 border-l border-white/5 pl-4">Observaciones</div>
+                            </div>
+                            <div id="adminFullReportsList" class="divide-y divide-slate-700/50 max-h-[60vh] overflow-y-auto no-scrollbar"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <div id="operationalContent" class="space-y-6 animate-in fade-in duration-500">
-                <!-- MARCO AZUL UNIFICADO -->
-                <section id="rondinesCard" class="bg-blue-900 p-6 rounded-[2.5rem] shadow-xl text-white">
-                    <div class="flex justify-between items-center mb-6 text-white text-white">
-                        <h3 id="scheduleTitle" class="font-black text-xs uppercase tracking-widest text-blue-300 text-blue-300">Cargando...</h3>
-                        <div data-icon="calendar" class="w-5 h-5 text-blue-400"></div>
+            <!-- CONTENIDO OPERATIVO PRINCIPAL -->
+            <div id="operationalContent" class="space-y-6 animate-in fade-in duration-700">
+                <!-- MARCO AZUL UNIFICADO (PUNTO 1 Y 2) -->
+                <section id="rondinesCard" class="bg-blue-900 p-7 rounded-[3rem] shadow-2xl text-white border-b-8 border-blue-950">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 id="scheduleTitle" class="font-black text-sm uppercase tracking-widest text-blue-200">Próximo Turno</h3>
+                        <div class="bg-white/10 p-3 rounded-full"><div data-icon="calendar" class="w-5 h-5 text-white"></div></div>
                     </div>
-                    <div id="patrolScheduleList" class="space-y-6 text-white text-white"></div>
+                    <div id="patrolScheduleList" class="space-y-8"></div>
                 </section>
 
-                <section class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 mb-8 text-sm text-slate-800">
-                    <h3 class="font-bold text-slate-400 mb-4 text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 opacity-60 font-bold"><div data-icon="history" class="w-4 h-4 text-slate-400"></div> Historial Reciente</h3>
-                    <div id="historyList" class="space-y-3 text-slate-700"></div>
+                <section class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-100 mb-10">
+                    <h3 class="font-bold text-slate-400 mb-5 text-[10px] uppercase tracking-[0.3em] flex items-center gap-3 opacity-60 font-black"><div data-icon="history" class="w-5 h-5 text-slate-400"></div> Última Actividad</h3>
+                    <div id="historyList" class="space-y-4 text-slate-700"></div>
                 </section>
             </div>
         </main>
     </div>
 
-    <!-- MODAL PROYECCIÓN 4 DOMINGOS -->
-    <div id="futureScheduleModal" class="fixed inset-0 bg-black/90 hidden items-center justify-center p-4 z-[200] text-slate-800">
-        <div class="bg-slate-900 border border-slate-700 rounded-[2.5rem] p-8 max-w-lg w-full shadow-2xl text-white text-white">
-            <div class="flex justify-between items-center mb-6 text-white">
-                <h4 class="font-black text-lg uppercase tracking-tight text-blue-400">Rol Próximos 4 Domingos</h4>
-                <button onclick="window.closeFutureScheduleModal()" class="text-slate-400"><div data-icon="x" class="w-6 h-6 text-white text-white"></div></button>
+    <!-- MODAL PROYECCIÓN 4 DOMINGOS (PUNTO 2: PARA TODOS) -->
+    <div id="futureScheduleModal" class="fixed inset-0 bg-black/95 hidden items-center justify-center p-6 z-[200]">
+        <div class="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200">
+            <div class="flex justify-between items-center mb-8">
+                <h4 class="font-black text-xl uppercase tracking-tighter text-blue-400">Proyección de Roles</h4>
+                <button onclick="window.closeFutureScheduleModal()" class="text-slate-500 bg-white/5 p-3 rounded-full"><div data-icon="x" class="w-6 h-6"></div></button>
             </div>
-            <div id="futureScheduleContainer" class="space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar pr-1 text-white"></div>
-            <button onclick="window.closeFutureScheduleModal()" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold uppercase text-[10px] mt-6 border border-slate-700 text-white">Cerrar Proyección</button>
+            <div id="futureScheduleContainer" class="space-y-5 max-h-[60vh] overflow-y-auto no-scrollbar pr-1"></div>
+            <button onclick="window.closeFutureScheduleModal()" class="w-full bg-slate-800 text-white py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest mt-8 border border-slate-700 active:scale-95 transition-transform">Regresar al Menú</button>
         </div>
     </div>
 
     <!-- DIRECTORIO SOS -->
-    <div id="emergencyMenu" class="fixed inset-0 bg-slate-900/95 hidden items-end sm:items-center justify-center p-4 z-50 text-slate-800 text-slate-800">
-        <div class="bg-white rounded-[2.5rem] w-full max-w-md p-8 shadow-2xl text-center text-slate-800 text-slate-800">
-            <div class="flex justify-between items-center mb-6 text-slate-800 text-slate-800"><h2 class="text-xl font-black text-red-600 uppercase tracking-tighter flex items-center gap-2 text-red-600 text-red-600"><div data-icon="phone-call" class="w-7 h-7 text-red-600 text-red-600 text-red-600 text-red-600"></div> SOS</h2><button onclick="window.closeEmergencyMenu()" class="bg-slate-100 p-2 rounded-full text-slate-400 text-slate-400 text-slate-400 text-slate-400 text-slate-400 text-slate-400 text-slate-400"><div data-icon="x" class="w-5 h-5 text-slate-400"></div></button></div>
-            <div id="emergencyPhonesGrid" class="grid grid-cols-2 gap-3 mb-6"></div>
-            <button onclick="window.closeEmergencyMenu()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest mb-2 text-white">Regresar al Inicio</button>
-            <button onclick="window.broadcastAlert()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase text-xs shadow-lg active:scale-95 transition-all text-white text-white">Notificar Comité</button>
+    <div id="emergencyMenu" class="fixed inset-0 bg-slate-900/98 hidden items-end sm:items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-[3rem] w-full max-w-md p-8 shadow-2xl text-center mb-4 sm:mb-0 animate-in slide-in-from-bottom-10 duration-300">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-black text-red-600 uppercase tracking-tighter flex items-center gap-3"><div data-icon="phone-call" class="w-8 h-8"></div> SOS</h2>
+                <button onclick="window.closeEmergencyMenu()" class="bg-slate-100 p-3 rounded-full text-slate-400"><div data-icon="x" class="w-6 h-6"></div></button>
+            </div>
+            <div id="emergencyPhonesGrid" class="grid grid-cols-2 gap-4 mb-8"></div>
+            <button onclick="window.closeEmergencyMenu()" class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest mb-3 active:scale-95 transition-all">Regresar</button>
+            <button onclick="window.broadcastAlert()" class="w-full bg-red-600 text-white py-5 rounded-[2rem] font-black uppercase text-xs shadow-2xl active:scale-95 transition-all">Notificar Emergencia a Comité</button>
         </div>
     </div>
 
     <!-- MODAL MSGBOX -->
-    <div id="msgBox" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-[100] text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800"><div class="bg-white rounded-[2.5rem] p-10 max-w-xs w-full text-center shadow-2xl text-slate-800 text-slate-800 text-slate-800"><div id="msgIcon" class="mb-6 flex justify-center text-slate-800 text-slate-800 text-slate-800"></div><h4 id="msgTitle" class="font-black text-xl mb-2 uppercase text-slate-800 text-slate-800"></h4><p id="msgText" class="text-slate-500 text-xs mb-8 text-slate-500 text-slate-500"></p><button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold uppercase text-[10px] text-white">Entendido</button></div></div>
+    <div id="msgBox" class="fixed inset-0 bg-black/90 hidden items-center justify-center p-4 z-[300]">
+        <div class="bg-white rounded-[3rem] p-10 max-w-xs w-full text-center shadow-2xl animate-in zoom-in-95 duration-200">
+            <div id="msgIcon" class="mb-8 flex justify-center"></div>
+            <h4 id="msgTitle" class="font-black text-xl mb-3 uppercase leading-tight"></h4>
+            <p id="msgText" class="text-slate-500 text-xs mb-10 leading-relaxed font-medium"></p>
+            <button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-black uppercase text-[11px] tracking-widest active:scale-95 transition-transform">Entendido</button>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -302,7 +397,7 @@
         const SU_EMAIL = "seguridadcapillassud@gmail.com";
         const SU_PASS = "tlahuiscalpantecutli1963";
 
-        // --- UTILIDADES FECHA ---
+        // --- UTILIDADES ---
         function getNextSunday(offsetWeeks = 0) {
             const now = new Date();
             const d = new Date(now);
@@ -325,7 +420,7 @@
             document.getElementById('msgTitle').innerText = title;
             document.getElementById('msgText').innerText = text;
             const iconDiv = document.getElementById('msgIcon');
-            iconDiv.innerHTML = `<div class="${type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} p-5 rounded-full text-slate-800"><div data-icon="${type === 'success' ? 'check-circle' : 'alert-octagon'}" class="w-12 h-12"></div></div>`;
+            iconDiv.innerHTML = `<div class="${type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} p-6 rounded-full"><div data-icon="${type === 'success' ? 'check-circle' : 'alert-octagon'}" class="w-16 h-16"></div></div>`;
             modal.classList.replace('hidden', 'flex'); renderIcons();
         }
         function closeModal() { document.getElementById('msgBox')?.classList.replace('flex', 'hidden'); }
@@ -334,42 +429,39 @@
             document.getElementById(id)?.classList.remove('hidden'); renderIcons();
         }
         
-        // INFORMES ACTUALIZADOS (PUNTO 2)
+        // INFORMES REORGANIZADOS (PUNTO 2)
         function renderReportsAdminUI() {
             const list = document.getElementById('adminFullReportsList'); if (!list) return;
             if (!reportsState || reportsState.length === 0) { list.innerHTML = '<p class="text-center py-12 opacity-40 text-xs font-black uppercase text-white">Sin informes</p>'; return; }
             
             list.innerHTML = reportsState.map(r => `
-                <div class="grid grid-cols-12 p-5 text-[10px] items-start gap-2 hover:bg-white/5 transition-all text-white border-b border-slate-700/50">
+                <div class="grid grid-cols-12 p-6 text-[10px] items-start gap-2 hover:bg-white/5 transition-all text-white border-b border-slate-700/50">
                     <div class="col-span-3 pr-2">
-                        <p class="text-lg font-black text-white uppercase tracking-tight font-black text-white">${new Date(r.timestamp).toLocaleDateString('es-MX', {day:'2-digit', month:'2-digit'})}</p>
-                        <p class="text-sm font-bold text-blue-300 -mt-1 font-black text-blue-300">${r.time}</p>
-                        <p class="text-[9px] opacity-60 mt-2 uppercase leading-tight font-bold text-slate-400">${r.user}</p>
+                        <p class="text-base font-black text-white uppercase tracking-tight">${new Date(r.timestamp).toLocaleDateString('es-MX', {day:'2-digit', month:'2-digit'})}</p>
+                        <p class="text-xs font-black text-blue-300 -mt-1">${r.time}</p>
+                        <p class="text-[8px] opacity-60 mt-2 uppercase font-bold leading-tight">${r.user}</p>
                     </div>
-                    <div class="col-span-5 pr-2 border-l border-white/10 pl-3 text-white">
+                    <div class="col-span-5 pr-2 border-l border-white/10 pl-4">
                         <p class="whitespace-pre-line text-slate-300 leading-tight font-medium opacity-80">${r.details ? r.details.summary : '---'}</p>
                     </div>
-                    <div class="col-span-4 border-l border-white/10 pl-3 italic text-amber-200 opacity-90 text-[10px]">
+                    <div class="col-span-4 border-l border-white/10 pl-4 italic text-amber-200 opacity-90 text-[10px]">
                         ${r.details ? r.details.general : 'Sin comentarios'}
                     </div>
                 </div>
             `).join('');
         }
 
-        // VISUALIZACIÓN DE USUARIOS
         function renderUserListUI() {
             const list = document.getElementById('userTableList'); if (!list) return;
             const entries = Object.entries(usersState);
-            if (entries.length === 0) { list.innerHTML = '<p class="col-span-full py-12 text-center opacity-50 text-xs">SIN MIEMBROS</p>'; return; }
-            
+            if (entries.length === 0) { list.innerHTML = '<p class="col-span-full py-12 text-center opacity-50 text-xs text-white">Sin miembros registrados</p>'; return; }
             list.innerHTML = entries.map(([id, data]) => `
-                <div class="bg-slate-800/80 p-4 rounded-3xl flex justify-between items-center border border-slate-700 hover:border-slate-500 transition-all text-white">
+                <div class="bg-slate-800/80 p-5 rounded-[2rem] flex justify-between items-center border border-slate-700 transition-all text-white">
                     <div>
-                        <p class="font-black text-xs uppercase tracking-tight text-white font-bold">${data.name || id}</p>
-                        <p class="text-[8px] text-blue-400 font-black uppercase mt-0.5 tracking-widest text-blue-400 font-black">${data.role}</p>
-                        <p class="text-[7px] text-slate-500 mt-1 truncate max-w-[120px] font-bold">${data.email}</p>
+                        <p class="font-black text-xs uppercase tracking-tight text-white">${data.name || id}</p>
+                        <p class="text-[8px] text-blue-400 font-black uppercase mt-1 tracking-widest">${data.role}</p>
                     </div>
-                    <button onclick="window.deleteUser('${id}')" class="bg-red-900/50 hover:bg-red-600 text-red-400 hover:text-white w-8 h-8 rounded-full flex items-center justify-center transition-all text-white"><div data-icon="trash-2" class="w-4 h-4 text-white"></div></button>
+                    <button onclick="window.deleteUser('${id}')" class="bg-red-900/50 hover:bg-red-600 text-red-400 hover:text-white w-9 h-9 rounded-2xl flex items-center justify-center transition-all text-white"><div data-icon="trash-2" class="w-4 h-4"></div></button>
                 </div>`).join('');
             renderIcons();
         }
@@ -378,28 +470,16 @@
             const extList = document.getElementById('adminExteriorTasksList');
             const intList = document.getElementById('adminInteriorTasksList');
             if (!extList || !intList) return;
-
-            extList.innerHTML = taskCatalog.exterior.map((t, idx) => `
-                <div class="flex items-center gap-2 bg-slate-900/50 p-2 rounded-xl border border-slate-700 text-white">
-                    <input type="text" value="${t}" onchange="window.editCatalogTask('exterior', ${idx}, this.value)" class="flex-grow bg-transparent text-[10px] font-bold outline-none text-white text-white">
-                    <button onclick="window.removeCatalogTask('exterior', ${idx})" class="text-red-500 p-1 text-red-400 text-red-400"><div data-icon="x" class="w-3 h-3 text-red-400"></div></button>
-                </div>`).join('');
-
-            intList.innerHTML = taskCatalog.interior.map((t, idx) => `
-                <div class="flex items-center gap-2 bg-slate-900/50 p-2 rounded-xl border border-slate-700 text-white text-white">
-                    <input type="text" value="${t}" onchange="window.editCatalogTask('interior', ${idx}, this.value)" class="flex-grow bg-transparent text-[10px] font-bold outline-none text-white text-white">
-                    <button onclick="window.removeCatalogTask('interior', ${idx})" class="text-red-500 p-1 text-red-400 text-red-400"><div data-icon="x" class="w-3 h-3 text-red-400"></div></button>
-                </div>`).join('');
+            extList.innerHTML = taskCatalog.exterior.map((t, idx) => `<div class="flex items-center gap-2 bg-slate-900/50 p-2 rounded-xl border border-slate-700 text-white"><input type="text" value="${t}" onchange="window.editCatalogTask('exterior', ${idx}, this.value)" class="flex-grow bg-transparent text-[10px] font-bold outline-none text-white"><button onclick="window.removeCatalogTask('exterior', ${idx})" class="text-red-500 p-1"><div data-icon="x" class="w-3 h-3"></div></button></div>`).join('');
+            intList.innerHTML = taskCatalog.interior.map((t, idx) => `<div class="flex items-center gap-2 bg-slate-900/50 p-2 rounded-xl border border-slate-700 text-white text-white"><input type="text" value="${t}" onchange="window.editCatalogTask('interior', ${idx}, this.value)" class="flex-grow bg-transparent text-[10px] font-bold outline-none text-white"><button onclick="window.removeCatalogTask('interior', ${idx})" class="text-red-500 p-1"><div data-icon="x" class="w-3 h-3"></div></button></div>`).join('');
             renderIcons();
         }
 
-        // PROYECCIÓN (PUNTO 3)
         function renderFutureScheduleUI() {
             if (!currentUnitData?.startTime || !usersState) return;
             const staffList = Object.keys(usersState).filter(e => usersState[e].role !== "Obispo").sort();
             const container = document.getElementById('futureScheduleContainer');
             if (staffList.length === 0) { container.innerHTML = '<p class="text-center opacity-50 py-10">Sin observadores.</p>'; return; }
-
             let html = "";
             for (let i = 0; i < 4; i++) {
                 const dateObj = getNextSunday(i); const dateSeed = dateObj.getDate();
@@ -410,9 +490,9 @@
                     { label: "Salida", email: staffList[(dateSeed + 2) % staffList.length] }
                 ];
                 html += `
-                <div class="bg-white/5 border border-white/10 p-4 rounded-3xl space-y-2 text-white text-white">
-                    <p class="text-[9px] font-black uppercase text-blue-400 tracking-widest border-b border-white/5 pb-2 mb-2 text-white">${dStr}</p>
-                    ${slots.map(s => `<div class="flex justify-between items-center text-[10px] text-white"><span class="opacity-60 text-white">${s.label}:</span><span class="font-bold uppercase text-white">${usersState[s.email]?.name || s.email}</span></div>`).join('')}
+                <div class="bg-white/5 border border-white/10 p-5 rounded-[2rem] space-y-3">
+                    <p class="text-[10px] font-black uppercase text-blue-400 tracking-widest border-b border-white/5 pb-2 mb-2">${dStr}</p>
+                    ${slots.map(s => `<div class="flex justify-between items-center text-[11px] text-white"><span class="opacity-60">${s.label}:</span><span class="font-black uppercase text-white">${usersState[s.email]?.name || s.email}</span></div>`).join('')}
                 </div>`;
             }
             container.innerHTML = html; renderIcons();
@@ -436,41 +516,41 @@
             const myTurns = schedule.filter(s => s.isMe);
             const container = document.getElementById('patrolScheduleList');
             const title = document.getElementById('scheduleTitle');
-
             title.innerText = `Turno del domingo (${getNextSundayDate()})`;
 
             if (myTurns.length > 0) {
                 container.innerHTML = myTurns.map(myTurn => {
                     const tasksForChecklist = myTurn.type === 'exterior' ? taskCatalog.exterior : taskCatalog.interior;
                     const checklistHtml = tasksForChecklist.map((taskLabel, idx) => `
-                        <div class="space-y-2 border-t border-white/10 pt-3 text-white">
-                            <div class="flex items-start gap-3 text-white">
+                        <div class="space-y-3 border-t border-white/10 pt-4 text-white">
+                            <div class="flex items-start gap-4">
                                 <input type="checkbox" id="task_check_${myTurn.id}_${idx}" class="check-custom mt-0.5">
-                                <label for="task_check_${myTurn.id}_${idx}" class="text-[11px] font-semibold text-blue-50 leading-tight text-white">${taskLabel}</label>
+                                <label for="task_check_${myTurn.id}_${idx}" class="text-[12px] font-bold text-white leading-tight">${taskLabel}</label>
                             </div>
-                            <input type="text" id="task_obs_${myTurn.id}_${idx}" class="task-input-integrated w-full text-white" placeholder="Reportar hallazgo...">
+                            <input type="text" id="task_obs_${myTurn.id}_${idx}" class="task-input-integrated w-full" placeholder="Detallar hallazgo...">
                         </div>
                     `).join('');
 
                     return `
-                    <div class="space-y-4 text-white">
-                        <div class="flex items-center gap-4 bg-white/10 p-4 rounded-3xl border border-white/10 text-white text-white">
-                            <div class="text-center min-w-[60px] text-white"><p class="text-[8px] font-black uppercase text-blue-300">Entrada</p><p class="text-xl font-black text-white text-white">${myTurn.time}</p></div>
-                            <div class="flex-grow overflow-hidden text-white"><p class="text-[10px] font-black uppercase text-amber-400 text-amber-400 tracking-wider">${myTurn.label}</p><p class="text-[14px] font-bold truncate uppercase text-white font-bold">${myTurn.assigned}</p></div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 bg-white/10 p-5 rounded-[2rem] border border-white/10 text-white">
+                            <div class="text-center min-w-[70px] text-white"><p class="text-[9px] font-black uppercase text-blue-300">Entrada</p><p class="text-2xl font-black">${myTurn.time}</p></div>
+                            <div class="flex-grow overflow-hidden text-white"><p class="text-[11px] font-black uppercase text-amber-400 tracking-wider">${myTurn.label}</p><p class="text-[14px] font-black truncate uppercase">${myTurn.assigned}</p></div>
+                            <div class="w-3 h-3 bg-amber-400 rounded-full animate-pulse shadow-glow"></div>
                         </div>
-                        <div class="bg-white/5 p-4 rounded-[2rem] border border-white/10 space-y-4 text-white">
-                            <p class="text-[8px] font-black uppercase opacity-60 tracking-[0.2em] mb-2 text-blue-200">Revisión de Gira:</p>
+                        <div class="bg-white/5 p-6 rounded-[2.5rem] border border-white/10 space-y-4 text-white">
+                            <p class="text-[9px] font-black uppercase opacity-60 tracking-[0.2em] mb-2 text-blue-200">Hoja de Gira:</p>
                             ${checklistHtml}
-                            <div class="pt-4 border-t border-white/10 text-white">
-                                <p class="text-[8px] font-black uppercase opacity-60 mb-2 text-blue-200 text-blue-200">Novedades Finales:</p>
-                                <textarea id="observations_${myTurn.id}" rows="2" class="task-input-integrated w-full" placeholder="Mensaje para el Obispo..."></textarea>
-                                <button onclick="window.submitPatrolReport(${myTurn.id})" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 rounded-2xl shadow-lg mt-4 text-[10px] uppercase tracking-widest active:scale-95 transition-all text-white text-white text-white">Enviar Informe Final</button>
+                            <div class="pt-6 border-t border-white/10">
+                                <p class="text-[9px] font-black uppercase opacity-60 mb-2">Observaciones Generales:</p>
+                                <textarea id="observations_${myTurn.id}" rows="3" class="task-input-integrated w-full" placeholder="Novedades para Líderes..."></textarea>
+                                <button onclick="window.submitPatrolReport(${myTurn.id})" class="w-full bg-emerald-600 text-white font-black py-5 rounded-[2rem] shadow-xl mt-6 text-[11px] uppercase tracking-widest active:scale-95 transition-all text-white text-white">Enviar Informe Final</button>
                             </div>
                         </div>
                     </div>`;
                 }).join('');
             } else {
-                container.innerHTML = '<p class="p-8 bg-blue-800/30 rounded-[2.5rem] text-[11px] uppercase text-blue-300 font-bold text-center border border-blue-800/30">No tienes asignaciones hoy.</p>';
+                container.innerHTML = '<p class="p-10 bg-blue-800/30 rounded-[3rem] text-[12px] uppercase text-blue-300 font-black text-center border border-blue-800/30">Sin giras para usted hoy.</p>';
             }
         }
 
@@ -479,7 +559,7 @@
                 showPage('superuserPanel');
                 onSnapshot(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades'), snap => {
                     const list = document.getElementById('allUnitsList');
-                    if(list) list.innerHTML = snap.docs.map(d => `<div class="bg-slate-800 p-4 rounded-2xl flex justify-between items-center border border-slate-700 text-white text-white text-white"><div><p class="font-bold text-xs uppercase font-bold text-white">${d.data().name}</p><p class="text-[9px] opacity-50 font-bold">ID: ${d.id}</p></div><button onclick="window.deleteUnit('${d.id}')" class="bg-red-900/50 text-red-400 px-4 py-2 rounded-xl text-[10px] font-black uppercase border border-red-900 text-red-400">Eliminar</button></div>`).join('');
+                    if(list) list.innerHTML = snap.docs.map(d => `<div class="bg-slate-800 p-5 rounded-[2rem] flex justify-between items-center border border-slate-700 text-white"><div><p class="font-bold text-sm uppercase text-white font-black">${d.data().name}</p><p class="text-[10px] opacity-50 font-bold tracking-widest">ID: ${d.id}</p></div><button onclick="window.deleteUnit('${d.id}')" class="bg-red-900/50 text-red-400 px-5 py-2 rounded-2xl text-[10px] font-black uppercase border border-red-900">Eliminar</button></div>`).join('');
                     renderIcons();
                 });
                 return;
@@ -492,9 +572,8 @@
                 document.getElementById('inputStartTime').value = currentUnitData.startTime || "09:00";
                 const p = currentUnitData.emergencyPhones || {};
                 document.getElementById('tel_pc').value = p.pc || ""; document.getElementById('tel_tr').value = p.tr || "";
-                document.getElementById('tel_ps').value = p.ps || ""; document.getElementById('tel_sp').value = p.sp || "";
-                document.getElementById('tel_am').value = p.am || ""; document.getElementById('tel_bo').value = p.bo || "";
-                document.getElementById('tel_ot').value = p.ot || "";
+                document.getElementById('tel_sp').value = p.sp || ""; document.getElementById('tel_am').value = p.am || ""; 
+                document.getElementById('tel_bo').value = p.bo || ""; document.getElementById('tel_ot').value = p.ot || "";
             }
             document.getElementById('displayRole').innerText = u.role || "MIEMBRO";
             const ab = document.getElementById('adminBtn'); 
@@ -519,7 +598,14 @@
             onSnapshot(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${unitNum}`), snap => { 
                 reportsState = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => b.timestamp - a.timestamp); 
                 renderReportsAdminUI();
+                updateHistoryUI();
             });
+        }
+
+        function updateHistoryUI() {
+            const list = document.getElementById('historyList'); if (!list) return;
+            if (!reportsState || reportsState.length === 0) { list.innerHTML = '<p class="text-center py-10 opacity-30 text-xs font-black uppercase text-slate-400">Sin registros</p>'; return; }
+            list.innerHTML = reportsState.slice(0, 5).map(r => `<div class="p-5 bg-slate-50 rounded-[2rem] flex justify-between items-center shadow-sm text-slate-800 border border-slate-100"><div class="text-slate-800"><p class="text-[11px] font-black uppercase text-slate-800">${r.user}</p><p class="text-[10px] opacity-60 font-bold">${r.time}</p></div><span class="text-[9px] font-black text-blue-600 px-3 py-1.5 rounded-full bg-blue-100 uppercase border border-blue-200">GIRA</span></div>`).join('');
         }
 
         // --- EXPORTS ---
@@ -558,7 +644,7 @@
                 const snap = await getDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', num));
                 if (snap.exists()) {
                     if (snap.data().name.toUpperCase() === rawName) { currentUnitData = { id: num, ...snap.data() }; document.getElementById('loginUnitDisplay').innerText = snap.data().name; showPage('loginPage'); startUnitSync(num); }
-                    else showModal("alert", "Error", "El Barrio no coincide.");
+                    else showModal("alert", "Error", "El Barrio no coincide con el número.");
                 } else { currentUnitData = { id: num, name: rawName }; showPage('initAdminPage'); }
             } catch (e) { showModal("alert", "Error", "Fallo de nube."); }
         };
@@ -588,7 +674,7 @@
             const key = email.toLowerCase().trim();
             usersState[key] = { name: fName, email: key, role, pass };
             await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: usersState });
-            showModal("success", "Éxito", "Usuario registrado.");
+            showModal("success", "Éxito", "Miembro registrado.");
         };
 
         window.updateUnitTime = async () => {
@@ -598,9 +684,9 @@
         };
 
         window.updateEmergencyPhones = async () => {
-            const p = { pc: document.getElementById('tel_pc').value.trim(), tr: document.getElementById('tel_tr').value.trim(), ps: document.getElementById('tel_ps').value.trim(), sp: document.getElementById('tel_sp').value.trim(), am: document.getElementById('tel_am').value.trim(), bo: document.getElementById('tel_bo').value.trim(), ot: document.getElementById('tel_ot').value.trim() };
+            const p = { pc: document.getElementById('tel_pc').value.trim(), tr: document.getElementById('tel_tr').value.trim(), sp: document.getElementById('tel_sp').value.trim(), am: document.getElementById('tel_am').value.trim(), bo: document.getElementById('tel_bo').value.trim(), ot: document.getElementById('tel_ot').value.trim() };
             await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { emergencyPhones: p });
-            currentUnitData.emergencyPhones = p; showModal("success", "Éxito", "Teléfonos actualizados.");
+            currentUnitData.emergencyPhones = p; showModal("success", "Éxito", "Teléfonos guardados.");
         };
 
         window.deleteUser = async (id) => { if (confirm("¿Borrar miembro?")) { delete usersState[id]; await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: usersState }); } };
@@ -619,7 +705,8 @@
             const generalObs = document.getElementById(`observations_${tid}`).value || 'Sin novedad';
             const report = { user: u?.name || currentUser_id, type: "GIRA", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), timestamp: Date.now(), details: { summary: taskDetails, general: generalObs } };
             await addDoc(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${currentUnitData.id}`), report);
-            showModal("success", "Informe Enviado", "El reporte ha sido enviado.");
+            if (navigator.vibrate) navigator.vibrate(100);
+            showModal("success", "Gira Finalizada", "Informe enviado correctamente.");
             calculateSchedule();
         };
 
@@ -627,14 +714,15 @@
             const u = usersState[currentUser_id];
             const report = { user: u?.name || currentUser_id, type: "EMERGENCIA", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), timestamp: Date.now() };
             await addDoc(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${currentUnitData.id}`), report);
-            showModal("alert", "S.O.S", "Alerta enviada.");
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+            showModal("alert", "S.O.S", "Alerta enviada a todo el equipo.");
         };
 
         window.openEmergencyMenu = () => {
             const grid = document.getElementById('emergencyPhonesGrid');
             const p = currentUnitData?.emergencyPhones || {};
-            const items = [{l:"P. Civil", n:p.pc||"911"}, {l:"Tránsito", n:p.tr||"911"}, {l:"Prox. Social", n:p.ps||"911"}, {l:"Seg. Pública", n:p.sp||"911"}, {l:"Ambulancia", n:p.am||"911"}, {l:"Bomberos", n:p.bo||"911"}, {l:"Otro", n:p.ot||"911"}];
-            grid.innerHTML = items.map(i => `<a href="tel:${i.n}" class="bg-slate-50 p-4 rounded-2xl flex flex-col items-center gap-1 border border-slate-100"><span class="text-red-600 font-black text-base">${i.n}</span><span class="text-[7px] text-slate-400 font-bold uppercase">${i.l}</span></a>`).join('');
+            const items = [{l:"P. Civil", n:p.pc||"911"}, {l:"Tránsito", n:p.tr||"911"}, {l:"Seg. Pública", n:p.sp||"911"}, {l:"Ambulancia", n:p.am||"911"}, {l:"Bomberos", n:p.bo||"911"}, {l:"Otro", n:p.ot||"911"}];
+            grid.innerHTML = items.map(i => `<a href="tel:${i.n}" class="bg-slate-50 p-5 rounded-[2rem] flex flex-col items-center gap-1 border border-slate-100 shadow-sm active:scale-95 transition-all"><span class="text-red-600 font-black text-lg">${i.n}</span><span class="text-[8px] text-slate-400 font-black uppercase">${i.l}</span></a>`).join('');
             document.getElementById('emergencyMenu')?.classList.remove('hidden'); renderIcons();
         };
 
@@ -644,13 +732,15 @@
             const p = document.getElementById('adminPanel'); const c = document.getElementById('operationalContent');
             if (p && c) { 
                 const h = p.classList.contains('hidden'); p.classList.toggle('hidden', !h); c.classList.toggle('hidden', h); 
-                if(h) { renderUserListUI(); renderReportsAdminUI(); renderTasksCatalogUI(); } 
-                renderIcons(); 
+                if(h) { renderUserListUI(); renderReportsAdminUI(); renderTasksCatalogUI(); } renderIcons(); 
             }
         };
 
         window.switchAdminTab = (tab) => {
-            ['unit', 'tasks', 'emergency', 'users', 'reports'].forEach(t => { document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1)}`)?.classList.remove('tab-active'); document.getElementById(`panel${t.charAt(0).toUpperCase()+t.slice(1)}Content`)?.classList.add('hidden'); });
+            ['unit', 'tasks', 'emergency', 'users', 'reports'].forEach(t => { 
+                document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1)}`)?.classList.remove('tab-active'); 
+                document.getElementById(`panel${t.charAt(0).toUpperCase()+t.slice(1)}Content`)?.classList.add('hidden'); 
+            });
             const bt = document.getElementById(`tab${tab.charAt(0).toUpperCase()+tab.slice(1)}`); if(bt) bt.classList.add('tab-active');
             const pn = document.getElementById(`panel${tab.charAt(0).toUpperCase()+tab.slice(1)}Content`); if(pn) pn.classList.remove('hidden');
             if (tab === 'reports') renderReportsAdminUI(); 
@@ -660,8 +750,8 @@
         };
 
         onAuthStateChanged(fAuth, user => { if (user) { setTimeout(() => { const sp = document.getElementById('splashScreen'); if (sp) { sp.classList.add('animate-fade-out'); setTimeout(() => { sp.classList.add('hidden'); showPage('unitStepPage'); }, 500); } }, 1500); } });
-        async function init() { try { await signInAnonymously(fAuth); } catch (e) { document.getElementById('statusLabel').innerText = "Error de conexión."; } }
-        init(); setInterval(calculateSchedule, 30000);
+        async function init() { try { await signInAnonymously(fAuth); } catch (e) { document.getElementById('statusLabel').innerText = "Error de red."; } }
+        init(); setInterval(calculateSchedule, 45000);
         const sa = (id, ev, fn) => document.getElementById(id)?.addEventListener(ev, fn);
         sa('unitForm', 'submit', e => { e.preventDefault(); window.checkUnit(); });
         sa('loginForm', 'submit', e => { e.preventDefault(); window.login(document.getElementById('email').value, document.getElementById('password').value); });
