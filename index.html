@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comité de Seguridad - Versión 1.7.6</title>
+    <title>Comité de Seguridad - Versión 1.7.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -13,7 +13,7 @@
         .sos-glow { animation: pulse-red 2s infinite; }
         @keyframes pulse-red {
             0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(220, 38, 38, 0); }
+            70% { box-shadow: 0 0 0 15px rgba(220, 38, 38, 0); }
             100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
         }
         .hidden { display: none !important; }
@@ -25,10 +25,8 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .pass-container { position: relative; width: 100%; }
         .pass-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; z-index: 10; padding: 0.5rem; }
-        .task-card { transition: all 0.2s ease; border: 1px solid #f1f5f9; }
         .force-uppercase { text-transform: uppercase; }
-        /* Estilo para los checkboxes del checklist */
-        .check-custom { width: 1.5rem; height: 1.5rem; border-radius: 0.375rem; border: 2px solid #cbd5e1; cursor: pointer; accent-color: #2563eb; }
+        .check-custom { width: 1.4rem; height: 1.4rem; border-radius: 0.375rem; accent-color: #2563eb; cursor: pointer; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex flex-col overflow-x-hidden text-slate-900">
@@ -39,11 +37,11 @@
             <div id="splashIcon" data-icon="shield-check" class="w-16 h-16"></div>
         </div>
         <h1 class="text-3xl font-black uppercase tracking-[0.2em] mb-1 px-4">Comité de Seguridad</h1>
-        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 1.7.6</p>
+        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 1.7.7</p>
         <div class="absolute bottom-10 flex flex-col items-center px-6 w-full max-w-sm text-white text-center">
             <div id="loadingSpinner" class="w-8 h-8 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin mb-4 text-white"></div>
-            <span id="statusLabel" class="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70 leading-relaxed text-center">Verificando Protocolos...</span>
-            <button id="retryButton" onclick="location.reload()" class="hidden mt-4 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-full text-[10px] font-black uppercase border border-white/20 transition-all text-white text-white">Reintentar</button>
+            <span id="statusLabel" class="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70 leading-relaxed text-center">Iniciando Protocolos...</span>
+            <button id="retryButton" onclick="location.reload()" class="hidden mt-4 bg-white/10 hover:bg-white/20 px-6 py-2 rounded-full text-[10px] font-black uppercase border border-white/20 transition-all text-white">Reintentar</button>
         </div>
     </div>
 
@@ -67,7 +65,7 @@
     <!-- ACCESO -->
     <div id="loginPage" class="hidden flex-grow flex items-center justify-center p-6 bg-white text-center text-slate-800">
         <div class="w-full max-w-sm space-y-8 text-slate-800">
-            <div class="space-y-2 text-slate-800">
+            <div class="space-y-2">
                 <h2 id="loginUnitDisplay" class="text-blue-600 font-black text-xl uppercase tracking-tighter font-bold">BARRIO</h2>
                 <p class="text-slate-500 text-xs uppercase font-bold text-slate-500">Acceso de Miembro</p>
             </div>
@@ -97,7 +95,7 @@
                     <button onclick="window.handleInitGate(false)" class="flex-1 bg-white text-slate-500 border border-slate-200 font-bold py-3 rounded-xl uppercase text-xs">No</button>
                 </div>
             </div>
-            <form id="initAdminForm" class="hidden space-y-4 text-left animate-in fade-in slide-in-from-top-4 duration-300">
+            <form id="initAdminForm" class="hidden space-y-4 text-left animate-in fade-in slide-in-from-top-4 duration-300 text-slate-800">
                 <div class="space-y-4">
                     <input type="text" id="initAdminFullName" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800 font-bold force-uppercase" placeholder="NOMBRE COMPLETO">
                     <input type="email" id="initAdminEmail" required class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none text-slate-800" placeholder="ejemplo@correo.com">
@@ -105,7 +103,7 @@
                         <input type="password" id="initAdminPass" required minlength="6" class="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 outline-none pr-12 text-slate-800" placeholder="Contraseña (Mín. 6 carac.)"><div class="pass-toggle" onclick="window.togglePassword('initAdminPass')"><div data-icon="eye" class="w-5 h-5 text-slate-400"></div></div>
                     </div>
                 </div>
-                <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-lg uppercase text-sm tracking-widest text-white">Finalizar Registro</button>
+                <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-4 rounded-2xl shadow-lg uppercase text-sm tracking-widest text-white text-white">Finalizar Registro</button>
             </form>
         </div>
     </div>
@@ -116,24 +114,28 @@
             <div><h2 class="text-xl font-black uppercase tracking-widest text-white">Panel Maestro</h2><p class="text-[10px] font-bold text-red-200 uppercase">Gestión Global</p></div>
             <button onclick="window.logout()" class="bg-white/10 p-3 rounded-xl hover:bg-red-700 transition-all text-white"><div data-icon="log-out" class="w-6 h-6 text-white"></div></button>
         </header>
-        <main class="max-w-4xl mx-auto w-full p-6 space-y-6"><div id="allUnitsList" class="space-y-4"></div></main>
+        <main class="max-w-4xl mx-auto w-full p-6 space-y-6"><div id="allUnitsList" class="space-y-4 text-white"></div></main>
     </div>
 
     <!-- APP PRINCIPAL -->
     <div id="mainApp" class="hidden flex-grow flex flex-col text-slate-800">
         <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
             <div class="max-w-4xl mx-auto px-4 h-20 flex justify-between items-center text-white text-white">
-                <div class="flex items-center gap-3 text-white">
-                    <div class="bg-white/10 p-2 rounded-xl flex items-center justify-center text-white text-white text-white"><div data-icon="shield" class="w-6 h-6 text-white text-white text-white text-white"></div></div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/10 p-2 rounded-xl flex items-center justify-center text-white text-white text-white"><div data-icon="shield" class="w-6 h-6 text-white text-white"></div></div>
                     <div class="flex flex-col text-white">
-                        <h2 id="headerLocName" class="font-bold text-sm uppercase tracking-widest truncate max-w-[150px] text-white">...</h2>
+                        <h2 id="headerLocName" class="font-bold text-sm uppercase tracking-widest truncate max-w-[120px] text-white">...</h2>
                         <span id="headerUnitNumber" class="text-[9px] text-blue-300 font-bold uppercase tracking-widest">Unidad 000000</span>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div id="userInfo" class="hidden sm:flex flex-col items-end mr-1 text-right text-white"><span id="displayUserName" class="text-[10px] font-bold uppercase truncate max-w-[150px] text-white">...</span><span id="displayRole" class="text-[8px] font-black text-blue-300 uppercase mt-1">...</span></div>
-                    <button id="adminBtn" onclick="window.toggleAdminPanel()" class="hidden admin-gear-btn w-11 h-11 rounded-xl shadow-md flex items-center justify-center text-slate-900"><div data-icon="settings" class="w-6 h-6"></div></button>
-                    <button onclick="window.logout()" class="bg-white/10 hover:bg-red-500 w-11 h-11 rounded-xl transition-all flex items-center justify-center text-white text-white text-white"><div data-icon="log-out" class="w-5 h-5"></div></button>
+                <div class="flex items-center gap-2">
+                    <!-- BOTÓN SOS EN BARRA SUPERIOR (PUNTO 1) -->
+                    <button onclick="window.openEmergencyMenu()" class="sos-glow bg-red-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-95 transition-all">
+                        <div data-icon="megaphone" class="w-5 h-5"></div>
+                    </button>
+                    
+                    <button id="adminBtn" onclick="window.toggleAdminPanel()" class="hidden admin-gear-btn w-10 h-10 rounded-xl shadow-md flex items-center justify-center text-slate-900"><div data-icon="settings" class="w-5 h-5"></div></button>
+                    <button onclick="window.logout()" class="bg-white/10 hover:bg-red-500 w-10 h-10 rounded-xl transition-all flex items-center justify-center text-white text-white text-white"><div data-icon="log-out" class="w-5 h-5"></div></button>
                 </div>
             </div>
         </header>
@@ -141,76 +143,69 @@
         <main class="max-w-4xl mx-auto w-full p-4 flex-grow relative text-slate-800">
             <!-- PANEL ADMINISTRADOR -->
             <section id="adminPanel" class="hidden bg-slate-900 text-white p-6 rounded-[2.5rem] shadow-2xl border border-slate-700 w-full mb-6">
-                <div class="flex justify-between items-center mb-6 text-white"><h3 class="font-black text-xs text-blue-400 uppercase tracking-widest flex items-center gap-2 text-blue-400"><div data-icon="sliders" class="w-4 h-4 text-blue-400"></div> Gestión Unidad</h3><button onclick="window.toggleAdminPanel()" class="text-slate-500 hover:text-white p-1 text-white"><div data-icon="x" class="w-6 h-6 text-white text-white text-white text-white"></div></button></div>
+                <div class="flex justify-between items-center mb-6 text-white"><h3 class="font-black text-xs text-blue-400 uppercase tracking-widest flex items-center gap-2 text-blue-400"><div data-icon="sliders" class="w-4 h-4 text-blue-400"></div> Gestión Barrio</h3><button onclick="window.toggleAdminPanel()" class="text-slate-500 hover:text-white p-1 text-white"><div data-icon="x" class="w-6 h-6 text-white text-white text-white"></div></button></div>
+                <div class="flex bg-slate-800 rounded-2xl p-1 mb-6 border border-slate-700 text-white overflow-x-auto no-scrollbar"><button onclick="window.switchAdminTab('unit')" id="tabUnit" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn tab-active rounded-xl text-white">Horario</button><button onclick="window.switchAdminTab('emergency')" id="tabEmergency" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl">Teléfonos</button><button onclick="window.switchAdminTab('users')" id="tabUsers" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl">Usuarios</button><button onclick="window.switchAdminTab('reports')" id="tabReports" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl text-slate-500">Informes</button></div>
                 
-                <div class="flex bg-slate-800 rounded-2xl p-1 mb-6 border border-slate-700 text-white overflow-x-auto no-scrollbar">
-                    <button onclick="window.switchAdminTab('unit')" id="tabUnit" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn tab-active rounded-xl text-white">Horario</button>
-                    <button onclick="window.switchAdminTab('emergency')" id="tabEmergency" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl">Teléfonos</button>
-                    <button onclick="window.switchAdminTab('users')" id="tabUsers" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl">Usuarios</button>
-                    <button onclick="window.switchAdminTab('reports')" id="tabReports" class="flex-1 py-3 px-2 text-[8px] font-black uppercase tab-btn text-slate-500 rounded-xl text-slate-500">Informes</button>
-                </div>
+                <div id="panelUnitContent" class="space-y-4 text-white"><div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/50 text-white"><label class="text-[9px] font-bold uppercase ml-1 text-slate-400">Hora de Entrada (Servicios Dominicales)</label><input type="time" id="inputStartTime" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-5 py-4 text-lg font-bold text-white"><button onclick="window.updateUnitTime()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black text-[10px] uppercase text-white mt-4">Actualizar Horario</button></div></div>
+
+                <div id="panelEmergencyContent" class="hidden space-y-4 text-white"><div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/50 text-white space-y-4"><h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest text-blue-400">Directorio de Emergencias</h4><div class="grid grid-cols-1 gap-3">
+                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Protección Civil</label><input type="tel" id="tel_pc" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
+                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Tránsito</label><input type="tel" id="tel_tr" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
+                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Proximidad Social</label><input type="tel" id="tel_ps" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
+                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Seguridad Pública</label><input type="tel" id="tel_sp" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
+                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Ambulancia</label><input type="tel" id="tel_am" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
+                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Bomberos</label><input type="tel" id="tel_bo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
+                    <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Otro Servicio</label><input type="tel" id="tel_ot" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
+                </div><button onclick="window.updateEmergencyPhones()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-4 rounded-xl font-black text-[10px] uppercase text-white mt-2">Guardar Directorio</button></div></div>
+
+                <div id="panelUsersContent" class="hidden space-y-6 text-white"><div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/50 text-white"><form id="addUserForm" class="space-y-4 text-slate-800"><input type="text" id="newUserFullName" required placeholder="NOMBRE COMPLETO" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white force-uppercase"><div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-800"><input type="email" id="newUserEmail" required placeholder="correo@ejemplo.com" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white font-bold text-white"><select id="newUserRole" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white text-white text-white text-white text-white text-white"><option value="Observador">Observador</option><option value="Administrador Auxiliar">Admin Auxiliar</option><option value="Obispo">Obispo</option></select></div><input type="password" id="newUserPass" required placeholder="Clave temporal" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white text-white text-white"><button type="submit" class="w-full bg-blue-600 py-3 rounded-xl text-[9px] font-black uppercase text-white text-white text-white">Registrar</button></form></div><div id="userTableList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div></div>
                 
-                <!-- Pestaña Horario -->
-                <div id="panelUnitContent" class="space-y-4 text-white">
-                    <div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/50 text-white">
-                        <label class="text-[9px] font-black uppercase ml-1 text-slate-400">Hora de Entrada (Servicios Dominicales)</label>
-                        <input type="time" id="inputStartTime" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-5 py-4 text-lg font-bold text-white mb-4">
-                        <button onclick="window.updateUnitTime()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black text-[10px] uppercase text-white">Actualizar Horario</button>
+                <!-- PESTAÑA INFORMES (PUNTO 3) -->
+                <div id="panelReportsContent" class="hidden space-y-4 text-white">
+                    <div id="adminFullReportsList" class="space-y-4">
+                        <!-- Se llena dinámicamente -->
                     </div>
                 </div>
-
-                <!-- Pestaña Emergencias -->
-                <div id="panelEmergencyContent" class="hidden space-y-4 text-white">
-                    <div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/50 text-white space-y-4">
-                        <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-2 text-blue-400">Directorio de Emergencias</h4>
-                        <div class="grid grid-cols-1 gap-3">
-                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Protección Civil</label><input type="tel" id="tel_pc" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Tránsito</label><input type="tel" id="tel_tr" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Proximidad Social</label><input type="tel" id="tel_ps" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Seguridad Pública</label><input type="tel" id="tel_sp" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Ambulancia</label><input type="tel" id="tel_am" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Bomberos</label><input type="tel" id="tel_bo" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                            <div><label class="text-[8px] font-bold text-slate-400 uppercase ml-1">Otro Servicio</label><input type="tel" id="tel_ot" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2 text-sm font-bold text-white"></div>
-                        </div>
-                        <button onclick="window.updateEmergencyPhones()" class="w-full bg-emerald-600 hover:bg-emerald-500 py-4 rounded-xl font-black text-[10px] uppercase text-white mt-2">Guardar Directorio</button>
-                    </div>
-                </div>
-
-                <div id="panelUsersContent" class="hidden space-y-6 text-white"><div class="bg-slate-800/40 p-5 rounded-3xl border border-slate-700/50 text-white"><form id="addUserForm" class="space-y-4 text-slate-800"><input type="text" id="newUserFullName" required placeholder="NOMBRE COMPLETO" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white force-uppercase"><div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-slate-800"><input type="email" id="newUserEmail" required placeholder="correo@ejemplo.com" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white font-bold text-white"><select id="newUserRole" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white text-white text-white text-white text-white"><option value="Observador">Observador</option><option value="Administrador Auxiliar">Admin Auxiliar</option><option value="Obispo">Obispo</option></select></div><input type="password" id="newUserPass" required placeholder="Clave temporal" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white text-white"><button type="submit" class="w-full bg-blue-600 py-3 rounded-xl text-[9px] font-black uppercase text-white">Registrar</button></form></div><div id="userTableList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div></div>
-                <div id="panelReportsContent" class="hidden space-y-4 text-white"><div id="adminFullReportsList" class="space-y-4 text-white"></div></div>
             </section>
 
-            <div id="operationalContent" class="space-y-6 animate-in fade-in duration-500 text-slate-800 text-slate-800">
-                <section id="rondinesCard" class="bg-blue-900 p-6 rounded-[2.5rem] shadow-xl text-white text-white text-white"><div class="flex justify-between items-center mb-4 text-white text-white"><h3 class="font-black text-xs uppercase tracking-widest text-blue-300">Roles de Hoy</h3><div data-icon="calendar" class="w-5 h-5 text-blue-400"></div></div><div id="patrolScheduleList" class="space-y-4"></div></section>
+            <div id="operationalContent" class="space-y-6 animate-in fade-in duration-500 text-slate-800">
+                <!-- RONDÍN PERSONALIZADO (PUNTO 2) -->
+                <section id="rondinesCard" class="bg-blue-900 p-6 rounded-[2.5rem] shadow-xl text-white text-white text-white text-white">
+                    <div class="flex justify-between items-center mb-4 text-white text-white text-white">
+                        <h3 id="scheduleTitle" class="font-black text-xs uppercase tracking-widest text-blue-300">Tu Turno de Hoy</h3>
+                        <div data-icon="calendar" class="w-5 h-5 text-blue-400 text-blue-400"></div>
+                    </div>
+                    <div id="patrolScheduleList" class="space-y-4"></div>
+                </section>
                 
                 <section id="activePatrolArea" class="hidden bg-white p-8 rounded-[2.5rem] shadow-sm border border-slate-200 text-slate-800">
-                    <div class="mb-6 flex justify-between items-center"><h3 class="font-black text-xs uppercase text-slate-400 tracking-widest flex items-center gap-2 text-slate-400 text-slate-400"><div data-icon="check-circle" class="text-blue-600 w-5 h-5"></div> Checklist de Gira</h3><span class="text-[9px] font-black bg-blue-100 text-blue-700 px-3 py-1 rounded-full uppercase">Activo</span></div>
+                    <div class="mb-6 flex justify-between items-center"><h3 class="font-black text-xs uppercase text-slate-400 tracking-widest flex items-center gap-2 text-slate-400 text-slate-400"><div data-icon="check-circle" class="text-blue-600 w-5 h-5"></div> Registro de Hallazgos</h3><span class="text-[9px] font-black bg-blue-100 text-blue-700 px-3 py-1 rounded-full uppercase">En Gira</span></div>
                     <div id="activeTaskChecklist" class="space-y-4 mb-8"></div>
                     <div class="pt-6 border-t border-slate-100">
-                        <textarea id="observations" rows="2" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm outline-none text-slate-800 mb-4" placeholder="Observaciones generales..."></textarea>
-                        <button onclick="window.submitPatrolReport()" class="w-full bg-emerald-600 text-white font-black py-5 rounded-2xl shadow-xl active:scale-95 transition-all text-sm uppercase tracking-widest">Enviar Informe al Obispo</button>
+                        <textarea id="observations" rows="2" class="w-full p-4 rounded-2xl bg-slate-50 border border-slate-200 text-sm outline-none text-slate-800 mb-4" placeholder="Alguna novedad general..."></textarea>
+                        <button onclick="window.submitPatrolReport()" class="w-full bg-emerald-600 text-white font-black py-5 rounded-2xl shadow-xl active:scale-95 transition-all text-sm uppercase tracking-widest text-white text-white">Finalizar Gira y Enviar Informe</button>
                     </div>
                 </section>
 
-                <section class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-red-50 flex flex-col items-center text-center text-slate-800 text-slate-800"><h3 class="text-red-600 font-black uppercase text-[10px] mb-2 font-bold">Emergencia</h3><button onclick="window.openEmergencyMenu()" class="sos-glow bg-red-600 w-36 h-36 rounded-full flex flex-col items-center justify-center text-white border-[10px] border-white text-white"><div data-icon="megaphone" class="w-12 h-12 mb-1"></div><span class="font-black text-3xl">S.O.S</span></button></section>
-                <section class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 mb-8 text-sm text-slate-800 text-slate-800"><h3 class="font-bold text-slate-400 mb-4 text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 opacity-60 font-bold"><div data-icon="history" class="w-4 h-4 text-slate-400"></div> Historial</h3><div id="historyList" class="space-y-3 text-slate-700 text-slate-700"></div></section>
+                <section class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 mb-8 text-sm text-slate-800 text-slate-800">
+                    <h3 class="font-bold text-slate-400 mb-4 text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 opacity-60 font-bold"><div data-icon="history" class="w-4 h-4 text-slate-400"></div> Última Actividad</h3>
+                    <div id="historyList" class="space-y-3 text-slate-700 text-slate-700 text-slate-700"></div>
+                </section>
             </div>
         </main>
     </div>
 
-    <!-- MENÚ EMERGENCIA DINÁMICO -->
+    <!-- MENÚ SOS DINÁMICO -->
     <div id="emergencyMenu" class="fixed inset-0 bg-slate-900/95 hidden items-end sm:items-center justify-center p-4 z-50 text-slate-800">
         <div class="bg-white rounded-[2.5rem] w-full max-w-md p-8 shadow-2xl text-center">
-            <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-red-600 uppercase tracking-tighter flex items-center gap-2 text-red-600"><div data-icon="phone-call" class="w-7 h-7 text-red-600"></div> DIRECTORIO SOS</h2><button onclick="window.closeEmergencyMenu()" class="bg-slate-100 p-2 rounded-full text-slate-400 text-slate-400 text-slate-400"><div data-icon="x" class="w-5 h-5 text-slate-400"></div></button></div>
-            <div id="emergencyPhonesGrid" class="grid grid-cols-2 gap-3 mb-6">
-                <!-- Se llena dinámicamente con JS -->
-            </div>
+            <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-red-600 uppercase tracking-tighter flex items-center gap-2 text-red-600"><div data-icon="phone-call" class="w-7 h-7 text-red-600"></div> DIRECTORIO SOS</h2><button onclick="window.closeEmergencyMenu()" class="bg-slate-100 p-2 rounded-full text-slate-400 text-slate-400 text-slate-400 text-slate-400"><div data-icon="x" class="w-5 h-5 text-slate-400"></div></button></div>
+            <div id="emergencyPhonesGrid" class="grid grid-cols-2 gap-3 mb-6"></div>
             <button onclick="window.broadcastAlert()" class="w-full bg-red-600 text-white py-5 rounded-[2rem] font-black uppercase text-base shadow-2xl active:translate-y-1 text-white text-white text-white">Notificar a Todo el Comité</button>
         </div>
     </div>
 
     <!-- MODAL MSGBOX -->
-    <div id="msgBox" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-[100] text-slate-800"><div class="bg-white rounded-[2.5rem] p-10 max-w-xs w-full text-center shadow-2xl text-slate-800 text-slate-800 text-slate-800"><div id="msgIcon" class="mb-6 flex justify-center text-slate-800"></div><h4 id="msgTitle" class="font-black text-xl mb-2 uppercase text-slate-800"></h4><p id="msgText" class="text-slate-500 text-xs mb-8 text-slate-500"></p><button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold uppercase text-[10px] text-white text-white">Entendido</button></div></div>
+    <div id="msgBox" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-[100] text-slate-800"><div class="bg-white rounded-[2.5rem] p-10 max-w-xs w-full text-center shadow-2xl text-slate-800 text-slate-800"><div id="msgIcon" class="mb-6 flex justify-center text-slate-800"></div><h4 id="msgTitle" class="font-black text-xl mb-2 uppercase text-slate-800"></h4><p id="msgText" class="text-slate-500 text-xs mb-8 text-slate-500"></p><button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold uppercase text-[10px] text-white text-white">Entendido</button></div></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -283,7 +278,7 @@
             document.getElementById('msgTitle').innerText = title;
             document.getElementById('msgText').innerText = text;
             const iconDiv = document.getElementById('msgIcon');
-            iconDiv.innerHTML = `<div class="${type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} p-5 rounded-full"><div data-icon="${type === 'success' ? 'check-circle' : 'alert-octagon'}" class="w-12 h-12 text-white"></div></div>`;
+            iconDiv.innerHTML = `<div class="${type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} p-5 rounded-full"><div data-icon="${type === 'success' ? 'check-circle' : 'alert-octagon'}" class="w-12 h-12"></div></div>`;
             modal.classList.replace('hidden', 'flex'); renderIcons();
         }
         function closeModal() { document.getElementById('msgBox')?.classList.replace('flex', 'hidden'); }
@@ -291,17 +286,31 @@
             ['loginPage', 'mainApp', 'unitStepPage', 'initAdminPage', 'superuserPanel'].forEach(p => document.getElementById(p)?.classList.add('hidden'));
             document.getElementById(id)?.classList.remove('hidden'); renderIcons();
         }
-        function updateHistoryUI() {
-            const list = document.getElementById('historyList'); if (!list) return;
-            if (reportsState.length === 0) { list.innerHTML = '<p class="text-center py-6 opacity-40 text-xs font-black uppercase text-slate-400 font-bold uppercase text-slate-400">Sin actividad</p>'; return; }
-            list.innerHTML = reportsState.slice(0, 5).map(r => `<div class="p-4 bg-slate-50 rounded-2xl flex justify-between items-center mb-2 shadow-sm text-slate-800"><div><p class="text-[10px] font-black uppercase text-slate-800 font-bold uppercase text-slate-800">${r.user}</p><p class="text-[9px] opacity-60 text-slate-500">${r.time}</p></div><span class="text-[8px] font-bold text-blue-600 px-2 py-1 rounded-full bg-blue-100 uppercase font-black">REPORTE</span></div>`).join('');
-        }
-        function renderUserListUI() {
-            const list = document.getElementById('userTableList'); if (!list) return;
-            const entries = Object.entries(usersState);
-            if (entries.length === 0) { list.innerHTML = '<p class="col-span-full py-12 text-center opacity-50 text-xs text-white">SIN MIEMBROS</p>'; return; }
-            list.innerHTML = entries.map(([id, data]) => `<div class="bg-slate-800 p-4 rounded-3xl flex justify-between items-center border border-slate-700 text-white"><div><p class="font-bold text-xs truncate uppercase text-white font-bold text-white">${data.name || id}</p><p class="text-[8px] text-blue-400 font-black uppercase text-blue-400">${data.role}</p></div><button onclick="window.deleteUser('${id}')" class="bg-red-500/20 text-red-500 w-8 h-8 rounded-full flex items-center justify-center text-red-500 text-red-500 text-white"><div data-icon="trash-2" class="w-4 h-4"></div></button></div>`).join('');
-            renderIcons();
+        
+        // INFORMES DETALLADOS PARA OBISPO Y ADMIN (PUNTO 3)
+        function renderReportsAdminUI() {
+            const list = document.getElementById('adminFullReportsList'); if (!list) return;
+            if (reportsState.length === 0) { list.innerHTML = '<p class="text-center py-12 opacity-40 text-xs font-black uppercase">Sin informes recibidos</p>'; return; }
+            
+            list.innerHTML = reportsState.map(r => `
+                <div class="bg-slate-800 p-5 rounded-[2rem] border border-slate-700 shadow-xl space-y-3">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[10px] font-black uppercase text-blue-400 tracking-widest">${r.user}</p>
+                            <p class="text-[9px] text-slate-400">${r.time} • ${new Date(r.timestamp).toLocaleDateString()}</p>
+                        </div>
+                        <span class="text-[8px] font-black bg-blue-900/50 text-blue-300 px-3 py-1 rounded-full uppercase border border-blue-900">${r.type}</span>
+                    </div>
+                    ${r.details ? `
+                        <div class="bg-slate-900/50 p-3 rounded-2xl border border-slate-700/50">
+                            <p class="text-[9px] font-bold text-slate-300 uppercase mb-2 border-b border-slate-700 pb-1">Detalle de tareas:</p>
+                            <p class="text-[9px] text-slate-400 whitespace-pre-line leading-relaxed">${r.details.summary}</p>
+                            <p class="text-[9px] font-bold text-amber-400 uppercase mt-2">Observaciones Generales:</p>
+                            <p class="text-[10px] text-white italic">"${r.details.general}"</p>
+                        </div>
+                    ` : '<p class="text-[9px] text-slate-500 italic">Informe básico de alerta</p>'}
+                </div>
+            `).join('');
         }
 
         function calculateSchedule() {
@@ -309,7 +318,7 @@
             const staffList = Object.keys(usersState).filter(e => usersState[e].role !== "Obispo").sort();
             if (staffList.length === 0) {
                 const container = document.getElementById('patrolScheduleList');
-                if (container) container.innerHTML = '<p class="p-4 bg-blue-800/40 rounded-3xl text-[10px] uppercase text-blue-300 font-bold text-center">Sin observadores activos</p>';
+                if (container) container.innerHTML = '<p class="p-4 bg-blue-800/40 rounded-3xl text-[10px] uppercase text-blue-300 font-bold text-center">Sin observadores configurados</p>';
                 return;
             }
             const [h, m] = currentUnitData.startTime.split(':').map(Number);
@@ -320,28 +329,41 @@
                 const assignedEmail = staffList[(dateSeed + idx) % staffList.length]; const u = usersState[assignedEmail];
                 return { ...slot, time: baseTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), assigned: u?.name || assignedEmail, isMe: currentUser_id === assignedEmail };
             });
+            
+            // FILTRO: MOSTRAR SOLO EL RONDÍN QUE LE CORRESPONDE (PUNTO 2)
+            const myTurn = schedule.find(s => s.isMe);
             const container = document.getElementById('patrolScheduleList');
-            if (container) {
-                container.innerHTML = schedule.map(s => `
-                    <div class="flex flex-col gap-3 p-4 rounded-3xl border ${s.isMe ? 'bg-blue-800 border-blue-500 shadow-lg' : 'bg-blue-900/50 border-blue-800/50'}">
+            const title = document.getElementById('scheduleTitle');
+
+            if (myTurn) {
+                activeTurnId = myTurn.id;
+                title.innerText = "Tu Turno de Hoy";
+                container.innerHTML = `
+                    <div class="flex flex-col gap-3 p-6 rounded-[2rem] border bg-blue-800 border-blue-500 shadow-2xl">
                         <div class="flex items-center gap-4">
-                            <div class="text-center min-w-[60px] text-white"><p class="text-[9px] font-black uppercase text-blue-300">Hora</p><p class="text-lg font-black text-white">${s.time}</p></div>
-                            <div class="flex-grow overflow-hidden text-white"><p class="text-[10px] font-black uppercase ${s.isMe ? 'text-amber-400' : 'text-blue-400'} text-white">${s.label}</p><p class="text-[11px] font-bold truncate uppercase text-white font-bold">${s.assigned}</p></div>
-                            ${s.isMe ? '<div class="w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>' : ''}
+                            <div class="text-center min-w-[70px] text-white"><p class="text-[10px] font-black uppercase text-blue-300">Entrada</p><p class="text-2xl font-black">${myTurn.time}</p></div>
+                            <div class="flex-grow overflow-hidden text-white"><p class="text-[12px] font-black uppercase text-amber-400">${myTurn.label}</p><p class="text-[14px] font-bold truncate uppercase text-white">${myTurn.assigned}</p></div>
+                            <div class="w-3 h-3 bg-amber-400 rounded-full animate-pulse"></div>
                         </div>
-                    </div>`).join('');
+                    </div>`;
+            } else {
+                activeTurnId = null;
+                title.innerText = "Asignaciones de Hoy";
+                container.innerHTML = '<p class="p-6 bg-blue-800/20 rounded-[2rem] text-[11px] uppercase text-blue-300 font-bold text-center border border-blue-800/30">No tienes giras asignadas para el día de hoy.</p>';
             }
-            const tasksArea = document.getElementById('activePatrolArea'); const tasksList = document.getElementById('activeTaskChecklist');
-            activeTurnId = null; schedule.forEach(s => { if (s.isMe) activeTurnId = s.id; });
+
+            // Checklist de tareas corregido
+            const tasksArea = document.getElementById('activePatrolArea');
+            const tasksList = document.getElementById('activeTaskChecklist');
             if (activeTurnId && tasksArea && tasksList) {
                 tasksArea.classList.remove('hidden');
                 tasksList.innerHTML = TURNO_TASKS[activeTurnId].map((task, idx) => `
-                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm text-slate-800 space-y-2">
-                        <div class="flex items-start gap-3">
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm text-slate-800 space-y-3">
+                        <div class="flex items-start gap-4">
                             <input type="checkbox" id="task_check_${idx}" class="check-custom mt-0.5">
-                            <label for="task_check_${idx}" class="text-[11px] font-bold text-slate-700 leading-tight">${task.label}</label>
+                            <label for="task_check_${idx}" class="text-[12px] font-bold text-slate-700 leading-tight">${task.label}</label>
                         </div>
-                        <input type="text" id="task_obs_${idx}" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-[10px] outline-none focus:ring-1 focus:ring-blue-500 placeholder-slate-400" placeholder="Anotar observación...">
+                        <input type="text" id="task_obs_${idx}" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-[11px] outline-none focus:ring-2 focus:ring-blue-500 placeholder-slate-400" placeholder="Anotar observaciones de este punto...">
                     </div>`).join('');
             } else if (tasksArea) tasksArea.classList.add('hidden');
         }
@@ -351,7 +373,7 @@
                 showPage('superuserPanel');
                 onSnapshot(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades'), snap => {
                     const list = document.getElementById('allUnitsList');
-                    if(list) list.innerHTML = snap.docs.map(d => `<div class="bg-slate-800 p-4 rounded-2xl flex justify-between items-center border border-slate-700 text-white"><div><p class="font-bold text-xs uppercase font-bold text-white font-bold text-white">${d.data().name}</p><p class="text-[9px] opacity-50 text-slate-400 font-bold">ID: ${d.id}</p></div><button onclick="window.deleteUnit('${d.id}')" class="bg-red-900/50 text-red-400 px-4 py-2 rounded-xl text-[10px] font-black uppercase border border-red-900">Eliminar</button></div>`).join('');
+                    if(list) list.innerHTML = snap.docs.map(d => `<div class="bg-slate-800 p-4 rounded-2xl flex justify-between items-center border border-slate-700 text-white"><div><p class="font-bold text-xs uppercase font-bold text-white">${d.data().name}</p><p class="text-[9px] opacity-50 font-bold">ID: ${d.id}</p></div><button onclick="window.deleteUnit('${d.id}')" class="bg-red-900/50 text-red-400 px-4 py-2 rounded-xl text-[10px] font-black uppercase border border-red-900">Eliminar</button></div>`).join('');
                     renderIcons();
                 });
                 return;
@@ -368,9 +390,7 @@
                 document.getElementById('tel_am').value = p.am || ""; document.getElementById('tel_bo').value = p.bo || "";
                 document.getElementById('tel_ot').value = p.ot || "";
             }
-            document.getElementById('displayUserName').innerText = u.name || currentUser_id;
-            document.getElementById('displayRole').innerText = u.role || "MIEMBRO";
-            document.getElementById('userInfo').classList.remove('hidden');
+            const ui = document.getElementById('userInfo'); if(ui) ui.classList.remove('hidden');
             const ab = document.getElementById('adminBtn'); 
             if(ab && (u.role?.includes("Administrador") || u.role === "Obispo")) ab.classList.remove('hidden');
             calculateSchedule();
@@ -382,7 +402,10 @@
                 if (snap.exists()) { usersState = snap.data().users || {}; syncReady = true; calculateSchedule(); renderUserListUI(); }
                 else { usersState = {}; syncReady = true; }
             });
-            onSnapshot(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${unitNum}`), snap => { reportsState = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => b.timestamp - a.timestamp); updateHistoryUI(); });
+            onSnapshot(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${unitNum}`), snap => { 
+                reportsState = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => b.timestamp - a.timestamp); 
+                updateHistoryUI(); renderReportsAdminUI();
+            });
         }
 
         // --- GLOBAL EXPORTS ---
@@ -401,9 +424,9 @@
                 const snap = await getDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', num));
                 if (snap.exists()) {
                     if (snap.data().name.toUpperCase() === rawName) { currentUnitData = { id: num, ...snap.data() }; document.getElementById('loginUnitDisplay').innerText = snap.data().name; showPage('loginPage'); startUnitSync(num); }
-                    else showModal("alert", "Error", "El Barrio no coincide con el número.");
+                    else showModal("alert", "Error", "Nombre de Barrio incorrecto.");
                 } else { currentUnitData = { id: num, name: rawName }; showPage('initAdminPage'); }
-            } catch (e) { showModal("alert", "Error", "Fallo de nube."); }
+            } catch (e) { showModal("alert", "Error", "Error de conexión."); }
         };
 
         window.login = (id, pass) => {
@@ -423,7 +446,7 @@
                 await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { name: currentUnitData.name.toUpperCase(), startTime: "09:00", createdAt: Date.now(), emergencyPhones: {} });
                 await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: initialUsers });
                 usersState = initialUsers; currentUser_id = email; currentUnitData.startTime = "09:00"; startUnitSync(currentUnitData.id); enterAppUI();
-            } catch (e) { showModal("alert", "Error", "Error al crear."); }
+            } catch (e) { showModal("alert", "Error", "Fallo al registrar."); }
         };
 
         window.addNewUser = async (email, role, pass) => {
@@ -448,7 +471,7 @@
                 ot: document.getElementById('tel_ot').value.trim()
             };
             await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { emergencyPhones: p });
-            currentUnitData.emergencyPhones = p; showModal("success", "Éxito", "Directorio actualizado.");
+            currentUnitData.emergencyPhones = p; showModal("success", "Éxito", "Teléfonos actualizados.");
         };
 
         window.deleteUser = async (id) => { if (confirm("¿Borrar miembro?")) { delete usersState[id]; await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: usersState }); } };
@@ -456,18 +479,23 @@
         
         window.submitPatrolReport = async () => {
             const u = usersState[currentUser_id];
-            let taskDetails = ""; let anyUnchecked = false;
+            let taskDetails = ""; 
             TURNO_TASKS[activeTurnId].forEach((task, idx) => {
                 const checked = document.getElementById(`task_check_${idx}`).checked;
                 const obs = document.getElementById(`task_obs_${idx}`).value.trim();
-                if (!checked) anyUnchecked = true;
                 taskDetails += `${task.label}: [${checked ? 'CUMPLIDO' : 'PENDIENTE'}] ${obs ? '- Obs: '+obs : ''}\n`;
             });
-            const generalObs = document.getElementById('observations').value || 'Sin novedad adicional';
-            const report = { user: u?.name || currentUser_id, type: "RECORRIDO", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), timestamp: Date.now(), details: { summary: taskDetails, general: generalObs, incomplete: anyUnchecked } };
+            const generalObs = document.getElementById('observations').value || 'Sin novedad';
+            const report = { 
+                user: u?.name || currentUser_id, 
+                type: "RECORRIDO", 
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), 
+                timestamp: Date.now(), 
+                details: { summary: taskDetails, general: generalObs } 
+            };
             await addDoc(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${currentUnitData.id}`), report);
             document.getElementById('observations').value = ""; activeTurnId = null; document.getElementById('activePatrolArea')?.classList.add('hidden');
-            showModal("success", "Gira Finalizada", "Informe enviado al Obispo.");
+            showModal("success", "Gira Finalizada", "Informe enviado correctamente.");
         };
 
         window.broadcastAlert = async () => {
@@ -480,17 +508,8 @@
         window.openEmergencyMenu = () => {
             const grid = document.getElementById('emergencyPhonesGrid');
             const p = currentUnitData?.emergencyPhones || {};
-            const items = [
-                {l:"P. Civil", n:p.pc||"911"}, {l:"Tránsito", n:p.tr||"911"},
-                {l:"Prox. Social", n:p.ps||"911"}, {l:"Seg. Pública", n:p.sp||"911"},
-                {l:"Ambulancia", n:p.am||"911"}, {l:"Bomberos", n:p.bo||"911"},
-                {l:"Otro", n:p.ot||"911"}
-            ];
-            grid.innerHTML = items.map(i => `
-                <a href="tel:${i.n}" class="bg-slate-50 p-4 rounded-2xl flex flex-col items-center gap-1 border border-slate-100 active:scale-95 transition-all">
-                    <span class="text-red-600 font-black text-base">${i.n}</span>
-                    <span class="text-[7px] text-slate-400 font-bold uppercase">${i.l}</span>
-                </a>`).join('');
+            const items = [{l:"P. Civil", n:p.pc||"911"}, {l:"Tránsito", n:p.tr||"911"}, {l:"Prox. Social", n:p.ps||"911"}, {l:"Seg. Pública", n:p.sp||"911"}, {l:"Ambulancia", n:p.am||"911"}, {l:"Bomberos", n:p.bo||"911"}, {l:"Otro", n:p.ot||"911"}];
+            grid.innerHTML = items.map(i => `<a href="tel:${i.n}" class="bg-slate-50 p-4 rounded-2xl flex flex-col items-center gap-1 border border-slate-100"><span class="text-red-600 font-black text-base">${i.n}</span><span class="text-[7px] text-slate-400 font-bold uppercase">${i.l}</span></a>`).join('');
             document.getElementById('emergencyMenu')?.classList.remove('hidden'); renderIcons();
         };
 
@@ -509,7 +528,7 @@
         };
 
         onAuthStateChanged(fAuth, user => { if (user) { setTimeout(() => { const sp = document.getElementById('splashScreen'); if (sp) { sp.classList.add('animate-fade-out'); setTimeout(() => { sp.classList.add('hidden'); showPage('unitStepPage'); }, 500); } }, 1500); } });
-        async function init() { try { await signInAnonymously(fAuth); } catch (e) { document.getElementById('statusLabel').innerText = "Error: Verifica dominios en Firebase."; } }
+        async function init() { try { await signInAnonymously(fAuth); } catch (e) { document.getElementById('statusLabel').innerText = "Error de conexión."; } }
         init(); setInterval(calculateSchedule, 30000);
         const sa = (id, ev, fn) => document.getElementById(id)?.addEventListener(ev, fn);
         sa('unitForm', 'submit', e => { e.preventDefault(); window.checkUnit(); });
