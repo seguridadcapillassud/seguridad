@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#1e3a8a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Seguridad Capillas - Versión 2.1.2</title>
+    <title>Seguridad Capillas - Versión 2.1.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
@@ -135,6 +135,18 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
+        .pass-container { position: relative; width: 100%; }
+        .pass-toggle { 
+            position: absolute; 
+            right: 0.75rem; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            cursor: pointer; 
+            color: #94a3b8; 
+            z-index: 20; 
+            padding: 0.5rem; 
+        }
+
         form { padding-bottom: 2rem; }
     </style>
 </head>
@@ -143,10 +155,10 @@
     <!-- PANTALLA DE CARGA -->
     <div id="splashScreen" class="fixed inset-0 z-[100] bg-blue-900 flex flex-col items-center justify-center text-white text-center">
         <div class="mb-6 bg-white/10 p-6 rounded-full backdrop-blur-md border border-white/20">
-            <div id="splashIcon" data-icon="shield-check" class="w-16 h-16"></div>
+            <div id="splashIcon" data-icon="shield-check" class="w-16 h-16 text-white"></div>
         </div>
         <h1 class="text-4xl font-black uppercase tracking-tighter mb-1 px-6">Seguridad Capillas</h1>
-        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 2.1.2 Mobile</p>
+        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 2.1.7 Mobile</p>
         <div class="absolute bottom-12 flex flex-col items-center px-6 w-full text-white text-center">
             <div id="loadingSpinner" class="w-8 h-8 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin mb-4"></div>
             <span id="statusLabel" class="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70">Verificando Credenciales...</span>
@@ -158,32 +170,31 @@
         <div class="w-full max-w-sm space-y-10">
             <div class="text-center space-y-2">
                 <h1 class="text-3xl font-black uppercase tracking-tight text-white">Bienvenido</h1>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest text-slate-400">Identifique su Unidad</p>
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Identifique su Unidad</p>
             </div>
             <form id="unitForm" class="space-y-4">
                 <input type="text" id="inputUnitName" required class="w-full px-6 py-5 rounded-2xl bg-slate-800 border border-slate-700 outline-none text-white font-bold force-uppercase shadow-lg" placeholder="NOMBRE DEL BARRIO">
                 <input type="text" id="inputUnitNumber" required class="w-full px-6 py-5 rounded-2xl bg-slate-800 border border-slate-700 outline-none text-white font-bold shadow-lg" placeholder="NÚMERO DE UNIDAD">
                 <button type="submit" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl shadow-xl uppercase text-sm tracking-widest active:scale-95 transition-transform text-white">Verificar Unidad</button>
             </form>
-            <!-- Tip para superusuario -->
             <p class="text-[8px] text-center text-slate-600 uppercase tracking-widest font-black">Acceso Maestro habilitado para Administradores de Red</p>
         </div>
     </div>
 
     <!-- PÁGINA ACCESO (GOOGLE) -->
-    <div id="loginPage" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900 text-white text-white">
+    <div id="loginPage" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900 text-white">
         <div class="w-full max-w-sm space-y-12">
             <div class="text-center space-y-2">
                 <h2 id="loginUnitDisplay" class="text-blue-400 font-black text-2xl uppercase tracking-tighter">BARRIO</h2>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">Acceso Seguro</p>
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest text-slate-400">Acceso Seguro</p>
             </div>
             <div class="space-y-6">
                 <button onclick="window.loginWithGoogle()" class="google-btn">
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20" alt="G">
-                    Entrar con Google
+                    Elegir Cuenta de Google
                 </button>
-                <p class="text-[10px] text-slate-500 text-center leading-relaxed font-medium px-4">Solo miembros autorizados pueden acceder a este panel operativo.</p>
-                <button type="button" onclick="location.reload()" class="w-full text-slate-500 text-[10px] font-black uppercase tracking-widest py-8">Regresar</button>
+                <p class="text-[10px] text-slate-500 text-center leading-relaxed font-medium px-4">Si manejas varias cuentas, podrás seleccionar la correcta al presionar el botón.</p>
+                <button type="button" onclick="location.reload()" class="w-full text-slate-500 text-[10px] font-black uppercase tracking-widest py-8 text-center text-slate-500">Regresar</button>
             </div>
         </div>
     </div>
@@ -191,164 +202,161 @@
     <!-- PÁGINA REGISTRO INICIAL -->
     <div id="initAdminPage" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900">
         <div class="w-full max-w-sm space-y-8 text-white text-center">
-            <div class="bg-slate-800 p-8 rounded-[2.5rem] border border-slate-700 text-white">
-                <div data-icon="shield" class="w-12 h-12 text-blue-500 mx-auto mb-4"></div>
+            <div class="bg-slate-800 p-8 rounded-[2.5rem] border border-slate-700 text-white text-white">
+                <div data-icon="shield" class="w-12 h-12 text-blue-500 mx-auto mb-4 text-blue-500 text-blue-500"></div>
                 <h2 class="text-xl font-black uppercase tracking-tight text-white leading-tight">Configurar Unidad</h2>
-                <p class="text-slate-400 text-xs mt-3 font-medium leading-relaxed">Para ser el Administrador, vincule su cuenta de Google.</p>
-                <div class="mt-8">
+                <p class="text-slate-400 text-xs mt-3 font-medium leading-relaxed text-slate-400">Para ser el Administrador Maestro, vincule su cuenta de Google.</p>
+                <div class="mt-8 text-white text-white text-white">
                     <button onclick="window.initAdminWithGoogle()" class="google-btn">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20" alt="G">
                         Vincular Cuenta Google
                     </button>
                 </div>
-                <button onclick="location.reload()" class="mt-8 text-slate-500 text-[10px] font-bold uppercase">Cancelar</button>
+                <button onclick="location.reload()" class="mt-8 text-slate-500 text-[10px] font-bold uppercase text-slate-500">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <!-- PANEL SUPERUSUARIO RESTAURADO -->
-    <div id="superuserPanel" class="hidden flex-grow flex flex-col bg-slate-950 text-white text-white">
-        <header class="bg-red-900 p-6 pt-10 flex justify-between items-center shadow-2xl">
-            <div><h2 class="text-xl font-black uppercase tracking-widest font-black text-white">Master Panel</h2><p class="text-[10px] font-bold text-red-200 uppercase opacity-60">GESTIÓN GLOBAL DE UNIDADES</p></div>
-            <button onclick="window.logout()" class="bg-white/10 p-3 rounded-2xl text-white"><div data-icon="log-out" class="w-6 h-6"></div></button>
+    <!-- PANEL SUPERUSUARIO -->
+    <div id="superuserPanel" class="hidden flex-grow flex flex-col bg-slate-950 text-white">
+        <header class="bg-red-900 p-6 pt-10 flex justify-between items-center shadow-2xl text-white">
+            <div><h2 class="text-xl font-black uppercase tracking-widest font-black text-white">Master Panel</h2><p class="text-[10px] font-bold text-red-200 uppercase opacity-60 text-red-200">GESTIÓN GLOBAL DE UNIDADES</p></div>
+            <button onclick="window.logout()" class="bg-white/10 p-3 rounded-2xl text-white"><div data-icon="log-out" class="w-6 h-6 text-white"></div></button>
         </header>
-        <main class="w-full p-6 space-y-6 text-white text-white">
-            <h3 class="text-[10px] font-black uppercase tracking-widest text-red-400 mb-2">Unidades Activas</h3>
-            <div id="allUnitsList" class="space-y-4 text-white"></div>
-        </main>
+        <main class="w-full p-6 space-y-6 text-white text-white"><div id="allUnitsList" class="space-y-4 text-white"></div></main>
     </div>
 
     <!-- APP PRINCIPAL -->
     <div id="mainApp" class="hidden flex-grow flex flex-col bg-slate-900">
         <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50 pt-10 pb-4 text-white">
-            <div class="w-full px-4 flex justify-between items-center relative h-14">
+            <div class="w-full px-4 flex justify-between items-center relative h-14 text-white">
                 
-                <div class="flex items-center gap-3">
-                    <button onclick="window.showFutureScheduleModal()" class="bg-white/10 active:bg-blue-600 w-11 h-11 rounded-2xl flex items-center justify-center transition-all shadow-inner text-white text-white text-white">
+                <div class="flex items-center gap-3 text-white">
+                    <button onclick="window.showFutureScheduleModal()" class="bg-white/10 active:bg-blue-600 w-11 h-11 rounded-2xl flex items-center justify-center transition-all shadow-inner text-white">
                         <div data-icon="calendar" class="w-6 h-6 text-white text-white"></div>
                     </button>
                     <div class="flex flex-col text-white">
-                        <span id="displayRole" class="text-[7px] font-black bg-blue-800 px-1.5 py-0.5 rounded text-blue-200 uppercase tracking-tighter border border-blue-700/50 mb-1 w-max leading-none">...</span>
-                        <h2 id="headerLocName" class="font-black text-[10px] uppercase truncate max-w-[85px] leading-tight text-white">...</h2>
-                        <span id="headerUnitNumber" class="text-[8px] text-blue-300 font-bold opacity-80 leading-none mt-0.5">...</span>
+                        <span id="displayRole" class="text-[7px] font-black bg-blue-800 px-1.5 py-0.5 rounded text-blue-200 uppercase tracking-tighter border border-blue-700/50 mb-1 w-max leading-none text-blue-200">...</span>
+                        <h2 id="headerLocName" class="font-black text-[10px] uppercase truncate max-w-[80px] leading-tight text-white">...</h2>
+                        <span id="headerUnitNumber" class="text-[8px] text-blue-300 font-bold opacity-80 leading-none mt-0.5 text-blue-300">...</span>
                     </div>
                 </div>
 
-                <div class="absolute left-1/2 -translate-x-1/2 text-white text-white">
-                    <button onclick="window.openEmergencyMenu()" class="sos-glow bg-red-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all border-4 border-blue-900 text-white text-white">
+                <div class="absolute left-1/2 -translate-x-1/2 text-white text-white text-white">
+                    <button onclick="window.openEmergencyMenu()" class="sos-glow bg-red-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all border-4 border-blue-900 text-white">
                         <div data-icon="megaphone" class="w-8 h-8 text-white"></div>
                     </button>
                 </div>
 
-                <div class="flex items-center gap-1.5 text-white text-white">
+                <div class="flex items-center gap-1.5 text-white">
                     <button id="adminBtn" onclick="window.toggleAdminPanel()" class="hidden admin-gear-btn w-10 h-10 rounded-xl shadow-lg flex items-center justify-center active:scale-90 text-white"><div data-icon="settings" class="w-5 h-5 text-slate-800"></div></button>
-                    <button onclick="window.logout()" class="bg-white/10 hover:bg-red-500 w-10 h-10 rounded-xl transition-all flex items-center justify-center active:scale-90 text-white text-white text-white"><div data-icon="log-out" class="w-5 h-5"></div></button>
+                    <button onclick="window.logout()" class="bg-white/10 hover:bg-red-500 w-10 h-10 rounded-xl transition-all flex items-center justify-center active:scale-90 text-white"><div data-icon="log-out" class="w-5 h-5 text-white"></div></button>
                 </div>
             </div>
         </header>
 
-        <main class="w-full flex-grow bg-slate-900 text-white text-white text-white">
-            <section id="adminPanel" class="hidden bg-slate-800 w-full animate-in slide-in-from-top-4 duration-300 pb-10">
+        <main class="w-full flex-grow bg-slate-900 text-white">
+            <section id="adminPanel" class="hidden bg-slate-800 w-full animate-in slide-in-from-top-4 duration-300 pb-10 text-white">
                 <div class="flex justify-between items-center p-5 bg-slate-900/50 border-b border-slate-700 text-white">
                     <div class="flex items-center gap-3">
-                        <div data-icon="sliders" class="w-4 h-4 text-blue-400"></div>
+                        <div data-icon="sliders" class="w-4 h-4 text-blue-400 text-blue-400"></div>
                         <h3 class="font-black text-xs text-blue-400 uppercase tracking-widest text-blue-400">Gestión</h3>
                     </div>
-                    <button onclick="window.toggleAdminPanel()" class="text-slate-500 p-2 text-white text-white"><div data-icon="x" class="w-6 h-6 text-white text-white"></div></button>
+                    <button onclick="window.toggleAdminPanel()" class="text-slate-500 p-2 text-white"><div data-icon="x" class="w-6 h-6 text-white"></div></button>
                 </div>
                 
                 <div class="flex bg-slate-900 p-2 border-b border-slate-700 overflow-x-auto no-scrollbar gap-1 text-white">
                     <button onclick="window.switchAdminTab('unit')" id="tabUnit" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn tab-active rounded-xl text-white">Horario</button>
-                    <button onclick="window.switchAdminTab('tasks')" id="tabTasks" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-400 rounded-xl">Tareas</button>
-                    <button onclick="window.switchAdminTab('emergency')" id="tabEmergency" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-400 rounded-xl">Teléfonos</button>
-                    <button onclick="window.switchAdminTab('users')" id="tabUsers" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-400 rounded-xl text-white">Miembros</button>
+                    <button onclick="window.switchAdminTab('tasks')" id="tabTasks" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-400 rounded-xl text-slate-400">Tareas</button>
+                    <button onclick="window.switchAdminTab('emergency')" id="tabEmergency" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-400 rounded-xl text-slate-400">Teléfonos</button>
+                    <button onclick="window.switchAdminTab('users')" id="tabUsers" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-400 rounded-xl text-white text-white">Miembros</button>
                     <button onclick="window.switchAdminTab('reports')" id="tabReports" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn text-slate-400 rounded-xl text-slate-500 text-slate-500">Informes</button>
                 </div>
                 
-                <div class="p-4 space-y-6">
-                    <div id="panelUnitContent" class="space-y-4">
+                <div class="p-4 space-y-6 text-white text-white">
+                    <div id="panelUnitContent" class="space-y-4 text-white">
                         <div class="p-6 bg-slate-900/50 border border-slate-700 rounded-2xl text-white">
-                            <label class="text-[9px] font-black uppercase ml-1 text-slate-400 mb-2 block">Hora de Entrada Dominical</label>
-                            <input type="time" id="inputStartTime" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-5 py-4 text-xl font-bold text-white mb-4 shadow-inner text-white">
-                            <button onclick="window.updateUnitTime()" id="btnUpdateUnitTime" class="w-full bg-blue-600 py-5 rounded-xl font-black text-xs uppercase active:scale-95 transition-transform text-white">Actualizar</button>
+                            <label class="text-[9px] font-black uppercase ml-1 text-slate-400 mb-2 block text-slate-400">Entrada Dominical</label>
+                            <input type="time" id="inputStartTime" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-5 py-4 text-xl font-bold text-white mb-4 shadow-inner">
+                            <button onclick="window.updateUnitTime()" id="btnUpdateUnitTime" class="w-full bg-blue-600 py-5 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-transform text-white">Actualizar</button>
                         </div>
                     </div>
 
-                    <div id="panelTasksContent" class="hidden">
-                        <div class="px-2 mb-4"><h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest text-blue-400">Catálogo Dinámico</h4></div>
+                    <div id="panelTasksContent" class="hidden text-white">
+                        <div class="px-2 mb-4 text-white text-white"><h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest text-blue-400">Catálogo</h4></div>
                         <div class="bg-slate-900/50 border-y border-slate-700 overflow-hidden text-white">
-                            <label class="p-4 text-[9px] font-black text-slate-400 uppercase block bg-slate-950/30">Exterior (Turno 1)</label>
-                            <div id="adminExteriorTasksList" class="divide-y divide-white/5"></div>
+                            <label class="p-4 text-[9px] font-black text-slate-400 uppercase block bg-slate-950/30 text-slate-400">Exterior (Turno 1)</label>
+                            <div id="adminExteriorTasksList" class="divide-y divide-white/5 text-white"></div>
                             <div class="p-4 flex gap-2">
-                                <input type="text" id="newExteriorTask" class="flex-grow add-task-input bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-white outline-none" placeholder="AGREGAR TAREA...">
-                                <button onclick="window.addNewCatalogTask('exterior')" class="add-btn bg-blue-600 text-white px-4 rounded-xl"><div data-icon="shield-check" class="w-5 h-5 text-white text-white"></div></button>
+                                <input type="text" id="newExteriorTask" class="flex-grow add-task-input bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-white outline-none" placeholder="AGREGAR...">
+                                <button onclick="window.addNewCatalogTask('exterior')" class="add-btn bg-blue-600 text-white px-4 rounded-xl text-white"><div data-icon="shield-check" class="w-5 h-5 text-white"></div></button>
                             </div>
                         </div>
-                        <div class="bg-slate-900/50 border-b border-slate-700 overflow-hidden mt-6 text-white text-white">
-                            <label class="p-4 text-[9px] font-black text-slate-400 uppercase block bg-slate-950/30">Interior (Turno 2 y 3)</label>
-                            <div id="adminInteriorTasksList" class="divide-y divide-white/5"></div>
+                        <div class="bg-slate-900/50 border-b border-slate-700 overflow-hidden mt-6 text-white">
+                            <label class="p-4 text-[9px] font-black text-slate-400 uppercase block bg-slate-950/30 text-slate-400">Interior (Turno 2 y 3)</label>
+                            <div id="adminInteriorTasksList" class="divide-y divide-white/5 text-white"></div>
                             <div class="p-4 flex gap-2 text-white">
-                                <input type="text" id="newInteriorTask" class="flex-grow add-task-input bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-white outline-none" placeholder="AGREGAR TAREA...">
-                                <button onclick="window.addNewCatalogTask('interior')" class="add-btn bg-blue-600 text-white px-4 rounded-xl"><div data-icon="shield-check" class="w-5 h-5 text-white"></div></button>
+                                <input type="text" id="newInteriorTask" class="flex-grow add-task-input bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-xs font-bold text-white outline-none" placeholder="AGREGAR...">
+                                <button onclick="window.addNewCatalogTask('interior')" class="add-btn bg-blue-600 text-white px-4 rounded-xl text-white"><div data-icon="shield-check" class="w-5 h-5 text-white"></div></button>
                             </div>
                         </div>
                     </div>
 
-                    <div id="panelEmergencyContent" class="hidden p-4">
+                    <div id="panelEmergencyContent" class="hidden p-4 text-white">
                         <div class="bg-slate-900/50 p-6 border border-slate-700 rounded-2xl space-y-4 text-white">
                             <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest text-blue-400">Directorio SOS</h4>
                             <div class="grid grid-cols-1 gap-4 text-white text-white">
-                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1">Protección Civil</label><input type="tel" id="tel_pc" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1">P. Civil</label><input type="tel" id="tel_pc" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
                                 <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1 text-slate-400">Tránsito</label><input type="tel" id="tel_tr" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
-                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1 text-slate-400">Seguridad Pública</label><input type="tel" id="tel_sp" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
-                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1 text-slate-400">Ambulancia</label><input type="tel" id="tel_am" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1 text-slate-400 text-white">Seguridad Pública</label><input type="tel" id="tel_sp" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1 text-slate-400 text-white">Ambulancia</label><input type="tel" id="tel_am" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
                             </div>
                             <button onclick="window.updateEmergencyPhones()" id="btnSaveEmergency" class="w-full bg-emerald-600 py-5 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-transform text-white">Guardar Teléfonos</button>
                         </div>
                     </div>
 
-                    <div id="panelUsersContent" class="hidden p-4">
+                    <div id="panelUsersContent" class="hidden p-4 text-white">
                         <div class="bg-slate-900/50 p-6 border border-slate-700 rounded-2xl mb-6 text-white text-white">
-                            <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-4">Autorizar Miembro</h4>
-                            <form id="addUserForm" class="space-y-4 text-white">
+                            <h4 class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-4 text-blue-400">Autorizar Miembro</h4>
+                            <form id="addUserForm" class="space-y-4 text-white text-white text-white text-white text-white">
                                 <input type="text" id="newUserFullName" required placeholder="NOMBRE COMPLETO" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm font-bold text-white force-uppercase text-white">
-                                <input type="email" id="newUserEmail" required placeholder="CORREO DE GOOGLE (GMAIL)" style="text-transform: none !important;" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm text-white text-white text-white">
+                                <input type="email" id="newUserEmail" required placeholder="CORREO DE GOOGLE (GMAIL)" style="text-transform: none !important;" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm text-white text-white">
                                 <select id="newUserRole" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm font-bold text-white">
                                     <option value="Observador">Observador</option>
                                     <option value="Administrador Auxiliar">Administrador Auxiliar</option>
                                     <option value="Obispo">Obispo</option>
                                 </select>
-                                <button type="submit" id="btnAddMember" class="w-full bg-blue-600 py-5 rounded-xl font-black uppercase text-xs shadow-xl active:scale-95 text-white">Agregar Miembro</button>
+                                <button type="submit" id="btnAddMember" class="w-full bg-blue-600 py-5 rounded-xl font-black uppercase text-xs shadow-xl active:scale-95 text-white">Autorizar Miembro</button>
                             </form>
                         </div>
-                        <div id="userTableList" class="space-y-3 px-1 text-white"></div>
+                        <div id="userTableList" class="space-y-3 px-1 text-white text-white"></div>
                     </div>
                     
-                    <div id="panelReportsContent" class="hidden">
-                        <div class="bg-slate-950 border-y border-slate-700 text-white overflow-hidden text-white">
-                            <div class="report-grid p-3 text-[8px] font-black uppercase text-blue-400 bg-slate-900/50 border-b border-slate-700">
+                    <div id="panelReportsContent" class="hidden text-white">
+                        <div class="bg-slate-950 border-y border-slate-700 text-white overflow-hidden text-white text-white">
+                            <div class="report-grid p-3 text-[8px] font-black uppercase text-blue-400 bg-slate-900/50 border-b border-slate-700 text-blue-400">
                                 <div>FECHA / RESPONSABLE</div>
-                                <div class="border-l border-white/5 pl-2">RONDÍN</div>
-                                <div class="border-l border-white/5 pl-2">OBSERVACIONES</div>
+                                <div class="border-l border-white/5 pl-2 text-blue-400">RONDÍN</div>
+                                <div class="border-l border-white/5 pl-2 text-blue-400 text-blue-400">OBSERVACIONES</div>
                             </div>
-                            <div id="adminFullReportsList" class="divide-y divide-slate-800 max-h-[60vh] overflow-y-auto no-scrollbar text-white text-white text-white"></div>
+                            <div id="adminFullReportsList" class="divide-y divide-slate-800 max-h-[60vh] overflow-y-auto no-scrollbar text-white text-white"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- OPERATIVO FULL WIDTH -->
-            <div id="operationalContent" class="animate-in fade-in duration-700 bg-slate-900 pb-24 text-white">
+            <!-- CONTENIDO OPERATIVO -->
+            <div id="operationalContent" class="animate-in fade-in duration-700 bg-slate-900 pb-24 text-white text-white text-white">
                 <section id="rondinesCard" class="bg-blue-900 w-full p-6 text-white border-b-8 border-blue-950 shadow-2xl text-white">
-                    <div class="flex justify-between items-center mb-8">
-                        <h3 id="scheduleTitle" class="font-black text-sm uppercase tracking-widest text-blue-200">Próximo Turno</h3>
-                        <div class="bg-white/10 p-2.5 rounded-full shadow-inner"><div data-icon="calendar" class="w-5 h-5 text-white text-white"></div></div>
+                    <div class="flex justify-between items-center mb-8 text-white text-white">
+                        <h3 id="scheduleTitle" class="font-black text-sm uppercase tracking-widest text-blue-200 text-blue-200 text-blue-200">Próximo Turno</h3>
+                        <div class="bg-white/10 p-2.5 rounded-full shadow-inner text-white text-white"><div data-icon="calendar" class="w-5 h-5 text-white"></div></div>
                     </div>
-                    <div id="patrolScheduleList" class="space-y-10 text-white text-white"></div>
+                    <div id="patrolScheduleList" class="space-y-10 text-white text-white text-white text-white text-white"></div>
                 </section>
                 
-                <div class="py-12 text-center opacity-30 text-white">
-                    <p class="text-[9px] font-black uppercase tracking-[0.4em] text-blue-400">Seguridad Capillas Versión 2.1.2</p>
+                <div class="py-12 text-center opacity-30 text-white text-white">
+                    <p class="text-[9px] font-black uppercase tracking-[0.4em] text-blue-400 text-white">Sistema de Seguridad Versión 2.1.7</p>
                 </div>
             </div>
         </main>
@@ -357,48 +365,48 @@
     <!-- MODAL PROYECCIÓN -->
     <div id="futureScheduleModal" class="fixed inset-0 bg-black/95 hidden items-center justify-center p-6 z-[200]">
         <div class="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200 text-white">
-            <div class="flex justify-between items-center mb-8 text-white">
-                <h4 class="font-black text-xl uppercase tracking-tighter text-blue-400">Proyección Mensual</h4>
-                <button onclick="window.closeFutureScheduleModal()" class="text-slate-500 p-2"><div data-icon="x" class="w-6 h-6 text-white"></div></button>
+            <div class="flex justify-between items-center mb-8 text-white text-white">
+                <h4 class="font-black text-xl uppercase tracking-tighter text-blue-400 text-blue-400 text-blue-400">Proyección Mensual</h4>
+                <button onclick="window.closeFutureScheduleModal()" class="text-slate-500 p-2 text-white text-white"><div data-icon="x" class="w-6 h-6 text-white"></div></button>
             </div>
-            <div id="futureScheduleContainer" class="space-y-5 max-h-[60vh] overflow-y-auto no-scrollbar pr-1 text-white"></div>
-            <button onclick="window.closeFutureScheduleModal()" class="w-full bg-slate-800 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest mt-8 border border-slate-700 text-white">Regresar</button>
+            <div id="futureScheduleContainer" class="space-y-5 max-h-[60vh] overflow-y-auto no-scrollbar pr-1 text-white text-white"></div>
+            <button onclick="window.closeFutureScheduleModal()" class="w-full bg-slate-800 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest mt-8 border border-slate-700 text-white text-white">Regresar</button>
         </div>
     </div>
 
     <div id="emergencyMenu" class="fixed inset-0 bg-slate-900/98 hidden items-end sm:items-center justify-center p-4 z-50 text-slate-800">
         <div class="bg-white rounded-[2.5rem] w-full max-w-md p-8 shadow-2xl text-center mb-4 sm:mb-0">
             <div class="flex justify-between items-center mb-8 text-slate-800 text-slate-800">
-                <h2 class="text-2xl font-black text-red-600 uppercase tracking-tighter flex items-center gap-3 text-red-600 text-red-600 text-red-600 text-red-600 text-red-600"><div data-icon="phone-call" class="w-8 h-8 text-red-600 text-red-600 text-red-600"></div> SOS</h2>
-                <button onclick="window.closeEmergencyMenu()" class="bg-slate-100 p-2 rounded-full text-slate-400 text-slate-400 text-slate-400 text-slate-400 text-slate-400"><div data-icon="x" class="w-6 h-6 text-slate-400 text-slate-400"></div></button>
+                <h2 class="text-2xl font-black text-red-600 uppercase tracking-tighter flex items-center gap-3 text-red-600 text-red-600 text-red-600 text-red-600 text-red-600"><div data-icon="phone-call" class="w-8 h-8 text-red-600"></div> SOS</h2>
+                <button onclick="window.closeEmergencyMenu()" class="bg-slate-100 p-2 rounded-full text-slate-400 text-slate-400 text-slate-400 text-slate-400 text-slate-400 text-slate-400"><div data-icon="x" class="w-6 h-6 text-slate-400 text-slate-400"></div></button>
             </div>
             <div id="emergencyPhonesGrid" class="grid grid-cols-2 gap-4 mb-8 text-slate-800 text-slate-800"></div>
-            <button onclick="window.closeEmergencyMenu()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest mb-3">Regresar</button>
-            <button onclick="window.broadcastAlert()" class="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-2xl active:scale-95">Notificar a Comité</button>
+            <button onclick="window.closeEmergencyMenu()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest mb-3 text-white text-white text-white">Regresar</button>
+            <button onclick="window.broadcastAlert()" class="w-full bg-red-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-2xl active:scale-95 text-white">Notificar a Comité</button>
         </div>
     </div>
 
-    <!-- MODAL MSGBOX -->
+    <!-- MODALES MSGBOX -->
     <div id="msgBox" class="fixed inset-0 bg-black/95 hidden items-center justify-center p-4 z-[300]">
         <div class="bg-white rounded-[3rem] p-10 max-w-xs w-full text-center shadow-2xl animate-in zoom-in-95 duration-200 text-slate-800">
-            <div id="msgIcon" class="mb-8 flex justify-center text-slate-800 text-slate-800"></div>
-            <h4 id="msgTitle" class="font-black text-xl mb-3 uppercase leading-tight text-slate-900 text-slate-900"></h4>
-            <p id="msgText" class="text-slate-500 text-xs mb-10 leading-relaxed font-medium text-slate-500"></p>
-            <button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-black uppercase text-[11px] tracking-widest active:scale-95 text-white">Entendido</button>
+            <div id="msgIcon" class="mb-8 flex justify-center text-slate-800 text-slate-800 text-slate-800 text-slate-800 text-slate-800"></div>
+            <h4 id="msgTitle" class="font-black text-xl mb-3 uppercase leading-tight text-slate-900 text-slate-900 text-slate-900"></h4>
+            <p id="msgText" class="text-slate-500 text-xs mb-10 leading-relaxed font-medium text-slate-500 text-slate-500 text-slate-500"></p>
+            <button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-black uppercase text-[11px] tracking-widest active:scale-95 text-white text-white">Entendido</button>
         </div>
     </div>
 
     <!-- MODAL CONFIRMACIÓN -->
     <div id="confirmBox" class="fixed inset-0 bg-black/95 hidden items-center justify-center p-4 z-[350]">
         <div class="bg-white rounded-[3rem] p-10 max-w-xs w-full text-center shadow-2xl animate-in zoom-in-95 duration-200 text-slate-800 text-slate-800">
-            <div class="bg-red-50 text-red-500 p-6 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center text-red-500 text-red-500">
-                <div data-icon="trash-2" class="w-10 h-10"></div>
+            <div class="bg-red-50 text-red-500 p-6 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center text-red-500 text-red-500 text-red-500">
+                <div data-icon="trash-2" class="w-10 h-10 text-red-500 text-red-500"></div>
             </div>
             <h4 id="confirmTitle" class="font-black text-xl mb-3 uppercase text-slate-900 text-slate-900">¿Estás seguro?</h4>
-            <p id="confirmText" class="text-slate-500 text-xs mb-10 leading-relaxed text-slate-500"></p>
+            <p id="confirmText" class="text-slate-500 text-xs mb-10 leading-relaxed text-slate-500 text-slate-500"></p>
             <div class="flex flex-col gap-3">
-                <button id="confirmYesBtn" class="w-full bg-red-600 text-white py-5 rounded-[2rem] font-black uppercase text-xs shadow-xl active:scale-95 transition-all text-white">Confirmar Borrado</button>
-                <button onclick="window.closeConfirm()" class="w-full bg-slate-100 text-slate-500 py-5 rounded-[2rem] font-black uppercase text-xs active:scale-95 transition-all">Cancelar</button>
+                <button id="confirmYesBtn" class="w-full bg-red-600 text-white py-5 rounded-[2rem] font-black uppercase text-xs shadow-xl active:scale-95 transition-all text-white text-white">Confirmar Borrado</button>
+                <button onclick="window.closeConfirm()" class="w-full bg-slate-100 text-slate-500 py-5 rounded-[2rem] font-black uppercase text-xs active:scale-95 transition-all text-slate-500 text-slate-500">Cancelar</button>
             </div>
         </div>
     </div>
@@ -408,6 +416,7 @@
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // --- 1. CONFIGURACIÓN FIREBASE ---
         const firebaseConfig = {
           apiKey: "AIzaSyADadGOe0XW4sX6P5zmHTFnQRClMObnubo",
           authDomain: "seguridadcapilla-4e116.firebaseapp.com",
@@ -418,6 +427,7 @@
           measurementId: "G-DP73JK477V"
         };
 
+        // --- 2. CONSTANTES GLOBALES (ICON_MAP primero) ---
         const ICON_MAP = {
             'shield-check': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/>',
             'user': '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
@@ -439,32 +449,25 @@
             'check-circle': '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'
         };
 
-        let currentUnitData = null;
+        // --- 3. ESTADOS LOCALES ---
+        let currentUnitData = null; 
         let usersState = {};
         let reportsState = [];
         let taskCatalog = { exterior: [], interior: [] };
         let syncReady = false;
         let pendingConfirmAction = null;
+        const SU_EMAIL = "seguridadcapillassud@gmail.com";
 
+        // --- 4. INICIALIZACIÓN DE SERVICIOS ---
         const appInstance = initializeApp(firebaseConfig);
         const fAuth = getAuth(appInstance);
         const fDb = getFirestore(appInstance);
         const googleProvider = new GoogleAuthProvider();
+        googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-        const SU_EMAIL = "seguridadcapillassud@gmail.com";
-
-        function getNextSunday(offsetWeeks = 0) {
-            const now = new Date();
-            const d = new Date(now);
-            d.setDate(now.getDate() + (7 - now.getDay()) % 7 + (offsetWeeks * 7));
-            return d;
-        }
-        function getNextSundayDate(offset = 0) {
-            const d = getNextSunday(offset);
-            return d.toLocaleDateString('es-MX', { day: 'numeric', month: 'long' }).toUpperCase();
-        }
-
+        // --- 5. FUNCIONES DE APOYO ---
         function renderIcons() {
+            if (typeof ICON_MAP === 'undefined') return;
             document.querySelectorAll('[data-icon]').forEach(el => {
                 const name = el.getAttribute('data-icon'); const path = ICON_MAP[name];
                 if (path) el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full text-white">${path}</svg>`;
@@ -473,34 +476,114 @@
 
         function showModal(type, title, text) {
             const modal = document.getElementById('msgBox'); if (!modal) return;
-            document.getElementById('msgTitle').innerText = title.toUpperCase();
-            document.getElementById('msgText').innerText = text.toUpperCase();
+            const titleEl = document.getElementById('msgTitle');
+            const textEl = document.getElementById('msgText');
+            if (titleEl) titleEl.innerText = (title || "").toUpperCase();
+            if (textEl) textEl.innerText = (text || "").toUpperCase();
             const iconDiv = document.getElementById('msgIcon');
-            iconDiv.innerHTML = `<div class="${type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} p-6 rounded-full text-white"><div data-icon="${type === 'success' ? 'check-circle' : 'alert-octagon'}" class="w-12 h-12 text-white"></div></div>`;
+            if (iconDiv) {
+                iconDiv.innerHTML = `<div class="${type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} p-6 rounded-full text-white"><div data-icon="${type === 'success' ? 'check-circle' : 'alert-octagon'}" class="w-12 h-12 text-white"></div></div>`;
+            }
             modal.classList.replace('hidden', 'flex'); renderIcons();
         }
+
         function closeModal() { document.getElementById('msgBox')?.classList.replace('flex', 'hidden'); }
 
         function showConfirm(title, text, onConfirm) {
-            const box = document.getElementById('confirmBox');
-            document.getElementById('confirmTitle').innerText = title.toUpperCase();
-            document.getElementById('confirmText').innerText = text.toUpperCase();
-            pendingConfirmAction = onConfirm;
+            const box = document.getElementById('confirmBox'); if (!box) return;
+            const titleEl = document.getElementById('confirmTitle');
+            const textEl = document.getElementById('confirmText');
+            if (titleEl) titleEl.innerText = (title || "").toUpperCase();
+            if (textEl) textEl.innerText = (text || "").toUpperCase();
+            window.pendingConfirmAction = onConfirm;
             box.classList.replace('hidden', 'flex'); renderIcons();
         }
-        function closeConfirm() { document.getElementById('confirmBox')?.classList.replace('flex', 'hidden'); pendingConfirmAction = null; }
-        document.getElementById('confirmYesBtn')?.addEventListener('click', () => { if (pendingConfirmAction) pendingConfirmAction(); closeConfirm(); });
+
+        function closeConfirm() { document.getElementById('confirmBox')?.classList.replace('flex', 'hidden'); window.pendingConfirmAction = null; }
 
         function showPage(id) {
             ['loginPage', 'mainApp', 'unitStepPage', 'initAdminPage', 'superuserPanel'].forEach(p => document.getElementById(p)?.classList.add('hidden'));
-            document.getElementById(id)?.classList.remove('hidden'); renderIcons();
+            const target = document.getElementById(id);
+            if (target) { target.classList.remove('hidden'); renderIcons(); }
         }
-        
+
+        function setupInputAutoScroll() {
+            document.addEventListener('focusin', (e) => {
+                if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
+                    setTimeout(() => { e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 450);
+                }
+            });
+        }
+
+        function calculateSchedule() {
+            if (!currentUnitData || !currentUnitData.startTime || !usersState || !fAuth.currentUser) return;
+            const staffList = Object.keys(usersState).filter(e => usersState[e].role !== "Obispo").sort();
+            const [h, m] = currentUnitData.startTime.split(':').map(Number);
+            const dateSeed = new Date().getDate();
+            const slots = [{ id: 1, label: "Apertura / Exterior", offset: -10, type: 'exterior' }, 
+                           { id: 2, label: "Rondín Interior", offset: 70, type: 'interior' }, 
+                           { id: 3, label: "Salida / Cierre", offset: 105, type: 'interior' }];
+            
+            const schedule = slots.map((slot, idx) => {
+                const baseTime = new Date(); baseTime.setHours(h, m, 0); baseTime.setMinutes(baseTime.getMinutes() + slot.offset);
+                const assignedEmail = staffList[(dateSeed + idx) % staffList.length];
+                return { ...slot, time: baseTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), assigned: usersState[assignedEmail]?.name || assignedEmail, isMe: fAuth.currentUser.email.toLowerCase() === (assignedEmail || "").toLowerCase() };
+            });
+            
+            const myTurns = schedule.filter(s => s.isMe);
+            const container = document.getElementById('patrolScheduleList');
+            if (container) {
+                if (myTurns.length > 0) {
+                    container.innerHTML = myTurns.map(myTurn => {
+                        const tasksForChecklist = myTurn.type === 'exterior' ? taskCatalog.exterior : taskCatalog.interior;
+                        const checklistHtml = tasksForChecklist.map((taskLabel, idx) => `
+                            <div class="space-y-3 border-t border-white/10 pt-4 text-white">
+                                <div class="flex items-start gap-4">
+                                    <input type="checkbox" id="task_check_${myTurn.id}_${idx}" class="check-custom mt-0.5 shadow-md">
+                                    <label for="task_check_${myTurn.id}_${idx}" class="text-[12px] font-bold text-white leading-tight uppercase">${taskLabel}</label>
+                                </div>
+                                <input type="text" id="task_obs_${myTurn.id}_${idx}" class="task-input-integrated" placeholder="HALLAZGO...">
+                            </div>`).join('');
+
+                        return `<div class="space-y-6">
+                            <div class="flex items-center gap-4 bg-white/10 p-5 rounded-[2rem] border border-white/10">
+                                <div class="text-center min-w-[70px] text-white"><p class="text-[9px] font-black uppercase text-blue-300">Hora</p><p class="text-2xl font-black">${myTurn.time}</p></div>
+                                <div class="flex-grow overflow-hidden text-white"><p class="text-[11px] font-black uppercase text-amber-400 tracking-wider font-black">${myTurn.label}</p><p class="text-[14px] font-black truncate uppercase font-bold text-white">${myTurn.assigned}</p></div>
+                                <div class="w-3 h-3 bg-amber-400 rounded-full animate-pulse shadow-glow shadow-amber-500/50"></div>
+                            </div>
+                            <div class="bg-white/5 p-6 rounded-[2.5rem] border border-white/10 space-y-4 text-white">
+                                <p class="text-[9px] font-black uppercase opacity-60 tracking-[0.2em] mb-2 text-blue-200 uppercase">RONDÍN:</p>
+                                ${checklistHtml}
+                                <div class="pt-6 border-t border-white/10 text-white">
+                                    <p class="text-[9px] font-black uppercase opacity-60 mb-2">NOTAS:</p>
+                                    <textarea id="observations_${myTurn.id}" rows="3" class="task-input-integrated" placeholder="MENSAJE AL OBISPO..."></textarea>
+                                    <button onclick="window.submitPatrolReport(${myTurn.id})" class="w-full bg-emerald-600 text-white font-black py-5 rounded-[2rem] shadow-xl mt-6 text-[11px] uppercase tracking-widest active:scale-95 transition-all text-white">ENVIAR INFORME FINAL</button>
+                                </div>
+                            </div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    container.innerHTML = '<p class="p-10 text-[12px] uppercase text-blue-300 font-black text-center opacity-40">Sin giras para usted hoy.</p>';
+                }
+            }
+        }
+
+        // --- 6. VINCULACIÓN AL OBJETO WINDOW ---
+        window.showModal = showModal;
+        window.closeModal = closeModal;
+        window.showConfirm = showConfirm;
+        window.closeConfirm = closeConfirm;
+        window.renderIcons = renderIcons;
+        window.showPage = showPage;
+        window.calculateSchedule = calculateSchedule;
+        window.logout = async () => { if (fAuth) await signOut(fAuth); location.reload(); };
+
+        // --- 7. LÓGICA OPERATIVA ---
         function renderReportsAdminUI() {
             const list = document.getElementById('adminFullReportsList'); if (!list) return;
-            if (!reportsState || reportsState.length === 0) { list.innerHTML = '<p class="text-center py-12 opacity-40 text-xs font-black uppercase text-white">Sin informes</p>'; return; }
+            if (!reportsState || reportsState.length === 0) { list.innerHTML = '<p class="text-center py-12 opacity-40 text-xs font-black uppercase text-white text-white">Sin informes</p>'; return; }
             list.innerHTML = reportsState.map(r => `
-                <div class="report-grid p-3 text-[7px] leading-tight text-white border-b border-white/5">
+                <div class="report-grid p-3 text-[7px] leading-tight text-white border-b border-white/5 text-white">
                     <div class="pr-1 text-white">
                         <p class="text-[8px] font-black text-white">${new Date(r.timestamp).toLocaleDateString('es-MX', {day:'2-digit', month:'2-digit'})}</p>
                         <p class="text-blue-300 font-bold">${r.time}</p>
@@ -520,13 +603,13 @@
             const entries = Object.entries(usersState);
             if (entries.length === 0) { list.innerHTML = '<p class="col-span-full py-12 text-center opacity-50 text-xs text-white">SIN MIEMBROS</p>'; return; }
             list.innerHTML = entries.map(([id, data]) => `
-                <div class="bg-slate-900/50 p-5 border border-slate-700 flex justify-between items-center transition-all text-white">
+                <div class="bg-slate-900/50 p-5 border border-slate-700 flex justify-between items-center transition-all text-white text-white text-white">
                     <div class="min-w-0 flex-1 pr-4 text-white">
                         <p class="font-black text-xs uppercase tracking-tight text-white truncate font-bold text-white">${data.name || id}</p>
-                        <p class="text-[8px] text-blue-400 font-black uppercase mt-1 tracking-widest text-blue-400">${data.role}</p>
+                        <p class="text-[8px] text-blue-400 font-black uppercase mt-1 tracking-widest font-black text-blue-400">${data.role}</p>
                         <p class="text-[7px] text-slate-500 mt-1">${data.email}</p>
                     </div>
-                    <button onclick="window.deleteUser('${id}')" class="bg-red-900/30 text-red-400 w-10 h-10 rounded-xl flex items-center justify-center text-red-400"><div data-icon="trash-2" class="w-4 h-4"></div></button>
+                    <button onclick="window.deleteUser('${id}')" class="bg-red-900/30 text-red-400 w-10 h-10 rounded-xl flex items-center justify-center text-red-400 text-red-400 text-red-400"><div data-icon="trash-2" class="w-4 h-4"></div></button>
                 </div>`).join('');
             renderIcons();
         }
@@ -535,104 +618,49 @@
             const extList = document.getElementById('adminExteriorTasksList');
             const intList = document.getElementById('adminInteriorTasksList');
             if (!extList || !intList) return;
-            extList.innerHTML = taskCatalog.exterior.map((t, idx) => `<div class="catalog-row"><textarea onchange="window.editCatalogTask('exterior', ${idx}, this.value)" class="catalog-textarea no-scrollbar" rows="2">${t}</textarea><button onclick="window.removeCatalogTask('exterior', ${idx})" class="delete-btn active:scale-90 transition-all text-red-400 text-red-400 text-red-400"><div data-icon="x" class="w-4 h-4 text-red-400"></div></button></div>`).join('');
-            intList.innerHTML = taskCatalog.interior.map((t, idx) => `<div class="catalog-row"><textarea onchange="window.editCatalogTask('interior', ${idx}, this.value)" class="catalog-textarea no-scrollbar" rows="2">${t}</textarea><button onclick="window.removeCatalogTask('interior', ${idx})" class="delete-btn active:scale-90 transition-all text-red-400 text-red-400 text-red-400"><div data-icon="x" class="w-4 h-4 text-red-400"></div></button></div>`).join('');
+            extList.innerHTML = taskCatalog.exterior.map((t, idx) => `<div class="catalog-row text-white text-white"><textarea onchange="window.editCatalogTask('exterior', ${idx}, this.value)" class="catalog-textarea no-scrollbar" rows="2">${t}</textarea><button onclick="window.removeCatalogTask('exterior', ${idx})" class="delete-btn active:scale-90 transition-all text-red-400 text-red-400 text-red-400"><div data-icon="x" class="w-4 h-4 text-red-400"></div></button></div>`).join('');
+            intList.innerHTML = taskCatalog.interior.map((t, idx) => `<div class="catalog-row text-white text-white"><textarea onchange="window.editCatalogTask('interior', ${idx}, this.value)" class="catalog-textarea no-scrollbar" rows="2">${t}</textarea><button onclick="window.removeCatalogTask('interior', ${idx})" class="delete-btn active:scale-90 transition-all text-red-400 text-red-400 text-red-400"><div data-icon="x" class="w-4 h-4 text-red-400"></div></button></div>`).join('');
             renderIcons();
         }
 
-        function renderFutureScheduleUI() {
-            if (!currentUnitData?.startTime || !usersState) return;
-            const staffList = Object.keys(usersState).filter(e => usersState[e].role !== "Obispo").sort();
-            const container = document.getElementById('futureScheduleContainer');
-            if (staffList.length === 0) { container.innerHTML = '<p class="text-center opacity-50 py-10 text-white">Sin observadores configurados.</p>'; return; }
-            let html = "";
-            for (let i = 0; i < 4; i++) {
-                const dateObj = getNextSunday(i); const dateSeed = dateObj.getDate();
-                const dStr = dateObj.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
-                const slots = [{ label: "APERTURA", email: staffList[(dateSeed + 0) % staffList.length] }, { label: "RONDÍN", email: staffList[(dateSeed + 1) % staffList.length] }, { label: "SALIDA", email: staffList[(dateSeed + 2) % staffList.length] }];
-                html += `<div class="bg-white/5 border border-white/10 p-5 rounded-[2rem] space-y-3">
-                    <p class="text-[10px] font-black uppercase text-blue-400 tracking-widest border-b border-white/5 pb-2 mb-2 text-blue-400 font-bold">${dStr}</p>
-                    ${slots.map(s => `<div class="flex justify-between items-center text-[11px] text-white"><span class="opacity-60 text-[9px] uppercase text-white">${s.label}:</span><span class="font-black uppercase text-white truncate max-w-[150px] font-bold text-white text-white">${usersState[s.email]?.name || s.email}</span></div>`).join('')}
-                </div>`;
-            }
-            container.innerHTML = html; renderIcons();
+        function startUnitSync(unitNum) {
+            syncReady = false;
+            onSnapshot(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${unitNum}`, 'data'), snap => { 
+                if (snap.exists()) { usersState = snap.data().users || {}; syncReady = true; calculateSchedule(); renderUserListUI(); }
+                else { usersState = {}; syncReady = true; }
+            }, err => console.error("Sync Error:", err));
+            onSnapshot(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${unitNum}`, 'data'), snap => {
+                if (snap.exists()) { taskCatalog = snap.data(); }
+                else { 
+                    taskCatalog = { exterior: ['LUCES ESTACIONAMIENTO', 'PUERTAS EMERGENCIA', 'REVISIÓN AUTOS', 'LLEGADA MIEMBROS'], interior: ['EXTINTORES', 'REGLA 2 ADULTOS', 'ILUMINACIÓN', 'CIERRE'] };
+                    setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${unitNum}`, 'data'), taskCatalog);
+                }
+                calculateSchedule(); renderTasksCatalogUI();
+            }, err => console.error("Sync Error:", err));
+            onSnapshot(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${unitNum}`), snap => { 
+                reportsState = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => b.timestamp - a.timestamp); 
+                renderReportsAdminUI();
+            }, err => console.error("Sync Error:", err));
         }
 
-        function calculateSchedule() {
-            if (!currentUnitData?.startTime || !usersState || !fAuth.currentUser) return;
-            const staffList = Object.keys(usersState).filter(e => usersState[e].role !== "Obispo").sort();
-            const [h, m] = currentUnitData.startTime.split(':').map(Number);
-            const dateSeed = new Date().getDate();
-            const slots = [{ id: 1, label: "Apertura / Exterior", offset: -10, type: 'exterior' }, 
-                           { id: 2, label: "Rondín Interior", offset: 70, type: 'interior' }, 
-                           { id: 3, label: "Salida / Cierre", offset: 105, type: 'interior' }];
-            
-            const schedule = slots.map((slot, idx) => {
-                const baseTime = new Date(); baseTime.setHours(h, m, 0); baseTime.setMinutes(baseTime.getMinutes() + slot.offset);
-                const assignedEmail = staffList[(dateSeed + idx) % staffList.length]; const u = usersState[assignedEmail];
-                return { ...slot, time: baseTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), assigned: u?.name || assignedEmail, isMe: fAuth.currentUser.email === assignedEmail };
+        function loadAllUnitsForSU() {
+            onSnapshot(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades'), snap => {
+                const list = document.getElementById('allUnitsList');
+                if(list) list.innerHTML = snap.docs.map(d => `<div class="bg-slate-800 p-5 rounded-2xl flex justify-between items-center border border-slate-700 text-white text-white"><div><p class="font-bold text-sm uppercase text-white font-black text-white">${d.data().name}</p><p class="text-[10px] opacity-50 font-bold">ID: ${d.id}</p></div><button onclick="window.deleteUnit('${d.id}')" class="bg-red-900/30 text-red-400 px-4 py-2 rounded-xl text-[10px] font-black uppercase text-red-400 text-red-400">Eliminar</button></div>`).join('');
+                renderIcons();
             });
-            
-            const myTurns = schedule.filter(s => s.isMe);
-            const container = document.getElementById('patrolScheduleList');
-            const title = document.getElementById('scheduleTitle');
-            title.innerText = `TURNO DEL DOMINGO (${getNextSundayDate()})`;
-
-            if (myTurns.length > 0) {
-                container.innerHTML = myTurns.map(myTurn => {
-                    const tasksForChecklist = myTurn.type === 'exterior' ? taskCatalog.exterior : taskCatalog.interior;
-                    const checklistHtml = tasksForChecklist.map((taskLabel, idx) => `
-                        <div class="space-y-3 border-t border-white/10 pt-4 text-white">
-                            <div class="flex items-start gap-4">
-                                <input type="checkbox" id="task_check_${myTurn.id}_${idx}" class="check-custom mt-0.5 shadow-md">
-                                <label for="task_check_${myTurn.id}_${idx}" class="text-[12px] font-bold text-white leading-tight uppercase text-white">${taskLabel}</label>
-                            </div>
-                            <input type="text" id="task_obs_${myTurn.id}_${idx}" class="task-input-integrated" placeholder="DETALLAR HALLAZGO...">
-                        </div>`).join('');
-
-                    return `<div class="space-y-6 text-white text-white">
-                        <div class="flex items-center gap-4 bg-white/10 p-5 rounded-[2rem] border border-white/10">
-                            <div class="text-center min-w-[70px] text-white text-white text-white"><p class="text-[9px] font-black uppercase text-blue-300">Hora</p><p class="text-2xl font-black text-white text-white">${myTurn.time}</p></div>
-                            <div class="flex-grow overflow-hidden text-white text-white text-white text-white"><p class="text-[11px] font-black uppercase text-amber-400 tracking-wider font-black text-amber-400">${myTurn.label}</p><p class="text-[14px] font-black truncate uppercase font-bold text-white text-white">${myTurn.assigned}</p></div>
-                            <div class="w-3 h-3 bg-amber-400 rounded-full animate-pulse shadow-glow shadow-amber-500/50"></div>
-                        </div>
-                        <div class="bg-white/5 p-6 rounded-[2.5rem] border border-white/10 space-y-4 text-white text-white">
-                            <p class="text-[9px] font-black uppercase opacity-60 tracking-[0.2em] mb-2 text-blue-200 uppercase">RONDÍN:</p>
-                            ${checklistHtml}
-                            <div class="pt-6 border-t border-white/10 text-white text-white">
-                                <p class="text-[9px] font-black uppercase opacity-60 mb-2">NOTAS:</p>
-                                <textarea id="observations_${myTurn.id}" rows="3" class="task-input-integrated" placeholder="MENSAJE AL OBISPO..."></textarea>
-                                <button onclick="window.submitPatrolReport(${myTurn.id})" class="w-full bg-emerald-600 text-white font-black py-5 rounded-[2rem] shadow-xl mt-6 text-[11px] uppercase tracking-widest active:scale-95 transition-all text-white text-white">ENVIAR INFORME FINAL</button>
-                            </div>
-                        </div>
-                    </div>`;
-                }).join('');
-            } else {
-                container.innerHTML = '<p class="p-10 text-[12px] uppercase text-blue-300 font-black text-center opacity-40">Sin giras para usted hoy.</p>';
-            }
         }
 
-        // --- GOOGLE LOGIN (CON SUPERUSER - PUNTO FIX) ---
+        // --- 8. ACCESO GOOGLE ---
         window.loginWithGoogle = async () => {
             try {
                 const result = await signInWithPopup(fAuth, googleProvider);
                 const user = result.user;
                 const email = user.email.toLowerCase();
-
-                // LÓGICA DE SUPERUSUARIO (PUNTO RESTAURADO)
-                if (email === SU_EMAIL) {
-                    showPage('superuserPanel');
-                    loadAllUnitsForSU();
-                    return;
-                }
-
+                if (email === SU_EMAIL) { showPage('superuserPanel'); loadAllUnitsForSU(); return; }
                 if (!syncReady) { await new Promise(res => setTimeout(res, 800)); }
-                const authorizedUser = usersState[email];
-                if (authorizedUser) { enterAppUI(); } 
-                else {
-                    await signOut(fAuth);
-                    showModal("alert", "Sin Autorización", "Su cuenta no está registrada en este Barrio.");
-                }
+                if (usersState[email]) { enterAppUI(); } 
+                else { await signOut(fAuth); showModal("alert", "Denegado", "Su correo no está autorizado en este Barrio."); }
             } catch (e) { showModal("alert", "Error", "Fallo al conectar con Google."); }
         };
 
@@ -641,94 +669,17 @@
                 const result = await signInWithPopup(fAuth, googleProvider);
                 const user = result.user;
                 const email = user.email.toLowerCase();
-                const fName = user.displayName.toUpperCase();
-                const initialUsers = { [email]: { name: fName, email, role: "Administrador" } };
+                const initialUsers = { [email]: { name: user.displayName.toUpperCase(), email, role: "Administrador" } };
                 await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { 
                     name: currentUnitData.name.toUpperCase(), startTime: "09:00", createdAt: Date.now(), emergencyPhones: {} 
                 });
                 await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: initialUsers });
                 usersState = initialUsers; startUnitSync(currentUnitData.id); enterAppUI();
                 setTimeout(() => { window.toggleAdminPanel(true); window.switchAdminTab('users'); }, 600);
-            } catch (e) { showModal("alert", "Error", "Fallo al vincular."); }
+            } catch (e) { showModal("alert", "Error", "Fallo de registro."); }
         };
 
-        // --- SUPERUSER LOGIC ---
-        function loadAllUnitsForSU() {
-            onSnapshot(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades'), snap => {
-                const list = document.getElementById('allUnitsList');
-                if(list) list.innerHTML = snap.docs.map(d => `<div class="bg-slate-800 p-5 rounded-2xl flex justify-between items-center border border-slate-700 text-white"><div><p class="font-bold text-sm uppercase text-white font-black">${d.data().name}</p><p class="text-[10px] opacity-50 font-bold">ID: ${d.id}</p></div><button onclick="window.deleteUnit('${d.id}')" class="bg-red-900/30 text-red-400 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Eliminar</button></div>`).join('');
-                renderIcons();
-            });
-        }
-
-        function setupInputAutoScroll() {
-            document.addEventListener('focusin', (e) => {
-                if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-                    setTimeout(() => { e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 400);
-                }
-            });
-        }
-
-        function enterAppUI() {
-            const user = fAuth.currentUser;
-            if (!user) return;
-            if (user.email.toLowerCase() === SU_EMAIL) { showPage('superuserPanel'); loadAllUnitsForSU(); return; }
-            const u = usersState[user.email.toLowerCase()];
-            if (!u) { showPage('unitStepPage'); return; }
-            showPage('mainApp');
-            if (currentUnitData) {
-                document.getElementById('headerLocName').innerText = currentUnitData.name;
-                document.getElementById('headerUnitNumber').innerText = currentUnitData.id;
-                document.getElementById('inputStartTime').value = currentUnitData.startTime || "09:00";
-            }
-            document.getElementById('displayRole').innerText = u.role;
-            const ab = document.getElementById('adminBtn'); 
-            if(ab && (u.role?.includes("Administrador") || u.role === "Obispo")) ab.classList.remove('hidden');
-            calculateSchedule();
-        }
-
-        function startUnitSync(unitNum) {
-            syncReady = false;
-            onSnapshot(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${unitNum}`, 'data'), snap => { 
-                if (snap.exists()) { usersState = snap.data().users || {}; syncReady = true; calculateSchedule(); renderUserListUI(); }
-                else { usersState = {}; syncReady = true; }
-            });
-            onSnapshot(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${unitNum}`, 'data'), snap => {
-                if (snap.exists()) { taskCatalog = snap.data(); }
-                else { 
-                    taskCatalog = { exterior: ['LUCES ESTACIONAMIENTO', 'PUERTAS EMERGENCIA', 'REVISIÓN AUTOS', 'LLEGADA MIEMBROS'], interior: ['EXTINTORES', 'REGLA 2 ADULTOS', 'ILUMINACIÓN', 'CIERRE'] };
-                    setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${unitNum}`, 'data'), taskCatalog);
-                }
-                calculateSchedule(); renderTasksCatalogUI();
-            });
-            onSnapshot(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${unitNum}`), snap => { 
-                reportsState = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => b.timestamp - a.timestamp); 
-                renderReportsAdminUI();
-            });
-        }
-
-        window.showFutureScheduleModal = () => { renderFutureScheduleUI(); document.getElementById('futureScheduleModal').classList.replace('hidden', 'flex'); };
-        window.closeFutureScheduleModal = () => document.getElementById('futureScheduleModal').classList.replace('flex', 'hidden');
-
-        window.addNewCatalogTask = async (type) => {
-            const input = document.getElementById(`new${type.charAt(0).toUpperCase()+type.slice(1)}Task`);
-            if (!input || !input.value.trim()) return;
-            taskCatalog[type].push(input.value.trim().toUpperCase()); 
-            await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog);
-            input.value = "";
-        };
-        window.removeCatalogTask = async (type, index) => {
-            taskCatalog[type].splice(index, 1);
-            await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog);
-        };
-        window.editCatalogTask = async (type, index, val) => {
-            taskCatalog[type][index] = val.toUpperCase(); 
-            await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog);
-        };
-
-        window.closeModal = closeModal; window.showModal = showModal; window.showPage = showPage;
-        window.renderIcons = renderIcons; window.enterAppUI = enterAppUI; window.logout = async () => { await signOut(fAuth); location.reload(); };
-        
+        // --- 9. GESTIÓN DE INTERFAZ ---
         window.toggleAdminPanel = (forceState = null) => {
             const p = document.getElementById('adminPanel'); const c = document.getElementById('operationalContent');
             if (p && c) { 
@@ -741,8 +692,10 @@
 
         window.switchAdminTab = (tab) => {
             ['unit', 'tasks', 'emergency', 'users', 'reports'].forEach(t => { 
-                document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1)}`)?.classList.remove('tab-active'); 
-                document.getElementById(`panel${t.charAt(0).toUpperCase()+t.slice(1)}Content`)?.classList.add('hidden'); 
+                const tabBtn = document.getElementById(`tab${t.charAt(0).toUpperCase()+t.slice(1)}`);
+                const tabContent = document.getElementById(`panel${t.charAt(0).toUpperCase()+t.slice(1)}Content`);
+                if (tabBtn) tabBtn.classList.remove('tab-active'); 
+                if (tabContent) tabContent.classList.add('hidden'); 
             });
             const bt = document.getElementById(`tab${tab.charAt(0).toUpperCase()+tab.slice(1)}`); if(bt) bt.classList.add('tab-active');
             const pn = document.getElementById(`panel${tab.charAt(0).toUpperCase()+tab.slice(1)}Content`); if(pn) pn.classList.remove('hidden');
@@ -750,6 +703,25 @@
             if (tab === 'users') renderUserListUI();
             if (tab === 'tasks') renderTasksCatalogUI();
             renderIcons();
+        };
+
+        // --- 10. OPERACIONES DE DATOS ---
+        window.addNewCatalogTask = async (type) => {
+            const input = document.getElementById(`new${type.charAt(0).toUpperCase()+type.slice(1)}Task`);
+            if (!input || !input.value.trim()) return;
+            taskCatalog[type].push(input.value.trim().toUpperCase()); 
+            await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog);
+            input.value = "";
+        };
+
+        window.removeCatalogTask = async (type, index) => {
+            taskCatalog[type].splice(index, 1);
+            await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog);
+        };
+
+        window.editCatalogTask = async (type, index, val) => {
+            taskCatalog[type][index] = val.toUpperCase(); 
+            await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog);
         };
 
         window.deleteUser = (id) => {
@@ -766,8 +738,6 @@
             });
         };
 
-        window.handleInitGate = (isEligible) => { if (!isEligible) { location.reload(); return; } document.getElementById('initAdminGate')?.classList.add('hidden'); document.getElementById('initAdminForm')?.classList.remove('hidden'); };
-
         window.checkUnit = async () => {
             const rawName = document.getElementById('inputUnitName')?.value.trim().toUpperCase();
             const num = document.getElementById('inputUnitNumber')?.value.trim();
@@ -777,14 +747,11 @@
                 if (snap.exists()) {
                     if (snap.data().name.toUpperCase() === rawName) { 
                         currentUnitData = { id: num, ...snap.data() }; 
-                        document.getElementById('loginUnitDisplay').innerText = snap.data().name; 
-                        showPage('loginPage'); 
-                        startUnitSync(num); 
+                        const display = document.getElementById('loginUnitDisplay');
+                        if (display) display.innerText = snap.data().name; 
+                        showPage('loginPage'); startUnitSync(num); 
                     } else { showModal("alert", "Error", "El Barrio no coincide."); }
-                } else { 
-                    currentUnitData = { id: num, name: rawName }; 
-                    showPage('initAdminPage'); 
-                }
+                } else { currentUnitData = { id: num, name: rawName }; showPage('initAdminPage'); }
             } catch (e) { showModal("alert", "Error", "Fallo de conexión."); }
         };
 
@@ -795,7 +762,7 @@
             if (!fName || !email) return;
             usersState[email] = { name: fName, email, role };
             await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: usersState });
-            document.getElementById('addUserForm').reset();
+            document.getElementById('addUserForm')?.reset();
             showModal("success", "Éxito", "Miembro autorizado.");
         };
 
@@ -806,17 +773,19 @@
         };
 
         window.submitPatrolReport = async (tid) => {
-            const u = usersState[fAuth.currentUser?.email.toLowerCase()];
+            const user = fAuth.currentUser;
             const turnType = tid === 1 ? 'exterior' : 'interior';
             const tasksToLog = taskCatalog[turnType];
             let taskDetails = ""; 
             tasksToLog.forEach((taskLabel, idx) => {
                 const checked = document.getElementById(`task_check_${tid}_${idx}`).checked;
-                const obs = document.getElementById(`task_obs_${tid}_${idx}`).value.trim().toUpperCase();
+                const obsEl = document.getElementById(`task_obs_${tid}_${idx}`);
+                const obs = (obsEl?.value || "").trim().toUpperCase();
                 taskDetails += `${taskLabel}: [${checked ? 'CUMPLIDO' : 'PENDIENTE'}] ${obs ? '- OBS: '+obs : ''}\n`;
             });
-            const generalObs = (document.getElementById(`observations_${tid}`).value || 'SIN NOVEDAD').toUpperCase();
-            const report = { user: u?.name || fAuth.currentUser.email, type: "GIRA", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), timestamp: Date.now(), details: { summary: taskDetails, general: generalObs } };
+            const generalObsEl = document.getElementById(`observations_${tid}`);
+            const generalObs = (generalObsEl?.value || 'SIN NOVEDAD').toUpperCase();
+            const report = { user: usersState[user.email.toLowerCase()]?.name || user.email, type: "GIRA", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), timestamp: Date.now(), details: { summary: taskDetails, general: generalObs } };
             await addDoc(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${currentUnitData.id}`), report);
             if (navigator.vibrate) navigator.vibrate(100);
             showModal("success", "Informe Enviado", "Entrega exitosa.");
@@ -824,30 +793,54 @@
         };
 
         window.broadcastAlert = async () => {
-            const report = { user: fAuth.currentUser.email, type: "EMERGENCIA", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), timestamp: Date.now() };
+            const user = fAuth.currentUser;
+            const report = { user: user.email, type: "EMERGENCIA", time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), timestamp: Date.now() };
             await addDoc(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${currentUnitData.id}`), report);
             if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-            showModal("alert", "S.O.S", "Alerta enviada.");
+            showModal("alert", "S.O.S", "Alerta activa enviada.");
         };
 
         window.openEmergencyMenu = () => {
             const grid = document.getElementById('emergencyPhonesGrid');
-            const p = currentUnitData?.emergencyPhones || {};
-            const items = [{l:"P. Civil", n:p.pc||"911"}, {l:"Tránsito", n:p.tr||"911"}, {l:"Seg. Pública", n:p.sp||"911"}, {l:"Ambulancia", n:p.am||"911"}];
-            grid.innerHTML = items.map(i => `<a href="tel:${i.n}" class="bg-slate-50 p-5 rounded-2xl flex flex-col items-center gap-1 border border-slate-100 shadow-sm active:scale-95 transition-all text-slate-800"><span class="text-red-600 font-black text-lg">${i.n}</span><span class="text-[8px] text-slate-400 font-black uppercase">${i.l}</span></a>`).join('');
+            if (!grid) return;
+            const items = [{l:"P. Civil", n:"911"}, {l:"Tránsito", n:"911"}, {l:"S. Pública", n:"911"}, {l:"Ambulancia", n:"911"}];
+            grid.innerHTML = items.map(i => `<a href="tel:${i.n}" class="bg-slate-50 p-5 rounded-2xl flex flex-col items-center gap-1 border border-slate-100 shadow-sm active:scale-95 transition-all text-slate-800 text-slate-800"><span class="text-red-600 font-black text-lg text-red-600">${i.n}</span><span class="text-[8px] text-slate-400 font-black uppercase text-slate-400">${i.l}</span></a>`).join('');
             document.getElementById('emergencyMenu')?.classList.remove('hidden'); renderIcons();
         };
 
         window.closeEmergencyMenu = () => document.getElementById('emergencyMenu')?.classList.add('hidden');
 
-        onAuthStateChanged(fAuth, user => { /* Manejo de persistencia opcional */ });
+        // --- 11. INICIO DE EJECUCIÓN ---
         async function init() { 
             setupInputAutoScroll(); 
-            setTimeout(() => { document.getElementById('splashScreen')?.classList.add('animate-fade-out'); setTimeout(() => { document.getElementById('splashScreen')?.classList.add('hidden'); showPage('unitStepPage'); }, 500); }, 1500);
+            setTimeout(() => { 
+                const splash = document.getElementById('splashScreen');
+                if (splash) {
+                    splash.classList.add('animate-fade-out'); 
+                    setTimeout(() => { 
+                        splash.classList.add('hidden'); 
+                        showPage('unitStepPage'); 
+                    }, 500); 
+                }
+            }, 1500);
         }
-        init(); setInterval(calculateSchedule, 45000);
-        document.getElementById('unitForm')?.addEventListener('submit', e => { e.preventDefault(); window.checkUnit(); });
-        document.getElementById('addUserForm')?.addEventListener('submit', e => { e.preventDefault(); window.addNewUser(); });
+
+        init(); 
+        setInterval(calculateSchedule, 45000);
+        
+        // Listeners de eventos de formulario
+        document.getElementById('confirmYesBtn')?.addEventListener('click', () => { 
+            if (window.pendingConfirmAction) window.pendingConfirmAction(); 
+            closeConfirm(); 
+        });
+        document.getElementById('unitForm')?.addEventListener('submit', e => { 
+            e.preventDefault(); window.checkUnit(); 
+        });
+        document.getElementById('addUserForm')?.addEventListener('submit', e => { 
+            e.preventDefault(); window.addNewUser(); 
+        });
+        
+        onAuthStateChanged(fAuth, user => { if (user) { /* Sincronización diferida */ } });
     </script>
 </body>
 </html>
