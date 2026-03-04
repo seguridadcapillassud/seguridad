@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#1e3a8a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Seguridad Capillas - Versión 1.9.7</title>
+    <title>Seguridad Capillas - Versión 1.9.8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
@@ -46,7 +46,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Forzar mayúsculas y corregir desbordes */
+        /* Mayúsculas y corrección de desborde */
         input, textarea, select { 
             font-size: 16px !important; 
             text-transform: uppercase;
@@ -110,7 +110,7 @@
             background: rgba(239, 68, 68, 0.05);
         }
         
-        /* Grid de Informes - Ancho Real Móvil sin Scroll */
+        /* Grid de Informes - Sin scroll horizontal */
         .report-grid {
             display: grid;
             grid-template-columns: 28% 37% 35%;
@@ -118,7 +118,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Contenedor de contraseña con ojo */
+        /* Ojo para contraseña */
         .pass-container { position: relative; width: 100%; }
         .pass-toggle { 
             position: absolute; 
@@ -131,7 +131,6 @@
             padding: 0.5rem; 
         }
 
-        /* Espaciado extra para formularios para permitir scroll con teclado */
         form { padding-bottom: 2rem; }
     </style>
 </head>
@@ -143,14 +142,14 @@
             <div id="splashIcon" data-icon="shield-check" class="w-16 h-16"></div>
         </div>
         <h1 class="text-4xl font-black uppercase tracking-tighter mb-1 px-6">Seguridad Capillas</h1>
-        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 1.9.7 Mobile</p>
+        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 1.9.8 Mobile</p>
         <div class="absolute bottom-12 flex flex-col items-center px-6 w-full">
             <div id="loadingSpinner" class="w-8 h-8 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin mb-4"></div>
             <span id="statusLabel" class="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70">Sincronizando...</span>
         </div>
     </div>
 
-    <!-- PÁGINA IDENTIFICACIÓN -->
+    <!-- IDENTIFICACIÓN -->
     <div id="unitStepPage" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900">
         <div class="w-full max-w-sm space-y-10">
             <div class="text-center space-y-2">
@@ -165,7 +164,7 @@
         </div>
     </div>
 
-    <!-- PÁGINA ACCESO -->
+    <!-- ACCESO -->
     <div id="loginPage" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900">
         <div class="w-full max-w-sm space-y-10">
             <div class="text-center space-y-2">
@@ -184,7 +183,7 @@
         </div>
     </div>
 
-    <!-- PÁGINA REGISTRO INICIAL -->
+    <!-- REGISTRO INICIAL -->
     <div id="initAdminPage" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900">
         <div class="w-full max-w-sm space-y-8">
             <div class="bg-slate-800 p-8 rounded-[2.5rem] border border-slate-700 text-center">
@@ -192,7 +191,7 @@
                 <h2 class="text-xl font-black uppercase tracking-tight text-white leading-tight">Configuración Inicial</h2>
                 <p class="text-slate-400 text-xs mt-3 font-medium leading-relaxed">¿Es usted el Especialista en Seguridad o el Obispo?</p>
                 <div id="initAdminGate" class="flex gap-3 mt-8">
-                    <button onclick="window.handleInitGate(true)" class="flex-1 bg-blue-600 text-white font-black py-4 rounded-2xl uppercase text-xs active:scale-95">Sí, soy yo</button>
+                    <button onclick="window.handleInitGate(true)" class="flex-1 bg-blue-600 text-white font-black py-4 rounded-2xl uppercase text-xs shadow-lg active:scale-95">Sí, soy yo</button>
                     <button onclick="window.handleInitGate(false)" class="flex-1 bg-slate-700 text-slate-300 border border-slate-600 font-bold py-4 rounded-2xl uppercase text-xs active:scale-95">No</button>
                 </div>
             </div>
@@ -211,7 +210,7 @@
     <!-- PANEL SUPERUSUARIO -->
     <div id="superuserPanel" class="hidden flex-grow flex flex-col bg-slate-950 text-white">
         <header class="bg-red-900 p-6 pt-10 flex justify-between items-center shadow-2xl">
-            <div><h2 class="text-xl font-black uppercase tracking-widest">Master Panel</h2><p class="text-[10px] font-bold text-red-200 uppercase opacity-60">Gestión Global</p></div>
+            <div><h2 class="text-xl font-black uppercase tracking-widest font-black">Master Panel</h2><p class="text-[10px] font-bold text-red-200 uppercase opacity-60">Gestión Global</p></div>
             <button onclick="window.logout()" class="bg-white/10 p-3 rounded-2xl"><div data-icon="log-out" class="w-6 h-6"></div></button>
         </header>
         <main class="w-full p-6 space-y-6"><div id="allUnitsList" class="space-y-4"></div></main>
@@ -222,7 +221,6 @@
         <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50 pt-10 pb-4">
             <div class="w-full px-4 flex justify-between items-center relative h-14">
                 
-                <!-- IZQUIERDA: CALENDARIO + ROL + BARRIO -->
                 <div class="flex items-center gap-3">
                     <button onclick="window.showFutureScheduleModal()" class="bg-white/10 active:bg-blue-600 w-11 h-11 rounded-2xl flex items-center justify-center transition-all shadow-inner">
                         <div data-icon="calendar" class="w-6 h-6"></div>
@@ -230,28 +228,25 @@
                     <div class="flex flex-col">
                         <span id="displayRole" class="text-[7px] font-black bg-blue-800 px-1.5 py-0.5 rounded text-blue-200 uppercase tracking-tighter border border-blue-700/50 mb-1 w-max">...</span>
                         <h2 id="headerLocName" class="font-black text-[10px] uppercase truncate max-w-[80px] leading-tight">...</h2>
-                        <!-- Solo número de unidad (Punto 3) -->
                         <span id="headerUnitNumber" class="text-[8px] text-blue-300 font-bold opacity-80 leading-none mt-0.5">...</span>
                     </div>
                 </div>
 
-                <!-- CENTRO: SOS -->
                 <div class="absolute left-1/2 -translate-x-1/2">
                     <button onclick="window.openEmergencyMenu()" class="sos-glow bg-red-600 text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl active:scale-90 transition-all border-4 border-blue-900">
                         <div data-icon="megaphone" class="w-8 h-8"></div>
                     </button>
                 </div>
 
-                <!-- DERECHA: BOTONES -->
                 <div class="flex items-center gap-1.5">
-                    <button id="adminBtn" onclick="window.toggleAdminPanel()" class="hidden admin-gear-btn w-10 h-10 rounded-xl shadow-lg flex items-center justify-center active:scale-90"><div data-icon="settings" class="w-5 h-5"></div></button>
+                    <button id="adminBtn" onclick="window.toggleAdminPanel()" class="hidden admin-gear-btn w-10 h-10 rounded-xl shadow-lg flex items-center justify-center active:scale-90"><div data-icon="settings" class="w-5 h-5 text-slate-800"></div></button>
                     <button onclick="window.logout()" class="bg-white/10 hover:bg-red-500 w-10 h-10 rounded-xl transition-all flex items-center justify-center active:scale-90"><div data-icon="log-out" class="w-5 h-5"></div></button>
                 </div>
             </div>
         </header>
 
         <main class="w-full flex-grow bg-slate-900">
-            <!-- PANEL ADMINISTRADOR FULL WIDTH -->
+            <!-- PANEL ADMINISTRADOR -->
             <section id="adminPanel" class="hidden bg-slate-800 w-full animate-in slide-in-from-top-4 duration-300 pb-10">
                 <div class="flex justify-between items-center p-5 bg-slate-900/50 border-b border-slate-700">
                     <div class="flex items-center gap-3">
@@ -307,26 +302,26 @@
                             <div class="grid grid-cols-1 gap-4">
                                 <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1">Protección Civil</label><input type="tel" id="tel_pc" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
                                 <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1">Tránsito</label><input type="tel" id="tel_tr" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
-                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1 text-slate-400">Seguridad Pública</label><input type="tel" id="tel_sp" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
-                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1 text-slate-400">Ambulancia</label><input type="tel" id="tel_am" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
-                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1 text-slate-400 text-slate-400">Bomberos</label><input type="tel" id="tel_bo" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
-                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1 text-slate-400 text-slate-400">Otro</label><input type="tel" id="tel_ot" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1">Seguridad Pública</label><input type="tel" id="tel_sp" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1">Ambulancia</label><input type="tel" id="tel_am" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1">Bomberos</label><input type="tel" id="tel_bo" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
+                                <div><label class="text-[8px] font-bold text-slate-400 uppercase block mb-1">Otro</label><input type="tel" id="tel_ot" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm font-bold text-white shadow-inner"></div>
                             </div>
                             <button onclick="window.updateEmergencyPhones()" class="w-full bg-emerald-600 py-5 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl active:scale-95 transition-transform mt-4">Guardar Teléfonos</button>
                         </div>
                     </div>
 
                     <div id="panelUsersContent" class="hidden space-y-6">
-                        <div class="bg-slate-900/50 p-6 border border-slate-700 rounded-2xl">
+                        <div class="bg-slate-900/50 p-6 border border-slate-700 rounded-2xl mb-6">
                             <form id="addUserForm" class="space-y-4">
-                                <input type="text" id="newUserFullName" required placeholder="NOMBRE COMPLETO" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm font-bold text-white force-uppercase shadow-inner">
-                                <input type="email" id="newUserEmail" required placeholder="correo@ejemplo.com" style="text-transform: none;" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm text-white shadow-inner">
+                                <input type="text" id="newUserFullName" required placeholder="NOMBRE COMPLETO" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm font-bold text-white force-uppercase">
+                                <input type="email" id="newUserEmail" required placeholder="correo@ejemplo.com" style="text-transform: none;" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm text-white">
                                 <div class="grid grid-cols-1 gap-4">
                                     <div class="pass-container">
                                         <input type="password" id="newUserPass" required placeholder="Clave temporal" style="text-transform: none;" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm font-bold text-white shadow-inner">
                                         <div class="pass-toggle" onclick="window.togglePassword('newUserPass')"><div data-icon="eye" class="w-5 h-5"></div></div>
                                     </div>
-                                    <select id="newUserRole" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm font-bold text-white shadow-inner">
+                                    <select id="newUserRole" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-4 text-sm font-bold text-white">
                                         <option value="Observador">Observador</option>
                                         <option value="Administrador Auxiliar">Administrador Auxiliar</option>
                                         <option value="Obispo">Obispo</option>
@@ -338,11 +333,11 @@
                         <div id="userTableList" class="space-y-3 px-2"></div>
                     </div>
                     
-                    <!-- INFORMES - PUNTO 4: Sin Scroll Lateral -->
+                    <!-- INFORMES - PUNTO 1: Título de columna ajustado -->
                     <div id="panelReportsContent" class="hidden">
                         <div class="bg-slate-950 border-y border-slate-700 text-white overflow-hidden">
                             <div class="report-grid p-3 text-[8px] font-black uppercase text-blue-400 bg-slate-900/50 border-b border-slate-700">
-                                <div>FECHA / LÍDER</div>
+                                <div>FECHA / RESPONSABLE</div>
                                 <div class="border-l border-white/5 pl-2">TAREAS</div>
                                 <div class="border-l border-white/5 pl-2">NOTAS</div>
                             </div>
@@ -374,14 +369,13 @@
         <div class="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200">
             <div class="flex justify-between items-center mb-8">
                 <h4 class="font-black text-xl uppercase tracking-tighter text-blue-400">Proyección Mensual</h4>
-                <button onclick="window.closeFutureScheduleModal()" class="text-slate-500 bg-white/5 p-3 rounded-full"><div data-icon="x" class="w-6 h-6"></div></button>
+                <button onclick="window.closeFutureScheduleModal()" class="text-slate-500 p-2"><div data-icon="x" class="w-6 h-6"></div></button>
             </div>
             <div id="futureScheduleContainer" class="space-y-5 max-h-[60vh] overflow-y-auto no-scrollbar pr-1"></div>
             <button onclick="window.closeFutureScheduleModal()" class="w-full bg-slate-800 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest mt-8 border border-slate-700">Cerrar</button>
         </div>
     </div>
 
-    <!-- DIRECTORIO SOS -->
     <div id="emergencyMenu" class="fixed inset-0 bg-slate-900/98 hidden items-end sm:items-center justify-center p-4 z-50 text-slate-800">
         <div class="bg-white rounded-[2.5rem] w-full max-w-md p-8 shadow-2xl text-center mb-4 sm:mb-0">
             <div class="flex justify-between items-center mb-8">
@@ -400,7 +394,7 @@
             <div id="msgIcon" class="mb-8 flex justify-center text-slate-800"></div>
             <h4 id="msgTitle" class="font-black text-xl mb-3 uppercase leading-tight text-slate-900 text-slate-800"></h4>
             <p id="msgText" class="text-slate-500 text-xs mb-10 leading-relaxed font-medium text-slate-500"></p>
-            <button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-[11px] tracking-widest active:scale-95 transition-transform">Entendido</button>
+            <button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-black uppercase text-[11px] tracking-widest active:scale-95">Entendido</button>
         </div>
     </div>
 
@@ -409,7 +403,6 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // === FIREBASE CONFIG ===
         const firebaseConfig = {
           apiKey: "AIzaSyADadGOe0XW4sX6P5zmHTFnQRClMObnubo",
           authDomain: "seguridadcapilla-4e116.firebaseapp.com",
@@ -456,7 +449,6 @@
         const SU_EMAIL = "seguridadcapillassud@gmail.com";
         const SU_PASS = "tlahuiscalpantecutli1963";
 
-        // --- UTILIDADES ---
         function getNextSunday(offsetWeeks = 0) {
             const now = new Date();
             const d = new Date(now);
@@ -479,7 +471,7 @@
             document.getElementById('msgTitle').innerText = title.toUpperCase();
             document.getElementById('msgText').innerText = text.toUpperCase();
             const iconDiv = document.getElementById('msgIcon');
-            iconDiv.innerHTML = `<div class="${type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} p-6 rounded-full"><div data-icon="${type === 'success' ? 'check-circle' : 'alert-octagon'}" class="w-12 h-12"></div></div>`;
+            iconDiv.innerHTML = `<div class="${type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'} p-6 rounded-full text-slate-800"><div data-icon="${type === 'success' ? 'check-circle' : 'alert-octagon'}" class="w-12 h-12"></div></div>`;
             modal.classList.replace('hidden', 'flex'); renderIcons();
         }
         function closeModal() { document.getElementById('msgBox')?.classList.replace('flex', 'hidden'); }
@@ -516,8 +508,8 @@
             list.innerHTML = entries.map(([id, data]) => `
                 <div class="bg-slate-900/50 p-5 border border-slate-700 flex justify-between items-center transition-all text-white">
                     <div class="min-w-0 flex-1 pr-4">
-                        <p class="font-black text-xs uppercase tracking-tight text-white truncate">${data.name || id}</p>
-                        <p class="text-[8px] text-blue-400 font-black uppercase mt-1 tracking-widest">${data.role}</p>
+                        <p class="font-black text-xs uppercase tracking-tight text-white truncate font-bold">${data.name || id}</p>
+                        <p class="text-[8px] text-blue-400 font-black uppercase mt-1 tracking-widest font-black">${data.role}</p>
                     </div>
                     <button onclick="window.deleteUser('${id}')" class="bg-red-900/30 text-red-400 w-10 h-10 rounded-xl flex items-center justify-center"><div data-icon="trash-2" class="w-4 h-4"></div></button>
                 </div>`).join('');
@@ -543,28 +535,6 @@
                     <button onclick="window.removeCatalogTask('interior', ${idx})" class="delete-btn active:scale-90 transition-all text-red-400"><div data-icon="x" class="w-4 h-4"></div></button>
                 </div>`).join('');
             renderIcons();
-        }
-
-        function renderFutureScheduleUI() {
-            if (!currentUnitData?.startTime || !usersState) return;
-            const staffList = Object.keys(usersState).filter(e => usersState[e].role !== "Obispo").sort();
-            const container = document.getElementById('futureScheduleContainer');
-            if (staffList.length === 0) { container.innerHTML = '<p class="text-center opacity-50 py-10">Agregue observadores.</p>'; return; }
-            let html = "";
-            for (let i = 0; i < 4; i++) {
-                const dateObj = getNextSunday(i); const dateSeed = dateObj.getDate();
-                const dStr = dateObj.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
-                const slots = [
-                    { label: "APERTURA", email: staffList[(dateSeed + 0) % staffList.length] },
-                    { label: "RONDÍN", email: staffList[(dateSeed + 1) % staffList.length] },
-                    { label: "SALIDA", email: staffList[(dateSeed + 2) % staffList.length] }
-                ];
-                html += `<div class="bg-white/5 border border-white/10 p-5 rounded-[2rem] space-y-3">
-                    <p class="text-[10px] font-black uppercase text-blue-400 tracking-widest border-b border-white/5 pb-2 mb-2">${dStr}</p>
-                    ${slots.map(s => `<div class="flex justify-between items-center text-[11px] text-white"><span class="opacity-60 text-[9px] uppercase">${s.label}:</span><span class="font-black uppercase text-white truncate max-w-[150px]">${usersState[s.email]?.name || s.email}</span></div>`).join('')}
-                </div>`;
-            }
-            container.innerHTML = html; renderIcons();
         }
 
         function calculateSchedule() {
@@ -607,7 +577,7 @@
                             <div class="w-3 h-3 bg-amber-400 rounded-full animate-pulse shadow-glow shadow-amber-500/50"></div>
                         </div>
                         <div class="bg-white/5 p-6 rounded-[2.5rem] border border-white/10 space-y-4 text-white">
-                            <p class="text-[9px] font-black uppercase opacity-60 tracking-[0.2em] mb-2 text-blue-200">HOJA DE GIRA:</p>
+                            <p class="text-[9px] font-black uppercase opacity-60 tracking-[0.2em] mb-2 text-blue-200 uppercase">RONDÍN:</p>
                             ${checklistHtml}
                             <div class="pt-6 border-t border-white/10">
                                 <p class="text-[9px] font-black uppercase opacity-60 mb-2">NOTAS GENERALES:</p>
@@ -622,11 +592,9 @@
             }
         }
 
-        // --- AUTOMATIZACIÓN DE SCROLL PARA TECLADO (PUNTO 2) ---
         function setupInputAutoScroll() {
             document.addEventListener('focusin', (e) => {
                 if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) {
-                    // Esperar a que el teclado termine de subir
                     setTimeout(() => {
                         e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }, 350);
