@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <title>Seguridad Capillas - Versión 2.9.2</title>
+    <title>Seguridad Capillas - Versión 2.9.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
@@ -41,17 +41,18 @@
         .google-btn { background-color: white; color: #374151; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 16px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); width: 100%; transition: all 0.2s; }
         .google-btn:active { transform: scale(0.97); background-color: #f9fafb; }
         .phone-input-unified { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px; color: white; font-size: 14px; font-weight: 600; width: 100%; outline: none; }
+        .report-grid { display: grid; grid-template-columns: 28% 37% 35%; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body class="flex flex-col">
 
-    <!-- Splash Screen (Kill-switch inmediato) -->
-    <div id="splashScreen" class="fixed inset-0 z-[100] bg-blue-900 flex flex-col items-center justify-center text-white text-center">
+    <!-- Splash Screen (Kill-switch 1.1s) -->
+    <div id="splashScreen" style="display: flex;" class="fixed inset-0 z-[100] bg-blue-900 flex flex-col items-center justify-center text-white text-center">
         <div class="mb-6 bg-white/10 p-6 rounded-full backdrop-blur-md border border-white/20">
             <div data-icon="shield-check" class="w-16 h-16 text-white"></div>
         </div>
         <h1 class="text-4xl font-black uppercase tracking-tighter mb-1 px-6">Seguridad Capillas</h1>
-        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 2.9.2 Full</p>
+        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 2.9.3 Full</p>
         <div class="absolute bottom-12 flex flex-col items-center px-6 w-full">
             <div class="w-8 h-8 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin mb-4"></div>
             <span class="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70">Accediendo...</span>
@@ -124,22 +125,29 @@
                 <div class="p-4 space-y-6">
                     <div id="panelUnitContent" class="space-y-4">
                         <div class="p-6 bg-slate-900/50 border border-slate-700 rounded-2xl">
-                            <label class="text-[9px] font-black uppercase text-slate-400 mb-2 block">Entrada Dominical</label>
+                            <label class="text-[9px] font-black uppercase text-slate-400 mb-2 block">Hora de Entrada Dominical</label>
                             <input type="time" id="inputStartTime" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-5 py-4 text-xl font-bold text-white mb-4">
                             <button onclick="window.updateUnitTime()" class="w-full bg-blue-600 text-white font-black py-5 rounded-xl uppercase text-xs">Guardar</button>
                         </div>
                     </div>
-                    <div id="panelTasksContent" class="hidden space-y-4 text-white">
+                    <!-- Módulo de Tareas con input para ambos turnos -->
+                    <div id="panelTasksContent" class="hidden space-y-6 text-white">
                         <div class="bg-slate-900/50 border border-slate-700 rounded-2xl overflow-hidden text-white">
+                            <label class="p-3 text-[8px] font-black text-slate-500 uppercase bg-slate-950/30 block">Tareas Turno Exterior</label>
                             <div id="adminExteriorTasksList" class="divide-y divide-white/5 text-white"></div>
-                            <div class="p-3 flex gap-2"><input type="text" id="newExteriorTask" class="flex-grow bg-slate-800 p-3 rounded-xl text-xs font-bold text-white" placeholder="NUEVA TAREA..."><button onclick="window.addNewCatalogTask('exterior')" class="bg-blue-600 px-4 rounded-xl text-white">+</button></div>
+                            <div class="p-3 flex gap-2"><input type="text" id="newExteriorTask" class="flex-grow bg-slate-800 p-3 rounded-xl text-xs font-bold text-white" placeholder="NUEVA TAREA..."><button onclick="window.addNewCatalogTask('exterior')" class="bg-blue-600 px-4 rounded-xl text-white font-bold">+</button></div>
+                        </div>
+                        <div class="bg-slate-900/50 border border-slate-700 rounded-2xl overflow-hidden text-white">
+                            <label class="p-3 text-[8px] font-black text-slate-500 uppercase bg-slate-950/30 block">Tareas Turno Interior</label>
+                            <div id="adminInteriorTasksList" class="divide-y divide-white/5 text-white"></div>
+                            <div class="p-3 flex gap-2"><input type="text" id="newInteriorTask" class="flex-grow bg-slate-800 p-3 rounded-xl text-xs font-bold text-white" placeholder="NUEVA TAREA..."><button onclick="window.addNewCatalogTask('interior')" class="bg-blue-600 px-4 rounded-xl text-white font-bold">+</button></div>
                         </div>
                     </div>
                     <div id="panelUsersContent" class="hidden space-y-4 text-white">
                         <div id="userTableList" class="space-y-2"></div>
                         <div class="bg-slate-900/50 p-6 border border-slate-700 rounded-2xl text-white">
                             <form id="addUserForm" class="space-y-4">
-                                <input type="text" id="newUserFullName" required placeholder="NOMBRE" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-sm font-bold text-white">
+                                <input type="text" id="newUserFullName" required placeholder="NOMBRE COMPLETO" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-sm font-bold text-white">
                                 <input type="email" id="newUserEmail" required placeholder="CORREO GOOGLE" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-sm text-white">
                                 <select id="newUserRole" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-sm font-bold text-white">
                                     <option value="Observador">Observador</option>
@@ -157,10 +165,12 @@
                             <input type="tel" id="tel_sp" placeholder="SEG. PÚBLICA" class="phone-input-unified">
                             <input type="tel" id="tel_am" placeholder="AMBULANCIA" class="phone-input-unified">
                             <input type="tel" id="tel_bo" placeholder="BOMBEROS" class="phone-input-unified">
-                            <button onclick="window.updateEmergencyPhones()" class="w-full bg-emerald-600 py-4 rounded-xl font-black uppercase text-xs">Guardar Directorio</button>
+                            <button onclick="window.updateEmergencyPhones()" class="w-full bg-emerald-600 py-4 rounded-xl font-black uppercase text-xs shadow-xl active:scale-95">Guardar SOS</button>
                         </div>
                     </div>
-                    <div id="panelReportsContent" class="hidden"><div id="adminFullReportsList" class="divide-y divide-slate-800"></div></div>
+                    <div id="panelReportsContent" class="hidden">
+                        <div id="adminFullReportsList" class="divide-y divide-slate-800 bg-slate-900/50 border border-slate-700 rounded-2xl overflow-hidden"></div>
+                    </div>
                 </div>
             </section>
 
@@ -169,10 +179,10 @@
                 <div class="bg-blue-900 w-full p-8 rounded-[3rem] shadow-2xl border-b-8 border-blue-950 text-white">
                     <div class="flex justify-between items-center mb-8">
                         <h3 class="font-black text-sm uppercase text-blue-200" id="scheduleTitle">Turnos Dominicales</h3>
-                        <button onclick="window.openEmergencyMenu()" class="sos-glow bg-red-600 p-3 rounded-full text-white"><div data-icon="phone-call" class="w-6 h-6"></div></button>
+                        <button onclick="window.openEmergencyMenu()" class="sos-glow bg-red-600 p-3 rounded-full text-white"><div data-icon="megaphone" class="w-6 h-6"></div></button>
                     </div>
-                    <div id="patrolScheduleList" class="space-y-6">
-                        <p class="text-center opacity-40 text-[10px] font-black uppercase text-white">Sincronizando con el Barrio...</p>
+                    <div id="patrolScheduleList" class="space-y-10">
+                        <p class="text-center opacity-40 text-[10px] font-black uppercase text-white">Sincronizando...</p>
                     </div>
                 </div>
             </section>
@@ -182,7 +192,7 @@
     <!-- Modales -->
     <div id="msgBox" class="fixed inset-0 bg-black/95 hidden items-center justify-center p-4 z-[300] text-slate-800">
         <div class="bg-white rounded-[3rem] p-10 max-w-xs w-full text-center shadow-2xl">
-            <div id="msgIcon" class="mb-8 flex justify-center"></div>
+            <div id="msgIcon" class="mb-8 flex justify-center text-slate-800"></div>
             <h4 id="msgTitle" class="font-black text-xl mb-3 uppercase leading-tight text-slate-900"></h4>
             <p id="msgText" class="text-slate-500 text-[10px] mb-10 leading-relaxed font-medium text-slate-500"></p>
             <button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-black uppercase text-[11px] active:scale-95 text-white">Entendido</button>
@@ -229,6 +239,7 @@
             'log-out': '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
             'settings': '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
             'x': '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+            'megaphone': '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
             'phone-call': '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/><path d="M14.05 2a9 9 0 0 1 8 8"/><path d="M14.05 6A5 5 0 0 1 18 10"/>',
             'trash-2': '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>'
         };
@@ -242,6 +253,7 @@
         let currentUnitData = null;
         let usersState = {};
         let taskCatalog = { exterior: [], interior: [] };
+        let reportsState = [];
 
         // --- UI CORE ---
         window.renderIcons = () => { document.querySelectorAll('[data-icon]').forEach(el => { const p = ICON_MAP[el.getAttribute('data-icon')]; if (p) el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full text-white">${p}</svg>`; }); };
@@ -259,17 +271,25 @@
         };
 
         window.renderTasksCatalogUI = () => {
-            const extList = document.getElementById('adminExteriorTasksList'); if (!extList) return;
+            const extList = document.getElementById('adminExteriorTasksList'); const intList = document.getElementById('adminInteriorTasksList');
+            if (!extList || !intList) return;
             extList.innerHTML = (taskCatalog.exterior || []).map((t, idx) => `<div class="catalog-row p-3"><textarea onchange="window.editCatalogTask('exterior', ${idx}, this.value)" class="catalog-textarea text-white" rows="1">${t}</textarea><button onclick="window.removeCatalogTask('exterior', ${idx})" class="text-red-400 p-2"><div data-icon="x" class="w-4 h-4 text-red-400"></div></button></div>`).join('');
+            intList.innerHTML = (taskCatalog.interior || []).map((t, idx) => `<div class="catalog-row p-3"><textarea onchange="window.editCatalogTask('interior', ${idx}, this.value)" class="catalog-textarea text-white" rows="1">${t}</textarea><button onclick="window.removeCatalogTask('interior', ${idx})" class="text-red-400 p-2"><div data-icon="x" class="w-4 h-4 text-red-400"></div></button></div>`).join('');
             window.renderIcons();
         };
 
-        // --- LÓGICA ---
+        function renderReportsAdminUI() {
+            const list = document.getElementById('adminFullReportsList'); if (!list) return;
+            if (reportsState.length === 0) { list.innerHTML = '<p class="text-center py-10 opacity-30 text-xs font-black uppercase">SIN REPORTES</p>'; return; }
+            list.innerHTML = reportsState.map(r => `<div class="report-grid p-3 text-[7px] leading-tight text-white border-b border-white/5"><div class="pr-1"><p class="text-[8px] font-black">${r.time}</p><p class="opacity-60 uppercase truncate font-bold">${r.user}</p></div><div class="border-l border-white/10 pl-2 pr-1 opacity-80">${r.details?.summary || '---'}</div><div class="border-l border-white/10 pl-2 italic text-amber-200">${r.details?.general || 'OK'}</div></div>`).join('');
+        }
+
+        // --- LÓGICA TURNOS ---
         function calculateSchedule() {
             if (!currentUnitData || !usersState || !fAuth.currentUser) return;
             const staffList = Object.keys(usersState).filter(e => usersState[e].role !== "Obispo").sort();
             const container = document.getElementById('patrolScheduleList');
-            if(staffList.length === 0) { container.innerHTML = '<p class="text-center opacity-40 py-10">Sin miembros registrados.</p>'; return; }
+            if(staffList.length === 0) { container.innerHTML = '<p class="text-center opacity-40 py-10 uppercase text-xs">Sin miembros activos.</p>'; return; }
             const email = (fAuth.currentUser.email || "").toLowerCase();
             const dateSeed = new Date().getDate();
             const schedule = [{ id: 1, label: "Apertura" }, { id: 2, label: "Rondín" }, { id: 3, label: "Salida" }].map((slot, idx) => {
@@ -278,7 +298,7 @@
             });
             const myTurns = schedule.filter(s => s.isMe);
             if (myTurns.length > 0) {
-                container.innerHTML = myTurns.map(t => `<div class="bg-white/5 p-6 rounded-[2.5rem] border border-white/10 text-center"><p class="text-amber-400 font-black uppercase text-xs mb-4">${t.label}</p><button class="bg-emerald-600 py-4 px-8 rounded-2xl font-black text-xs uppercase text-white">Enviar Reporte</button></div>`).join('');
+                container.innerHTML = myTurns.map(t => `<div class="bg-white/5 p-6 rounded-[2.5rem] border border-white/10 text-center"><p class="text-amber-400 font-black uppercase text-xs mb-4">${t.label}</p><button class="bg-emerald-600 py-4 px-8 rounded-2xl font-black text-xs uppercase text-white shadow-xl">Reportar Ahora</button></div>`).join('');
             } else { container.innerHTML = '<p class="p-12 text-center opacity-40 uppercase font-black text-[10px]">No tienes turnos hoy.</p>'; }
         }
 
@@ -290,14 +310,34 @@
                 const btn = document.getElementById('googleLoginBtn'); if(btn) { btn.disabled = false; document.getElementById('googleBtnLabel').innerText = "Entrar con Google"; }
             });
             onSnapshot(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${unitNum}`, 'data'), snap => { if (snap.exists()) { taskCatalog = snap.data(); window.renderTasksCatalogUI(); } });
+            onSnapshot(collection(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_reports_${unitNum}`), snap => { reportsState = snap.docs.map(d => ({id: d.id, ...d.data()})).sort((a,b) => b.timestamp - a.timestamp); renderReportsAdminUI(); });
         }
 
+        // --- ACCIONES GESTIÓN ---
+        window.addNewCatalogTask = async (type) => {
+            const inp = document.getElementById(`new${type.charAt(0).toUpperCase()+type.slice(1)}Task`);
+            if(!inp.value.trim()) return;
+            if(!taskCatalog[type]) taskCatalog[type] = [];
+            taskCatalog[type].push(inp.value.trim().toUpperCase());
+            await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog);
+            inp.value = "";
+        };
+        window.removeCatalogTask = async (type, idx) => { taskCatalog[type].splice(idx, 1); await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog); };
+        window.editCatalogTask = async (type, idx, val) => { taskCatalog[type][idx] = val.toUpperCase(); await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog); };
+        window.deleteUser = async (id) => { delete usersState[id]; await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: usersState }); };
+        window.updateUnitTime = async () => { const t = document.getElementById('inputStartTime').value; await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { startTime: t }); };
+        window.updateEmergencyPhones = async () => {
+            const p = { pc: document.getElementById('tel_pc').value.trim(), tr: document.getElementById('tel_tr').value.trim(), sp: document.getElementById('tel_sp').value.trim(), am: document.getElementById('tel_am').value.trim(), bo: document.getElementById('tel_bo').value.trim() };
+            await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { emergencyPhones: p });
+        };
+
+        // --- AUTH ---
         window.loginWithGoogle = async () => {
             try {
                 const r = await signInWithPopup(fAuth, googleProvider); const email = r.user.email.toLowerCase();
                 if (email === PROG_EMAIL) { window.enterAppUI(); return; }
                 if (usersState[email]) { await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'users', r.user.uid, 'settings', 'prefs'), { lastUnitId: currentUnitData.id }); window.enterAppUI(); }
-                else { await signOut(fAuth); document.getElementById('msgTitle').innerText = "DENEGADO"; document.getElementById('msgText').innerText = "Contacte a su Obispo para autorizar su acceso."; document.getElementById('msgBox').classList.remove('hidden'); }
+                else { await signOut(fAuth); document.getElementById('msgTitle').innerText = "DENEGADO"; document.getElementById('msgText').innerText = "Contacte a su Obispo."; document.getElementById('msgBox').classList.remove('hidden'); }
             } catch (e) { window.showPage('unitStepPage'); }
         };
 
@@ -315,10 +355,16 @@
 
         window.enterAppUI = () => {
             window.hideSplash(); window.showPage('mainApp');
-            if (currentUnitData) { document.getElementById('headerLocName').innerText = currentUnitData.name; document.getElementById('headerUnitNumber').innerText = "#" + currentUnitData.id; }
+            if (currentUnitData) {
+                document.getElementById('headerLocName').innerText = currentUnitData.name;
+                document.getElementById('headerUnitNumber').innerText = "#" + currentUnitData.id;
+                document.getElementById('inputStartTime').value = currentUnitData.startTime || "09:00";
+                const p = currentUnitData.emergencyPhones || {};
+                ['pc','tr','sp','am','bo'].forEach(k => { const el = document.getElementById(`tel_${k}`); if(el) el.value = p[k] || ""; });
+            }
             const email = (fAuth.currentUser?.email || "").toLowerCase();
             if (email === PROG_EMAIL || (usersState[email] && usersState[email].role.includes("Administrador"))) document.getElementById('adminBtn')?.classList.remove('hidden');
-            window.renderUserListUI(); window.renderTasksCatalogUI(); calculateSchedule();
+            window.renderUserListUI(); window.renderTasksCatalogUI(); renderReportsAdminUI(); calculateSchedule();
         };
 
         window.logout = async () => { await signOut(fAuth); location.reload(); };
@@ -333,8 +379,8 @@
         };
         window.closeEmergencyMenu = () => document.getElementById('emergencyMenu')?.classList.add('hidden');
 
-        // --- BOOT ---
-        const boot = async () => {
+        // --- ARRANQUE ---
+        const start = async () => {
             if (!fAuth.currentUser) await signInAnonymously(fAuth);
             onAuthStateChanged(fAuth, async (user) => { 
                 if (user && !user.isAnonymous) {
@@ -351,7 +397,7 @@
             });
         };
 
-        boot();
+        start();
         document.getElementById('unitForm')?.addEventListener('submit', e => { e.preventDefault(); window.checkUnit(); });
         document.getElementById('addUserForm')?.addEventListener('submit', e => { e.preventDefault(); const em = document.getElementById('newUserEmail').value.trim().toLowerCase(); const fn = document.getElementById('newUserFullName').value.trim().toUpperCase(); const rl = document.getElementById('newUserRole').value; usersState[em] = { name: fn, email: em, role: rl }; setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: usersState }); e.target.reset(); window.renderUserListUI(); });
     </script>
