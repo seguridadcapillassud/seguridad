@@ -329,7 +329,7 @@
             window.renderIcons();
         };
 
-        // --- LÓGICA  RONDINES ---
+        // --- LÓGICA RONDINES ---
         function getNextSunday(offsetWeeks = 0) {
             const now = new Date(); const d = new Date(now);
             d.setDate(now.getDate() + (7 - now.getDay()) % 7 + (offsetWeeks * 7));
