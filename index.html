@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <title>Seguridad Capillas - Versión 2.9.6</title>
+    <title>Seguridad Capillas - Versión 2.9.8</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
@@ -41,6 +41,8 @@
         .google-btn:active { transform: scale(0.97); background-color: #f9fafb; }
         .phone-input-unified { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 12px; color: white; font-size: 14px; font-weight: 600; width: 100%; outline: none; }
         .report-grid { display: grid; grid-template-columns: 28% 37% 35%; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .check-custom { width: 1.6rem; height: 1.6rem; border-radius: 0.4rem; accent-color: #fbbf24; cursor: pointer; border: 2px solid rgba(255,255,255,0.3); }
+        .task-input-integrated { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); color: white; border-radius: 0.5rem; padding: 0.7rem; font-size: 0.85rem !important; outline: none; width: 100%; }
     </style>
 </head>
 <body class="flex flex-col">
@@ -50,15 +52,15 @@
         <div class="mb-6 bg-white/10 p-6 rounded-full backdrop-blur-md border border-white/20">
             <div data-icon="shield-check" class="w-16 h-16 text-white"></div>
         </div>
-        <h1 class="text-4xl font-black uppercase tracking-tighter mb-1 px-6">Seguridad Capillas</h1>
-        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 2.9.6</p>
-        <div class="absolute bottom-12 flex flex-col items-center px-6 w-full">
+        <h1 class="text-4xl font-black uppercase tracking-tighter mb-1 px-6 text-white">Seguridad Capillas</h1>
+        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 2.9.8</p>
+        <div class="absolute bottom-12 flex flex-col items-center px-6 w-full text-white">
             <div class="w-8 h-8 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin mb-4"></div>
-            <span class="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70">Accediendo...</span>
+            <span class="text-[10px] font-black uppercase tracking-widest opacity-70">Accediendo...</span>
         </div>
     </div>
 
-    <!-- Identificación -->
+    <!-- Página Identificación -->
     <div id="unitStepPage" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900 text-white">
         <div class="w-full max-w-sm space-y-8">
             <div class="text-center space-y-2">
@@ -74,7 +76,7 @@
         </div>
     </div>
 
-    <!-- Login -->
+    <!-- Página Login -->
     <div id="loginPage" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900 text-white text-center">
         <div class="w-full max-w-sm space-y-12">
             <div class="space-y-2">
@@ -91,19 +93,21 @@
 
     <!-- App Principal -->
     <div id="mainApp" class="hidden flex-grow flex flex-col bg-slate-900">
-        <header class="bg-blue-900 text-white shadow-lg pt-10 pb-4 text-white">
+        <header class="bg-blue-900 text-white shadow-lg pt-10 pb-4">
             <div class="w-full px-4 flex justify-between items-center h-14 relative">
                 <div class="flex items-center gap-3">
                     <button onclick="window.showFutureScheduleModal()" class="bg-white/10 active:bg-blue-600 w-10 h-10 rounded-xl flex items-center justify-center">
                         <div data-icon="calendar" class="w-6 h-6 text-white"></div>
                     </button>
-                    <div class="flex flex-col text-white">
-                        <h2 id="headerLocName" class="font-black text-[12px] uppercase truncate max-w-[100px] leading-tight text-white">BARRIO</h2>
-                        <span id="headerUnitNumber" class="text-[9px] text-blue-300 font-bold opacity-80 leading-none">#000000</span>
+                    <div class="flex flex-col">
+                        <h2 id="headerLocName" class="font-black text-[12px] uppercase truncate max-w-[120px] leading-tight text-white">BARRIO</h2>
+                        <div class="flex flex-col">
+                            <span id="headerUnitNumber" class="text-[9px] text-blue-300 font-bold opacity-80 leading-none">000000</span>
+                            <span id="displayRole" class="text-[7px] font-black text-amber-400 uppercase tracking-tighter mt-1">ROL</span>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Botón SOS Persistente en el centro -->
                 <div class="absolute left-1/2 -translate-x-1/2">
                     <button onclick="window.openEmergencyMenu()" class="sos-glow bg-red-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl active:scale-90 border-4 border-blue-900">
                         <div data-icon="siren" class="w-7 h-7 text-white"></div>
@@ -111,8 +115,8 @@
                 </div>
 
                 <div class="flex gap-1.5">
-                    <button id="adminBtn" onclick="window.toggleAdminPanel()" class="hidden admin-gear-btn w-9 h-9 rounded-xl flex items-center justify-center active:scale-90 shadow-lg"><div data-icon="settings" class="w-5 h-5 text-slate-800"></div></button>
-                    <button onclick="window.logout()" class="bg-white/10 p-2.5 rounded-xl active:scale-90 text-white text-white"><div data-icon="log-out" class="w-5 h-5 text-white"></div></button>
+                    <button id="adminBtn" onclick="window.toggleAdminPanel()" class="hidden admin-gear-btn w-9 h-9 rounded-xl flex items-center justify-center active:scale-90 shadow-lg"><div data-icon="settings" class="w-5 h-5"></div></button>
+                    <button onclick="window.logout()" class="bg-white/10 p-2.5 rounded-xl active:scale-90 text-white"><div data-icon="log-out" class="w-5 h-5 text-white"></div></button>
                 </div>
             </div>
         </header>
@@ -120,9 +124,9 @@
         <main class="w-full flex-grow bg-slate-900 overflow-y-auto no-scrollbar">
             <!-- PANEL GESTIÓN -->
             <section id="adminPanel" class="hidden bg-slate-800 w-full animate-in slide-in-from-top-4 duration-300 pb-10 text-white">
-                <div class="flex justify-between items-center p-5 bg-slate-900/50 border-b border-slate-700 text-white">
+                <div class="flex justify-between items-center p-5 bg-slate-900/50 border-b border-slate-700">
                     <h3 class="font-black text-xs text-blue-400 uppercase tracking-widest">Gestión Operativa</h3>
-                    <button onclick="window.toggleAdminPanel()" class="text-slate-500 p-2 text-white"><div data-icon="x" class="w-6 h-6 text-white text-white"></div></button>
+                    <button onclick="window.toggleAdminPanel()" class="text-slate-500 p-2 text-white"><div data-icon="x" class="w-6 h-6 text-white"></div></button>
                 </div>
                 <div class="flex bg-slate-900 p-2 border-b border-slate-700 overflow-x-auto no-scrollbar gap-1 text-white">
                     <button onclick="window.switchAdminTab('unit')" id="tabUnit" class="flex-1 py-3 px-3 text-[8px] font-black uppercase tab-btn tab-active rounded-xl">Horario</button>
@@ -136,24 +140,24 @@
                         <div class="p-6 bg-slate-900/50 border border-slate-700 rounded-2xl">
                             <label class="text-[9px] font-black uppercase text-slate-400 mb-2 block">Entrada Dominical</label>
                             <input type="time" id="inputStartTime" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-5 py-4 text-xl font-bold text-white mb-4">
-                            <button onclick="window.updateUnitTime()" class="w-full bg-blue-600 text-white font-black py-5 rounded-xl uppercase text-xs">Guardar</button>
+                            <button onclick="window.updateUnitTime()" class="w-full bg-blue-600 text-white font-black py-5 rounded-xl uppercase text-xs shadow-xl">Guardar</button>
                         </div>
                     </div>
-                    <div id="panelTasksContent" class="hidden space-y-6 text-white">
-                        <div class="bg-slate-900/50 border border-slate-700 rounded-2xl overflow-hidden">
+                    <div id="panelTasksContent" class="hidden space-y-6 text-white text-white">
+                        <div class="bg-slate-900/50 border border-slate-700 rounded-2xl overflow-hidden text-white">
                             <label class="p-3 text-[8px] font-black text-blue-400 uppercase bg-slate-950/30 block">Tareas Área Exterior</label>
-                            <div id="adminExteriorTasksList" class="divide-y divide-white/5"></div>
+                            <div id="adminExteriorTasksList" class="divide-y divide-white/5 text-white"></div>
                             <div class="p-3 flex gap-2"><input type="text" id="newExteriorTask" class="flex-grow bg-slate-800 p-3 rounded-xl text-xs font-bold text-white" placeholder="NUEVA..."><button onclick="window.addNewCatalogTask('exterior')" class="bg-blue-600 px-4 rounded-xl text-white font-bold">+</button></div>
                         </div>
-                        <div class="bg-slate-900/50 border border-slate-700 rounded-2xl overflow-hidden">
+                        <div class="bg-slate-900/50 border border-slate-700 rounded-2xl overflow-hidden text-white">
                             <label class="p-3 text-[8px] font-black text-blue-400 uppercase bg-slate-950/30 block">Tareas Área Interior</label>
-                            <div id="adminInteriorTasksList" class="divide-y divide-white/5"></div>
+                            <div id="adminInteriorTasksList" class="divide-y divide-white/5 text-white"></div>
                             <div class="p-3 flex gap-2"><input type="text" id="newInteriorTask" class="flex-grow bg-slate-800 p-3 rounded-xl text-xs font-bold text-white" placeholder="NUEVA..."><button onclick="window.addNewCatalogTask('interior')" class="bg-blue-600 px-4 rounded-xl text-white font-bold">+</button></div>
                         </div>
                     </div>
                     <div id="panelUsersContent" class="hidden space-y-6">
                         <div id="userTableList" class="space-y-3"></div>
-                        <div class="bg-slate-900/50 p-6 border border-slate-700 rounded-2xl">
+                        <div class="bg-slate-900/50 p-6 border border-slate-700 rounded-2xl text-white">
                             <form id="addUserForm" class="space-y-4">
                                 <input type="text" id="newUserFullName" required placeholder="NOMBRE COMPLETO" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-sm font-bold text-white">
                                 <input type="email" id="newUserEmail" required placeholder="CORREO GOOGLE" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-sm text-white">
@@ -171,9 +175,9 @@
                         <div class="bg-slate-900/50 p-6 border border-slate-700 rounded-2xl">
                             <h4 class="text-[10px] font-black text-blue-400 uppercase mb-4">Agregar Número</h4>
                             <div class="space-y-4">
-                                <input type="text" id="newPhoneLabel" placeholder="ETIQUETA (EJ: BOMBEROS)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-sm font-bold text-white">
+                                <input type="text" id="newPhoneLabel" placeholder="ETIQUETA (EJ: POLICÍA)" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-sm font-bold text-white">
                                 <input type="tel" id="newPhoneNumber" placeholder="NÚMERO" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-sm font-bold text-white">
-                                <button onclick="window.addNewEmergencyPhone()" class="w-full bg-emerald-600 py-4 rounded-xl font-black uppercase text-xs">Guardar</button>
+                                <button onclick="window.addNewEmergencyPhone()" class="w-full bg-emerald-600 py-4 rounded-xl font-black uppercase text-xs text-white">Guardar</button>
                             </div>
                         </div>
                     </div>
@@ -185,7 +189,7 @@
             <section id="operationalContent" class="p-6">
                 <div class="bg-blue-900 w-full p-8 rounded-[3rem] shadow-2xl border-b-8 border-blue-950 text-white">
                     <h3 class="font-black text-sm uppercase text-blue-200 mb-8" id="scheduleTitle">Rondines Dominicales</h3>
-                    <div id="patrolScheduleList" class="space-y-10 text-white">
+                    <div id="patrolScheduleList" class="space-y-10 text-white text-white">
                         <p class="text-center opacity-40 text-[10px] font-black uppercase text-white">Sincronizando...</p>
                     </div>
                 </div>
@@ -193,25 +197,36 @@
         </main>
     </div>
 
-    <!-- Modales -->
-    <div id="msgBox" class="fixed inset-0 bg-black/95 hidden items-center justify-center p-4 z-[300] text-slate-800">
-        <div class="bg-white rounded-[3rem] p-10 max-w-xs w-full text-center shadow-2xl">
-            <div id="msgIcon" class="mb-8 flex justify-center text-slate-800"></div>
-            <h4 id="msgTitle" class="font-black text-xl mb-3 uppercase leading-tight text-slate-900"></h4>
-            <p id="msgText" class="text-slate-500 text-[10px] mb-10 leading-relaxed font-medium text-slate-500"></p>
-            <button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-black uppercase text-[11px] active:scale-95 text-white">Entendido</button>
+    <!-- MODALES -->
+    <div id="futureScheduleModal" class="fixed inset-0 bg-black/95 hidden items-center justify-center p-6 z-[200]">
+        <div class="bg-slate-900 border border-slate-700 rounded-[3rem] p-8 max-w-lg w-full shadow-2xl animate-in zoom-in-95 duration-200 text-white text-white">
+            <div class="flex justify-between items-center mb-8">
+                <h4 class="font-black text-xl uppercase tracking-tighter text-blue-400 text-blue-400">Proyección Mensual</h4>
+                <button onclick="window.closeFutureScheduleModal()" class="text-slate-500 p-2"><div data-icon="x" class="w-6 h-6 text-white text-white"></div></button>
+            </div>
+            <div id="futureScheduleContainer" class="space-y-5 max-h-[60vh] overflow-y-auto no-scrollbar pr-1"></div>
+            <button onclick="window.closeFutureScheduleModal()" class="w-full bg-slate-800 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest mt-8 border border-slate-700">Regresar</button>
         </div>
     </div>
 
     <div id="emergencyMenu" class="fixed inset-0 bg-slate-900/98 hidden items-end sm:items-center justify-center p-4 z-50 text-slate-800">
         <div class="bg-white rounded-[2.5rem] w-full max-w-md p-8 shadow-2xl text-center">
-            <h2 class="text-2xl font-black text-red-600 uppercase flex items-center gap-3 mb-8 text-red-600"><div data-icon="siren" class="w-8 h-8 text-red-600"></div> SOS</h2>
+            <h2 class="text-2xl font-black text-red-600 uppercase flex items-center gap-3 mb-8 text-red-600"><div data-icon="siren" class="w-8 h-8 text-red-600 text-red-600"></div> SOS</h2>
             <div id="emergencyPhonesGrid" class="grid grid-cols-2 gap-4 mb-8"></div>
-            <button onclick="window.closeEmergencyMenu()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs mb-3 text-white text-white">Cerrar</button>
+            <button onclick="window.closeEmergencyMenu()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs mb-3 text-white text-white">Regresar</button>
         </div>
     </div>
 
-    <!-- Kill-switch Splash -->
+    <div id="msgBox" class="fixed inset-0 bg-black/95 hidden items-center justify-center p-4 z-[300] text-slate-800">
+        <div class="bg-white rounded-[3rem] p-10 max-w-xs w-full text-center shadow-2xl text-slate-800">
+            <div id="msgIcon" class="mb-8 flex justify-center text-slate-800"></div>
+            <h4 id="msgTitle" class="font-black text-xl mb-3 uppercase text-slate-900"></h4>
+            <p id="msgText" class="text-slate-500 text-[11px] mb-10 leading-relaxed font-medium"></p>
+            <button onclick="window.closeModal()" class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-black uppercase text-[11px] active:scale-95 text-white">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Script Kill-switch Splash -->
     <script>
         setTimeout(() => {
             const sp = document.getElementById('splashScreen');
@@ -227,7 +242,7 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signOut, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, collection, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- GLOBALES ---
+        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
           apiKey: "AIzaSyADadGOe0XW4sX6P5zmHTFnQRClMObnubo",
           authDomain: "seguridadcapilla-4e116.firebaseapp.com",
@@ -244,9 +259,9 @@
             'settings': '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
             'x': '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
             'siren': '<path d="M7 12V7a5 5 0 0 1 10 0v5"/><path d="M5 20a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2H5z"/><path d="M21 12h1M3 12h1M12 2v1M19 5l-1 1M5 5l1 1"/>',
-            'phone-call': '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/><path d="M14.05 2a9 9 0 0 1 8 8"/><path d="M14.05 6A5 5 0 0 1 18 10"/>',
             'trash-2': '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>',
-            'calendar': '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>'
+            'calendar': '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>',
+            'phone-call': '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/><path d="M14.05 2a9 9 0 0 1 8 8"/><path d="M14.05 6A5 5 0 0 1 18 10"/>'
         };
 
         const PROG_EMAIL = "cumorahnet@gmail.com";
@@ -260,13 +275,13 @@
         let taskCatalog = { exterior: [], interior: [] };
         let emergencyPhones = [];
 
-        // --- UI ---
-        window.renderIcons = () => { document.querySelectorAll('[data-icon]').forEach(el => { const p = ICON_MAP[el.getAttribute('data-icon')]; if (p) el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full text-white">${p}</svg>`; }); };
+        // --- UI CORE ---
+        window.renderIcons = () => { document.querySelectorAll('[data-icon]').forEach(el => { const p = ICON_MAP[el.getAttribute('data-icon')]; if (p) el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-full h-full text-white text-white text-white">${p}</svg>`; }); };
         window.hideSplash = () => { const sp = document.getElementById('splashScreen'); if(sp) { sp.classList.add('animate-fade-out'); setTimeout(() => sp.style.display = 'none', 400); } };
         window.showPage = (id) => { ['loginPage', 'mainApp', 'unitStepPage'].forEach(p => document.getElementById(p)?.classList.add('hidden')); document.getElementById(id)?.classList.remove('hidden'); window.renderIcons(); };
         window.closeModal = () => document.getElementById('msgBox')?.classList.add('hidden');
 
-        // --- RENDERERS GESTIÓN ---
+        // --- RENDERIZADO GESTIÓN ---
         window.renderUserListUI = () => {
             const list = document.getElementById('userTableList'); if (!list) return;
             const entries = Object.entries(usersState);
@@ -286,7 +301,7 @@
                             <option value="Obispo" ${data.role === 'Obispo' ? 'selected' : ''}>Obispo</option>
                         </select>
                     </div>
-                    ${isAdmin ? `<button onclick="window.deleteUser('${id}')" class="bg-red-900/30 text-red-400 w-9 h-9 rounded-xl flex items-center justify-center text-red-400"><div data-icon="trash-2" class="w-4 h-4"></div></button>` : ''}
+                    ${isAdmin ? `<button onclick="window.deleteUser('${id}')" class="bg-red-900/30 text-red-400 w-9 h-9 rounded-xl flex items-center justify-center text-red-400 text-red-400"><div data-icon="trash-2" class="w-4 h-4"></div></button>` : ''}
                 </div>`;
             }).join('');
             window.renderIcons();
@@ -295,39 +310,64 @@
         window.renderTasksCatalogUI = () => {
             const extList = document.getElementById('adminExteriorTasksList'); const intList = document.getElementById('adminInteriorTasksList');
             if (!extList || !intList) return;
-            extList.innerHTML = (taskCatalog.exterior || []).map((t, idx) => `<div class="catalog-row p-3"><textarea onchange="window.editCatalogTask('exterior', ${idx}, this.value)" class="catalog-textarea text-white" rows="1">${t}</textarea><button onclick="window.removeCatalogTask('exterior', ${idx})" class="text-red-400 p-2"><div data-icon="x" class="w-4 h-4 text-red-400"></div></button></div>`).join('');
-            intList.innerHTML = (taskCatalog.interior || []).map((t, idx) => `<div class="catalog-row p-3"><textarea onchange="window.editCatalogTask('interior', ${idx}, this.value)" class="catalog-textarea text-white" rows="1">${t}</textarea><button onclick="window.removeCatalogTask('interior', ${idx})" class="text-red-400 p-2"><div data-icon="x" class="w-4 h-4 text-red-400"></div></button></div>`).join('');
+            extList.innerHTML = (taskCatalog.exterior || []).map((t, idx) => `<div class="catalog-row p-3"><textarea onchange="window.editCatalogTask('exterior', ${idx}, this.value)" class="catalog-textarea text-white" rows="1">${t}</textarea><button onclick="window.removeCatalogTask('exterior', ${idx})" class="text-red-400 p-2"><div data-icon="x" class="w-4 h-4 text-red-400 text-red-400"></div></button></div>`).join('');
+            intList.innerHTML = (taskCatalog.interior || []).map((t, idx) => `<div class="catalog-row p-3"><textarea onchange="window.editCatalogTask('interior', ${idx}, this.value)" class="catalog-textarea text-white" rows="1">${t}</textarea><button onclick="window.removeCatalogTask('interior', ${idx})" class="text-red-400 p-2"><div data-icon="x" class="w-4 h-4 text-red-400 text-red-400"></div></button></div>`).join('');
             window.renderIcons();
         };
 
         window.renderEmergencyPhonesUI = () => {
             const list = document.getElementById('adminEmergencyPhonesList'); if (!list) return;
-            if (emergencyPhones.length === 0) { list.innerHTML = '<p class="text-center py-6 opacity-30 text-xs uppercase font-black">Directorio Vacío</p>'; return; }
+            if (emergencyPhones.length === 0) { list.innerHTML = '<p class="text-center py-6 opacity-30 text-xs uppercase font-black text-white">Directorio Vacío</p>'; return; }
             list.innerHTML = emergencyPhones.map((p, idx) => `
-                <div class="bg-slate-900/50 p-4 border border-slate-700 flex justify-between items-center text-white rounded-2xl">
+                <div class="bg-slate-900/50 p-4 border border-slate-700 flex justify-between items-center text-white rounded-2xl text-white">
                     <div class="min-w-0 flex-1 pr-4">
                         <input type="text" onchange="window.editPhoneLabel(${idx}, this.value)" class="bg-transparent font-black text-xs uppercase text-blue-400 outline-none w-full mb-1 border-b border-white/5" value="${p.label}">
                         <input type="tel" onchange="window.editPhoneNumber(${idx}, this.value)" class="bg-transparent text-[14px] text-white font-bold outline-none w-full" value="${p.number}">
                     </div>
-                    <button onclick="window.deleteEmergencyPhone(${idx})" class="bg-red-900/30 text-red-400 w-9 h-9 rounded-xl flex items-center justify-center"><div data-icon="trash-2" class="w-4 h-4 text-red-400"></div></button>
+                    <button onclick="window.deleteEmergencyPhone(${idx})" class="bg-red-900/30 text-red-400 w-9 h-9 rounded-xl flex items-center justify-center text-red-400"><div data-icon="trash-2" class="w-4 h-4"></div></button>
                 </div>`).join('');
             window.renderIcons();
         };
 
         // --- LÓGICA RONDINES ---
+        function getNextSunday(offsetWeeks = 0) {
+            const now = new Date(); const d = new Date(now);
+            d.setDate(now.getDate() + (7 - now.getDay()) % 7 + (offsetWeeks * 7));
+            return d;
+        }
+
+        window.renderFutureScheduleUI = () => {
+            if (!currentUnitData?.startTime || !usersState) return;
+            const staffList = Object.keys(usersState).filter(e => usersState[e].role !== "Obispo").sort();
+            const container = document.getElementById('futureScheduleContainer');
+            if (staffList.length === 0) { container.innerHTML = '<p class="text-center py-10 opacity-30 text-white">SIN MIEMBROS</p>'; return; }
+            let html = "";
+            for (let i = 0; i < 4; i++) {
+                const dateObj = getNextSunday(i); const seed = dateObj.getDate();
+                const dStr = dateObj.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
+                const slots = [
+                    { l: "ENTRADA", u: usersState[staffList[(seed + 0) % staffList.length]]?.name || staffList[(seed + 0) % staffList.length] },
+                    { l: "INTERMEDIO", u: usersState[staffList[(seed + 1) % staffList.length]]?.name || staffList[(seed + 1) % staffList.length] },
+                    { l: "SALIDA", u: usersState[staffList[(seed + 2) % staffList.length]]?.name || staffList[(seed + 2) % staffList.length] }
+                ];
+                html += `<div class="bg-white/5 border border-white/10 p-5 rounded-[2rem] space-y-3">
+                    <p class="text-[10px] font-black uppercase text-blue-400 tracking-widest border-b border-white/5 pb-2 mb-2 text-blue-400 font-bold">${dStr}</p>
+                    ${slots.map(s => `<div class="flex justify-between items-center text-[10px] text-white"><span class="opacity-60 uppercase">${s.l}:</span><span class="font-bold truncate max-w-[150px] text-white">${s.u}</span></div>`).join('')}
+                </div>`;
+            }
+            container.innerHTML = html;
+        };
+
         function calculateSchedule() {
             if (!currentUnitData?.startTime || !usersState || !fAuth.currentUser) return;
-            
-            // Excluir Obispo de la rotación
             const staffList = Object.keys(usersState).filter(e => usersState[e].role !== "Obispo").sort();
             const container = document.getElementById('patrolScheduleList');
-            if(staffList.length === 0) { container.innerHTML = '<p class="text-center opacity-40 py-10 uppercase text-xs">Sin miembros para asignar.</p>'; return; }
+            if(staffList.length === 0) { container.innerHTML = '<p class="text-center opacity-40 py-10 uppercase text-xs text-white">Sin miembros para asignar.</p>'; return; }
             
             const email = (fAuth.currentUser.email || "").toLowerCase();
             const [h, m] = currentUnitData.startTime.split(':').map(Number);
             const dateSeed = new Date().getDate();
 
-            // Slots fijos: Entrada (-10m), Intermedio (+75m), Salida (+120m)
             const schedule = [
                 { id: 1, label: "Rondín Entrada", offset: -10 },
                 { id: 2, label: "Rondín Intermedio", offset: 75 },
@@ -347,7 +387,7 @@
                         <p class="text-sm font-black text-amber-400 mb-6 uppercase tracking-widest">${t.label}</p>
                         <button class="w-full bg-emerald-600 py-4 rounded-2xl font-black text-xs uppercase shadow-xl text-white">Iniciar Reporte</button>
                     </div>`).join('');
-            } else { container.innerHTML = '<p class="p-12 text-center opacity-40 uppercase font-black text-[10px]">No tienes turnos hoy.</p>'; }
+            } else { container.innerHTML = '<p class="p-12 text-center opacity-40 uppercase font-black text-[10px] text-white">No tienes rondines para hoy.</p>'; }
         }
 
         async function startUnitSync(unitNum) {
@@ -369,25 +409,32 @@
         }
 
         // --- ACCIONES ---
+        window.showFutureScheduleModal = () => { window.renderFutureScheduleUI(); document.getElementById('futureScheduleModal').classList.replace('hidden', 'flex'); window.renderIcons(); };
+        window.closeFutureScheduleModal = () => document.getElementById('futureScheduleModal').classList.replace('flex', 'hidden');
         window.editMemberName = async (id, val) => { usersState[id].name = val.toUpperCase(); await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: usersState }); };
         window.editMemberRole = async (id, val) => { usersState[id].role = val; await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: usersState }); };
-        window.deleteUser = async (id) => { delete usersState[id]; await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: usersState }); };
+        window.deleteUser = async (id) => { if(confirm("¿ELIMINAR MIEMBRO?")) { delete usersState[id]; await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_users_${currentUnitData.id}`, 'data'), { users: usersState }); } };
         window.addNewCatalogTask = async (type) => { const inp = document.getElementById(`new${type.charAt(0).toUpperCase()+type.slice(1)}Task`); if(!inp.value.trim()) return; if(!taskCatalog[type]) taskCatalog[type] = []; taskCatalog[type].push(inp.value.trim().toUpperCase()); await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog); inp.value = ""; };
         window.removeCatalogTask = async (type, idx) => { taskCatalog[type].splice(idx, 1); await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog); };
         window.editCatalogTask = async (type, idx, val) => { taskCatalog[type][idx] = val.toUpperCase(); await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', `unidades_tasks_${currentUnitData.id}`, 'data'), taskCatalog); };
-        window.addNewEmergencyPhone = async () => { const label = document.getElementById('newPhoneLabel').value.trim().toUpperCase(); const number = document.getElementById('newPhoneNumber').value.trim(); if(!label || !number) return; emergencyPhones.push({ label, number }); await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { emergencyPhonesList: emergencyPhones }); document.getElementById('newPhoneLabel').value = ""; document.getElementById('newPhoneNumber').value = ""; };
-        window.editPhoneLabel = async (idx, val) => { emergencyPhones[idx].label = val.toUpperCase(); await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { emergencyPhonesList: emergencyPhones }); };
-        window.editPhoneNumber = async (idx, val) => { emergencyPhones[idx].number = val; await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { emergencyPhonesList: emergencyPhones }); };
+        window.addNewEmergencyPhone = async () => { const l = document.getElementById('newPhoneLabel').value.trim().toUpperCase(); const n = document.getElementById('newPhoneNumber').value.trim(); if(!l || !n) return; emergencyPhones.push({ label: l, number: n }); await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { emergencyPhonesList: emergencyPhones }); document.getElementById('newPhoneLabel').value = ""; document.getElementById('newPhoneNumber').value = ""; };
         window.deleteEmergencyPhone = async (idx) => { emergencyPhones.splice(idx, 1); await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { emergencyPhonesList: emergencyPhones }); };
+        window.editPhoneLabel = async (i,v) => { emergencyPhones[i].label = v.toUpperCase(); await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { emergencyPhonesList: emergencyPhones }); };
+        window.editPhoneNumber = async (i,v) => { emergencyPhones[i].number = v; await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { emergencyPhonesList: emergencyPhones }); };
         window.updateUnitTime = async () => { const t = document.getElementById('inputStartTime').value; await updateDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', currentUnitData.id), { startTime: t }); };
 
-        // --- AUTH ---
         window.loginWithGoogle = async () => {
             try {
                 const r = await signInWithPopup(fAuth, googleProvider); const email = r.user.email.toLowerCase();
                 if (email === PROG_EMAIL) { window.enterAppUI(); return; }
                 if (usersState[email]) { await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'users', r.user.uid, 'settings', 'prefs'), { lastUnitId: currentUnitData.id }); window.enterAppUI(); }
-                else { await signOut(fAuth); document.getElementById('msgTitle').innerText = "DENEDADO"; document.getElementById('msgText').innerText = "Contacte a su Obispo."; document.getElementById('msgBox').classList.remove('hidden'); }
+                else { 
+                    await signOut(fAuth); 
+                    const m = document.getElementById('msgBox');
+                    document.getElementById('msgTitle').innerText = "DENEGADO";
+                    document.getElementById('msgText').innerText = "CONTACTA A TU OBISPO O ESPECIALISTA EN TECNOLOGÍA PARA AUTORIZAR TU ACCESO Y/O SI TÚ ERES EL OBISPO O EL ESPECIALISTA DE TECNOLOGÍA DE TU BARRIO MANDA UNA CAPTURA DE HERRAMIENTAS SUD EN DONDE SE VEA TU NOMBRE Y TU LLAMAMIENTO AL CORREO SEGURIDADCAPILLASSUD@GMAIL.COM Y ESPERA RESPUESTA.";
+                    m.classList.remove('hidden'); window.renderIcons();
+                }
             } catch (e) { window.showPage('unitStepPage'); }
         };
 
@@ -399,7 +446,12 @@
                 if (!fAuth.currentUser) await signInAnonymously(fAuth);
                 const snap = await getDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', num));
                 if (snap.exists() && snap.data().name.toUpperCase() === ward) { currentUnitData = { id: num, ...snap.data() }; document.getElementById('loginUnitDisplay').innerText = currentUnitData.name; window.showPage('loginPage'); await startUnitSync(num); }
-                else { document.getElementById('msgTitle').innerText = "ERROR"; document.getElementById('msgText').innerText = "Barrio no coincide."; document.getElementById('msgBox').classList.remove('hidden'); }
+                else { 
+                    const m = document.getElementById('msgBox');
+                    document.getElementById('msgTitle').innerText = "ERROR";
+                    document.getElementById('msgText').innerText = "EL BARRIO NO COINCIDE CON EL NÚMERO.";
+                    m.classList.remove('hidden'); window.renderIcons();
+                }
             } catch (e) { console.error(e); }
         };
 
@@ -407,11 +459,13 @@
             window.hideSplash(); window.showPage('mainApp');
             if (currentUnitData) {
                 document.getElementById('headerLocName').innerText = currentUnitData.name;
-                document.getElementById('headerUnitNumber').innerText = "#" + currentUnitData.id;
+                document.getElementById('headerUnitNumber').innerText = currentUnitData.id;
                 document.getElementById('inputStartTime').value = currentUnitData.startTime || "09:00";
             }
             const email = (fAuth.currentUser?.email || "").toLowerCase();
-            if (email === PROG_EMAIL || (usersState[email] && (usersState[email].role === "Administrador" || usersState[email].role === "Obispo"))) document.getElementById('adminBtn')?.classList.remove('hidden');
+            const u = usersState[email];
+            document.getElementById('displayRole').innerText = u?.role || (email === PROG_EMAIL ? "PROGRAMADOR" : "MIEMBRO");
+            if (email === PROG_EMAIL || (u && (u.role === "Administrador" || u.role === "Obispo"))) document.getElementById('adminBtn')?.classList.remove('hidden');
             window.renderUserListUI(); window.renderTasksCatalogUI(); window.renderEmergencyPhonesUI(); calculateSchedule();
         };
 
@@ -421,8 +475,8 @@
 
         window.openEmergencyMenu = () => {
             const grid = document.getElementById('emergencyPhonesGrid'); 
-            if(emergencyPhones.length === 0) { grid.innerHTML = '<p class="col-span-full py-10 opacity-30 font-black">SIN NÚMEROS</p>'; }
-            else { grid.innerHTML = emergencyPhones.map(i => `<a href="tel:${i.number}" class="bg-slate-50 p-5 rounded-2xl flex flex-col items-center gap-1 active:scale-95 text-slate-800 border border-slate-100"><span class="text-red-600 font-black text-lg text-red-600 text-red-600">${i.number}</span><span class="text-[8px] text-slate-400 font-black uppercase text-slate-400">${i.label}</span></a>`).join(''); }
+            if(emergencyPhones.length === 0) { grid.innerHTML = '<p class="col-span-full py-10 opacity-30 font-black text-slate-800">SIN NÚMEROS</p>'; }
+            else { grid.innerHTML = emergencyPhones.map(i => `<a href="tel:${i.number}" class="bg-slate-50 p-5 rounded-2xl flex flex-col items-center gap-1 active:scale-95 text-slate-800 border border-slate-100 shadow-sm"><span class="text-red-600 font-black text-lg text-red-600 text-red-600">${i.number}</span><span class="text-[8px] text-slate-400 font-black uppercase text-slate-400">${i.label}</span></a>`).join(''); }
             document.getElementById('emergencyMenu')?.classList.remove('hidden'); window.renderIcons();
         };
         window.closeEmergencyMenu = () => document.getElementById('emergencyMenu')?.classList.add('hidden');
@@ -431,9 +485,7 @@
         const initApp = async () => {
             if (!fAuth.currentUser) await signInAnonymously(fAuth);
             onAuthStateChanged(fAuth, async (user) => { 
-                // Evitar redirección si ya estamos en una unidad cargada (preserva estado)
                 if (currentUnitData) return; 
-
                 if (user && !user.isAnonymous) {
                     const e = user.email.toLowerCase();
                     if (e === PROG_EMAIL) { window.showPage('unitStepPage'); return; }
