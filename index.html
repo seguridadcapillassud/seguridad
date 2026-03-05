@@ -13,7 +13,7 @@
     
     <link rel="manifest" href='data:application/json,{"name":"Seguridad Capillas","short_name":"Seguridad","start_url":".","display":"standalone","background_color":"#0f172a","theme_color":"#1e3a8a"}'>
 
-    <title>Seguridad Capillas - Versión 2.6.3</title>
+    <title>Seguridad Capillas - Versión 2.6.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
@@ -109,14 +109,14 @@
             <div id="splashIcon" data-icon="shield-check" class="w-16 h-16 text-white text-white text-white"></div>
         </div>
         <h1 class="text-4xl font-black uppercase tracking-tighter mb-1 px-6">Seguridad Capillas</h1>
-        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 2.6.3</p>
+        <p class="text-[10px] font-bold opacity-40 tracking-[0.3em] text-blue-200 uppercase">Versión 2.6.4 Mobile</p>
         <div class="absolute bottom-12 flex flex-col items-center px-6 w-full">
             <div id="loadingSpinner" class="w-8 h-8 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin mb-4"></div>
-            <span id="statusLabel" class="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70 text-white">Verificando...</span>
+            <span id="statusLabel" class="text-[10px] font-black text-blue-400 uppercase tracking-widest opacity-70">Cargando Sistema...</span>
         </div>
     </div>
 
-    <!-- Bienvenida / Identificación -->
+    <!-- Página de Identificación -->
     <div id="unitStepPage" class="hidden min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900">
         <div class="w-full max-w-sm space-y-8 text-white">
             <div class="text-center space-y-2">
@@ -145,7 +145,7 @@
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" height="20" alt="G">
                     <span id="googleBtnLabel">Entrar con Google</span>
                 </button>
-                <p class="text-[10px] text-slate-500 text-center px-4">Utilice su cuenta autorizada.</p>
+                <p class="text-[10px] text-slate-500 text-center px-4 leading-relaxed font-medium">Seleccione su cuenta autorizada.</p>
                 <button type="button" onclick="window.showPage('unitStepPage')" class="w-full text-slate-500 text-[10px] font-black uppercase py-4">Regresar</button>
             </div>
         </div>
@@ -153,15 +153,15 @@
 
     <!-- App Principal -->
     <div id="mainApp" class="hidden flex-grow flex flex-col bg-slate-900">
-        <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50 pt-10 pb-4">
+        <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50 pt-10 pb-4 text-white">
             <div class="w-full px-4 flex justify-between items-center h-14">
                 <div class="flex items-center gap-3">
-                    <button class="bg-white/10 active:bg-blue-600 w-11 h-11 rounded-2xl flex items-center justify-center">
+                    <div class="bg-white/10 active:bg-blue-600 w-11 h-11 rounded-2xl flex items-center justify-center">
                         <div data-icon="calendar" class="w-6 h-6 text-white text-white"></div>
-                    </button>
+                    </div>
                     <div class="flex flex-col">
                         <span id="displayRole" class="text-[7px] font-black bg-blue-800 px-1.5 py-0.5 rounded text-blue-200 uppercase tracking-tighter border border-blue-700/50 mb-1 w-max">...</span>
-                        <h2 id="headerLocName" class="font-black text-[10px] uppercase truncate max-w-[80px] leading-tight text-white">...</h2>
+                        <h2 id="headerLocName" class="font-black text-[10px] uppercase truncate max-w-[80px] leading-tight">...</h2>
                         <span id="headerUnitNumber" class="text-[8px] text-blue-300 font-bold opacity-80 leading-none mt-0.5">...</span>
                     </div>
                 </div>
@@ -172,18 +172,17 @@
                 </div>
                 <div class="flex items-center gap-1.5">
                     <button id="adminBtn" onclick="window.toggleAdminPanel()" class="hidden admin-gear-btn w-10 h-10 rounded-xl shadow-lg flex items-center justify-center active:scale-90"><div data-icon="settings" class="w-5 h-5 text-slate-800"></div></button>
-                    <button onclick="window.logout()" class="bg-white/10 hover:bg-red-500 w-10 h-10 rounded-xl transition-all flex items-center justify-center active:scale-90 text-white text-white"><div data-icon="log-out" class="w-5 h-5 text-white"></div></button>
+                    <button onclick="window.logout()" class="bg-white/10 hover:bg-red-500 w-10 h-10 rounded-xl transition-all flex items-center justify-center active:scale-90 text-white"><div data-icon="log-out" class="w-5 h-5 text-white"></div></button>
                 </div>
             </div>
         </header>
 
-        <main class="w-full flex-grow bg-slate-900 text-white">
-            <!-- Pestaña Operativa -->
+        <main class="w-full flex-grow bg-slate-900">
             <section id="operationalContent" class="animate-in fade-in duration-700 p-6">
-                <div class="bg-blue-900 w-full p-6 rounded-[2.5rem] shadow-2xl border-b-8 border-blue-950 text-white">
-                    <h3 class="font-black text-sm uppercase text-blue-200 mb-8" id="scheduleTitle">Próximos Turnos</h3>
+                <div class="bg-blue-900 w-full p-8 rounded-[2.5rem] shadow-2xl border-b-8 border-blue-950 text-white">
+                    <h3 class="font-black text-sm uppercase text-blue-200 mb-8" id="scheduleTitle">Panel Operativo</h3>
                     <div id="patrolScheduleList" class="space-y-6">
-                        <p class="text-center opacity-40 text-[10px] font-black uppercase">Sincronizando...</p>
+                        <p class="text-center opacity-40 text-[10px] font-black uppercase">Sincronizando datos...</p>
                     </div>
                 </div>
             </section>
@@ -205,7 +204,7 @@
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- CONFIGURACIÓN ---
+        // --- 1. CONFIGURACIÓN ---
         const firebaseConfig = {
           apiKey: "AIzaSyADadGOe0XW4sX6P5zmHTFnQRClMObnubo",
           authDomain: "seguridadcapilla-4e116.firebaseapp.com",
@@ -222,7 +221,8 @@
             'settings': '<path d="M12.22 2h-4.44l-.6 2.5a7.5 7.5 0 0 0-1.78.73l-2.43-.88L1 7.22l1.35 2.13a7.5 7.5 0 0 0 .15 1.94l-1.35 2.13 1.95 2.87 2.43-.88c.55.3 1.15.55 1.78.73l.6 2.5h4.44l.6-2.5a7.5 7.5 0 0 0 1.78-.73l2.43.88 1.95-2.87-1.35-2.13a7.5 7.5 0 0 0-.15-1.94l1.35-2.13-1.95-2.87-2.43.88a7.5 7.5 0 0 0-1.78-.73l-.6-2.5z"/><circle cx="12" cy="12" r="3"/>',
             'megaphone': '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
             'log-out': '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
-            'trash-2': '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>'
+            'x': '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+            'check-circle': '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>'
         };
 
         const SU_EMAIL = "seguridadcapillassud@gmail.com";
@@ -237,7 +237,7 @@
         let usersState = {};
         let syncReady = false;
 
-        // --- FUNCIONES INTERNAS ---
+        // --- 2. FUNCIONES DE INTERFAZ (EXPUESTAS A WINDOW) ---
         function renderIcons() {
             document.querySelectorAll('[data-icon]').forEach(el => {
                 const path = ICON_MAP[el.getAttribute('data-icon')];
@@ -246,18 +246,21 @@
         }
         window.renderIcons = renderIcons;
 
-        function showPage(id) {
-            ['loginPage', 'mainApp', 'unitStepPage'].forEach(p => document.getElementById(p)?.classList.add('hidden'));
-            document.getElementById(id)?.classList.remove('hidden');
-            renderIcons();
-        }
-        window.showPage = showPage;
-
         function hideSplash() {
             const sp = document.getElementById('splashScreen');
             if (sp) { sp.classList.add('animate-fade-out'); setTimeout(() => sp.classList.add('hidden'), 500); }
         }
+        window.hideSplash = hideSplash;
 
+        function showPage(id) {
+            ['loginPage', 'mainApp', 'unitStepPage'].forEach(p => document.getElementById(p)?.classList.add('hidden'));
+            const target = document.getElementById(id);
+            if (target) target.classList.remove('hidden');
+            renderIcons();
+        }
+        window.showPage = showPage;
+
+        // --- 3. LÓGICA DE NEGOCIO ---
         async function startUnitSync(unitNum) {
             onSnapshot(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'public', 'data', 'unidades', unitNum), snap => {
                 if (snap.exists()) currentUnitData = { id: unitNum, ...snap.data() };
@@ -274,28 +277,28 @@
             const user = fAuth.currentUser; if (!user) return;
             const email = (user.email || "").toLowerCase();
             hideSplash();
-            if (!currentUnitData) { window.showPage('unitStepPage'); return; }
-            window.showPage('mainApp');
-            const u = usersState[email] || (email === PROG_EMAIL ? { role: "Programador" } : { role: "MIEMBRO" });
-            document.getElementById('displayRole').innerText = u.role || "MIEMBRO";
+            if (!currentUnitData) { showPage('unitStepPage'); return; }
+            showPage('mainApp');
             document.getElementById('headerLocName').innerText = currentUnitData.name;
             document.getElementById('headerUnitNumber').innerText = currentUnitData.id;
+            const u = usersState[email] || (email === PROG_EMAIL ? { role: "Programador" } : { role: "MIEMBRO" });
+            document.getElementById('displayRole').innerText = u.role || "MIEMBRO";
         };
 
         window.loginWithGoogle = async () => {
             try {
                 const result = await signInWithPopup(fAuth, googleProvider);
                 const email = result.user.email.toLowerCase();
-                // ACCESO ESPECIAL MAESTROS
+                // PRIVILEGIO MAESTRO
                 if (email === SU_EMAIL || email === PROG_EMAIL) { window.enterAppUI(); return; }
                 if (usersState[email]) {
                     await setDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'users', result.user.uid, 'settings', 'prefs'), { lastUnitId: currentUnitData.id });
                     window.enterAppUI();
                 } else {
                     await signOut(fAuth);
-                    window.showModal("alert", "Denegado", "Contacta a tu Obispo o especialista en tecnología para autorizar tu acceso y/o si tú eres el obispo o el especialista de tecnología de tu barrio manda una captura de Herramientas SUD en donde se vea tu nombre y tu llamamiento al correo seguridadcapillassud@gmail.com y espera respuesta.");
+                    window.showModal("alert", "Acceso Denegado", "Contacta a tu Obispo o especialista en tecnología para autorizar tu acceso y/o si tú eres el obispo o el especialista de tecnología de tu barrio manda una captura de Herramientas SUD en donde se vea tu nombre y tu llamamiento al correo seguridadcapillassud@gmail.com y espera respuesta.");
                 }
-            } catch (e) { window.showPage('unitStepPage'); }
+            } catch (e) { showPage('unitStepPage'); }
         };
 
         window.checkUnit = async () => {
@@ -310,32 +313,40 @@
                     currentUnitData = { id: num, ...snap.data() };
                     document.getElementById('loginUnitDisplay').innerText = currentUnitData.name;
                     document.getElementById('loginStakeDisplay').innerText = currentUnitData.stake || "ESTACA";
-                    window.showPage('loginPage'); 
+                    showPage('loginPage'); 
                     await startUnitSync(num);
                 } else {
-                    window.showModal("alert", "No Encontrado", "El Barrio no coincide con el número.");
+                    window.showModal("alert", "Error", "El Barrio no coincide con el número ingresado.");
                 }
             } catch (e) { window.showModal("alert", "Error", "Problema de red."); }
         };
 
         window.logout = async () => { await signOut(fAuth); location.reload(); };
         window.closeModal = () => document.getElementById('msgBox')?.classList.add('hidden');
+        window.showModal = (type, title, text) => { 
+            const m = document.getElementById('msgBox'); if (!m) return;
+            document.getElementById('msgTitle').innerText = title.toUpperCase();
+            document.getElementById('msgText').innerText = text;
+            m.classList.remove('hidden'); renderIcons();
+        };
 
-        // --- INICIO ---
-        async function init() { 
-            // GARANTÍA: Quitar splash siempre a los 1.5s
+        // --- 4. ARRANQUE (INIT) ---
+        async function init() {
+            // SEGURIDAD: Quitar splash siempre a los 1.5 seg
             setTimeout(hideSplash, 1500);
+            
+            // Teclado móvil
+            document.addEventListener('focusin', (e) => { if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) setTimeout(() => e.target.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300); });
+            
             if (!fAuth.currentUser) await signInAnonymously(fAuth);
         }
 
         init();
-        document.getElementById('unitForm')?.addEventListener('submit', e => { e.preventDefault(); window.checkUnit(); });
         
         onAuthStateChanged(fAuth, async (user) => { 
             if (user && !user.isAnonymous) {
                 const email = (user.email || "").toLowerCase();
-                // Programadores siempre pasan por identificación
-                if (email === SU_EMAIL || email === PROG_EMAIL) { hideSplash(); window.showPage('unitStepPage'); return; }
+                if (email === SU_EMAIL || email === PROG_EMAIL) { hideSplash(); showPage('unitStepPage'); return; }
                 
                 try {
                     const prefs = await getDoc(doc(fDb, 'artifacts', 'seguridadcapilla-4e116', 'users', user.uid, 'settings', 'prefs'));
@@ -350,9 +361,11 @@
                         }
                     }
                 } catch(e) {}
-                hideSplash(); window.showPage('unitStepPage');
-            } else if (!user) { hideSplash(); window.showPage('unitStepPage'); }
+                hideSplash(); showPage('unitStepPage');
+            } else if (!user) { hideSplash(); showPage('unitStepPage'); }
         });
+
+        document.getElementById('unitForm')?.addEventListener('submit', e => { e.preventDefault(); window.checkUnit(); });
     </script>
 </body>
 </html>
